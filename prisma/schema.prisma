@@ -1,0 +1,185 @@
+datasource db {
+    provider = "postgresql"
+}
+
+generator client {
+    provider = "prisma-client"
+    output   = "../lib/generated/prisma"
+}
+
+/**
+ * ──────────────────────────────────────────────
+ * ENUMS
+ * ──────────────────────────────────────────────
+ */
+
+enum AuthProvider {
+    GOOGLE
+    CREDENTIALS
+}
+
+enum UserRole {
+    USER
+    ADMIN
+}
+
+enum TransactionType {
+    INCOME
+    EXPENSE
+}
+
+enum RecurringInterval {
+    DAILY
+    WEEKLY
+    BIWEEKLY
+    MONTHLY
+    YEARLY
+}
+
+/**
+ * ──────────────────────────────────────────────
+ * USER + AUTH
+ * ──────────────────────────────────────────────
+ */
+
+model User {
+    id           String    @id @default(cuid())
+    name         String
+    email        String    @unique
+    passwordHash String?
+    avatar       String
+    role         UserRole  @default(USER) // Added Role
+
+    accounts     Account[]
+    sessions     Session[]
+
+    balances     Balance?
+    transactions Transaction[]
+    budgets      Budget[]
+    pots         Pot[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Account {
+    id                String       @id @default(cuid())
+    userId            String
+    provider          AuthProvider
+    providerAccountId String
+
+    user User @relation(fields: [userId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    userId       String
+    sessionToken String   @unique
+    expires      DateTime
+
+    user User @relation(fields: [userId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+/**
+ * ──────────────────────────────────────────────
+ * SUPPORTING TABLES
+ * ──────────────────────────────────────────────
+ */
+
+model Category {
+    id           String        @id @default(cuid())
+    name         String        @unique
+    image        String
+    transactions Transaction[]
+    budgets      Budget[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Theme {
+    id   String @id @default(cuid())
+    name String @unique
+    hex  String
+
+    budgets Budget[]
+    pots    Pot[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+/**
+ * ──────────────────────────────────────────────
+ * FINANCIAL MODELS
+ * ──────────────────────────────────────────────
+ */
+
+model Balance {
+    id       String @id @default(cuid())
+    userId   String @unique
+    current  Float
+    income   Float
+    expenses Float
+
+    user User @relation(fields: [userId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+    id                String             @id @default(cuid())
+    userId            String
+    categoryId        String
+    name              String
+    amount            Float
+    date              DateTime
+
+    type              TransactionType    @default(EXPENSE)
+    recurringInterval RecurringInterval?
+
+    user     User     @relation(fields: [userId], references: [id])
+    category Category @relation(fields: [categoryId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Budget {
+    id         String  @id @default(cuid())
+    userId     String
+    categoryId String
+    maximum    Float
+    themeId    String
+
+    user     User      @relation(fields: [userId], references: [id])
+    category Category @relation(fields: [categoryId], references: [id])
+    theme    Theme    @relation(fields: [themeId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Pot {
+    id      String  @id @default(cuid())
+    userId  String
+    name    String
+    target  Float
+    total   Float
+    themeId String
+
+    user  User   @relation(fields: [userId], references: [id])
+    theme Theme @relation(fields: [themeId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
