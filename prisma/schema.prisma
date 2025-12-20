@@ -3,8 +3,8 @@ datasource db {
 }
 
 generator client {
-    provider = "prisma-client"
-    output   = "../lib/generated/prisma"
+    provider = "prisma-client-js"
+    // output   = "../lib/generated/prisma"
 }
 
 /**
@@ -47,8 +47,8 @@ model User {
     name         String
     email        String    @unique
     passwordHash String?
-    avatar       String
-    role         UserRole  @default(USER) // Added Role
+    avatar       String    @default("/avatar.jpg")
+    role         UserRole  @default(USER)
 
     accounts     Account[]
     sessions     Session[]

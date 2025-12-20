@@ -30,12 +30,6 @@
 
 	--font-sans: "Public Sans", sans-serif;
 
-	--font-preset-1: 2rem/120%;
-	--font-preset-2: 1.25rem/120%;
-	--font-preset-3: 1rem/150%;
-	--font-preset-4: 0.875rem/150%;
-	--font-preset-5: 0.75rem/150%;
-
 	--font-weight-bold: 700;
 	--font-weight-regular: 400;
 
@@ -60,4 +54,29 @@ body {
 	background: var(--color-main);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+}
+
+.font-preset-1 {
+	font-size: 2rem;
+	line-height: 120%;
+}
+
+.font-preset-2 {
+	font-size: 1.25rem;
+	line-height: 120%;
+}
+
+.font-preset-3 {
+	font-size: 1rem;
+	line-height: 150%;
+}
+
+.font-preset-4 {
+	font-size: 0.875rem;
+	line-height: 150%;
+}
+
+.font-preset-5 {
+	font-size: 0.75rem;
+	line-height: 150%;
 }
