@@ -1,7 +1,7 @@
 'use client';
 
-import { Input } from '@/components/input';
-import { Button } from '@/components/button';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import { login_schema } from '@/lib/schema';

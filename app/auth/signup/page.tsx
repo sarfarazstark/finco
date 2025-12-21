@@ -1,6 +1,6 @@
 'use client';
-import { Input } from '@/components/input';
-import { Button } from '@/components/button';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import { signup_schema } from '@/lib/schema';
@@ -15,9 +15,12 @@ export default function SignUp() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+
 		const formData = new FormData(e.target as HTMLFormElement);
 		const data = parse(formData);
+
 		if (!data) return;
+
 		try {
 			const response = await axios.post('/api/auth/signup', data);
 			toast.success(response.data.message || 'Sign up successful');

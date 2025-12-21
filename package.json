@@ -11,10 +11,10 @@
 	"dependencies": {
 		"@prisma/adapter-pg": "^7.2.0",
 		"@prisma/client": "^7.2.0",
+		"@tabler/icons-react": "^3.36.0",
 		"axios": "^1.13.2",
 		"bcryptjs": "^3.0.3",
 		"clsx": "^2.1.1",
-		"lucide-react": "^0.562.0",
 		"motion": "^12.23.26",
 		"next": "16.0.10",
 		"pg": "^8.16.3",

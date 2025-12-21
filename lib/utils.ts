@@ -1,6 +1,7 @@
 import { ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { ZodType } from 'zod';
+import { usePathname } from 'next/navigation';
 
 export const cn = (...inputs: ClassValue[]) => {
 	return twMerge(clsx(inputs));
@@ -18,4 +19,9 @@ export function validate<T>(schema: ZodType<T>, form: FormData) {
 	}
 
 	return { data: result.data as T, errors: null };
+}
+
+export function useIsRoute(route: string): boolean {
+	const pathname = usePathname();
+	return pathname === route;
 }

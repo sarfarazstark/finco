@@ -1,0 +1,512 @@
+diff --git a/app/api/auth/login/route.ts b/app/api/auth/login/route.ts
+index 3c92e2b..53a71b4 100644
+--- a/app/api/auth/login/route.ts
++++ b/app/api/auth/login/route.ts
+@@ -11,6 +11,7 @@ export const POST = async (req: Request) => {
+ 	const user = await prisma.user.findUnique({
+ 		where: { email },
+ 	});
++
+ 	if (!user) {
+ 		return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+ 	}
+diff --git a/app/auth/login/page.tsx b/app/auth/login/page.tsx
+index 7b17b0e..522687a 100644
+--- a/app/auth/login/page.tsx
++++ b/app/auth/login/page.tsx
+@@ -1,7 +1,7 @@
+ 'use client';
+ 
+-import { Input } from '@/components/input';
+-import { Button } from '@/components/button';
++import { Input } from '@/components/ui/input';
++import { Button } from '@/components/ui/button';
+ import Link from 'next/link';
+ import { motion } from 'motion/react';
+ import { login_schema } from '@/lib/schema';
+diff --git a/app/auth/signup/page.tsx b/app/auth/signup/page.tsx
+index 2dbd4ad..3350b9c 100644
+--- a/app/auth/signup/page.tsx
++++ b/app/auth/signup/page.tsx
+@@ -1,6 +1,6 @@
+ 'use client';
+-import { Input } from '@/components/input';
+-import { Button } from '@/components/button';
++import { Input } from '@/components/ui/input';
++import { Button } from '@/components/ui/button';
+ import Link from 'next/link';
+ import { motion } from 'motion/react';
+ import { signup_schema } from '@/lib/schema';
+@@ -15,9 +15,12 @@ export default function SignUp() {
+ 
+ 	const handleSubmit = async (e: React.FormEvent) => {
+ 		e.preventDefault();
++
+ 		const formData = new FormData(e.target as HTMLFormElement);
+ 		const data = parse(formData);
++
+ 		if (!data) return;
++
+ 		try {
+ 			const response = await axios.post('/api/auth/signup', data);
+ 			toast.success(response.data.message || 'Sign up successful');
+diff --git a/app/layout.tsx b/app/layout.tsx
+index ef1c9ac..f54e501 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -1,6 +1,9 @@
+ import type { Metadata } from 'next';
+ import './globals.css';
+ import { Toaster } from 'react-hot-toast';
++import Sidebar from '@/components/layout/sidebar';
++import TransitionLayout from '@/components/layout/TransitionLayout';
++import { Link } from '@/lib/shared';
+ 
+ export const metadata: Metadata = {
+ 	title: 'Personal Finance App - Smarter spending, stronger savings',
+@@ -11,6 +14,34 @@ export const metadata: Metadata = {
+ 	},
+ };
+ 
++const links: Link[] = [
++	{
++		label: 'Overview',
++		href: '/',
++		icon: 'home',
++	},
++	{
++		label: 'Transactions',
++		href: '/transactions',
++		icon: 'transactions',
++	},
++	{
++		label: 'Budget',
++		href: '/budget',
++		icon: 'budget',
++	},
++	{
++		label: 'Pots',
++		href: '/pots',
++		icon: 'pots',
++	},
++	{
++		label: 'Recurring Bills',
++		href: '/recurring-bills',
++		icon: 'recurringBills',
++	},
++];
++
+ export default function RootLayout({
+ 	children,
+ }: Readonly<{
+@@ -23,7 +54,12 @@ export default function RootLayout({
+ 					position='top-right'
+ 					toastOptions={{ duration: 3000, style: { fontSize: '14px' } }}
+ 				/>
+-				{children}
++				<main className='grid grid-cols-[auto_1fr] h-screen'>
++					<Sidebar links={links} />
++					<TransitionLayout>
++						<div>{children}</div>
++					</TransitionLayout>
++				</main>
+ 			</body>
+ 		</html>
+ 	);
+diff --git a/components/layout/TransitionLayout.tsx b/components/layout/TransitionLayout.tsx
+new file mode 100644
+index 0000000..1f254ec
+--- /dev/null
++++ b/components/layout/TransitionLayout.tsx
+@@ -0,0 +1,45 @@
++'use client';
++
++import { motion, AnimatePresence } from 'motion/react';
++import { usePathname } from 'next/navigation';
++import { LayoutRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
++import React, { useContext, useState } from 'react';
++
++function FrozenRouter(props: { children: React.ReactNode; }) {
++	const context = useContext(LayoutRouterContext ?? {});
++
++	const [frozen] = useState(context);
++
++	return (
++		<LayoutRouterContext.Provider value={frozen}>
++			{props.children}
++		</LayoutRouterContext.Provider>
++	);
++}
++
++const variants = {
++	initial: { opacity: 0, y: 20 },
++	animate: { opacity: 1, y: 0 },
++	exit: { opacity: 0, y: -20 }
++};
++
++export default function TransitionLayout({ children }: { children: React.ReactNode; }) {
++	const pathname = usePathname();
++
++	return (
++		<AnimatePresence mode="wait">
++			<motion.div
++				key={pathname}
++				initial="initial"
++				animate="animate"
++				exit="exit"
++				variants={variants}
++				transition={{ duration: 0.35, ease: "easeInOut" }}
++			>
++				<FrozenRouter>
++					{children}
++				</FrozenRouter>
++			</motion.div>
++		</AnimatePresence>
++	);
++}
+diff --git a/components/layout/sidebar.tsx b/components/layout/sidebar.tsx
+new file mode 100644
+index 0000000..497f626
+--- /dev/null
++++ b/components/layout/sidebar.tsx
+@@ -0,0 +1,89 @@
++'use client';
++import { motion } from 'motion/react';
++import Image from 'next/image';
++import { IconArrowBigLeftLinesFilled } from '@tabler/icons-react';
++import { useState } from 'react';
++import { cn } from '@/lib/utils';
++import { Link } from '@/lib/shared';
++import NavLink from '../ui/nav-link';
++
++export default function Sidebar({ links }: { links: Link[] }) {
++	const [isOpen, setIsOpen] = useState(true);
++
++	return (
++		<motion.div
++			animate={{
++				width: isOpen ? 256 : 64,
++			}}
++			initial={false}
++			transition={{
++				type: 'spring',
++				stiffness: 160,
++				damping: 20,
++				duration: 0.7,
++			}}
++			className={cn(
++				'w-full bg-grey-900 h-screen transition-none flex flex-col gap-12',
++				{
++					'max-w-64': isOpen,
++					'w-16': !isOpen,
++				},
++			)}>
++			<div className={cn('flex py-6 px-8', { 'px-4': !isOpen })}>
++				<Image
++					src='/assets/images/logo-large.svg'
++					alt='logo'
++					width={100}
++					height={100}
++					className={cn('w-28 mr-auto', {
++						block: isOpen,
++						hidden: !isOpen,
++					})}
++				/>
++
++				<Image
++					src='/assets/images/logo-small.svg'
++					alt='logo'
++					width={100}
++					height={100}
++					className={cn('h-6 mx-auto', {
++						block: !isOpen,
++						hidden: isOpen,
++					})}
++				/>
++			</div>
++
++			<nav className={cn('pr-6', !isOpen && 'pr-2')}>
++				<ul className='flex flex-col gap-2'>
++					{links.map((link) => (
++						<NavLink isOpen={isOpen} key={link.href} link={link} />
++					))}
++				</ul>
++			</nav>
++			<div
++				className={cn(
++					'text-grey-100 cursor-pointer py-6 px-8 mt-auto transition-transform flex items-center',
++					{
++						'px-4': !isOpen,
++					},
++				)}
++				onClick={() => setIsOpen((prev) => !prev)}>
++				<IconArrowBigLeftLinesFilled
++					className={cn('w-7 h-7 ml-auto transition-transform duration-500', {
++						'rotate-180': !isOpen,
++					})}
++				/>
++
++				<span
++					className={cn(
++						'font-preset-3 font-bold overflow-hidden transition-all duration-300 whitespace-nowrap',
++						isOpen
++							? 'opacity-100 ml-5 basis-auto max-w-[200px]'
++							: 'opacity-0 ml-0 basis-0 max-w-0',
++					)}>
++					Minimize Menu
++				</span>
++			</div>
++		</motion.div>
++	);
++}
+diff --git a/components/sidebar.tsx b/components/sidebar.tsx
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/components/button.tsx b/components/ui/button.tsx
+similarity index 100%
+rename from components/button.tsx
+rename to components/ui/button.tsx
+diff --git a/components/input.tsx b/components/ui/input.tsx
+similarity index 100%
+rename from components/input.tsx
+rename to components/ui/input.tsx
+diff --git a/components/ui/nav-link.tsx b/components/ui/nav-link.tsx
+new file mode 100644
+index 0000000..8b668fc
+--- /dev/null
++++ b/components/ui/nav-link.tsx
+@@ -0,0 +1,52 @@
++import { Link } from '@/lib/shared';
++import { cn } from '@/lib/utils';
++import { useIsRoute } from '@/lib/utils';
++
++import {
++	IconHomeFilled,
++	IconArrowsUpDown,
++	IconChartPie4Filled,
++	IconPigFilled,
++	IconReceiptFilled,
++} from '@tabler/icons-react';
++
++const mapIcon = {
++	home: IconHomeFilled,
++	transactions: IconArrowsUpDown,
++	budget: IconChartPie4Filled,
++	pots: IconPigFilled,
++	recurringBills: IconReceiptFilled,
++};
++
++export default function NavLink({
++	link,
++	isOpen,
++}: Readonly<{
++	link: Link;
++	isOpen: boolean;
++}>) {
++	const Icon = mapIcon[link.icon as keyof typeof mapIcon];
++
++	const isActive = useIsRoute(link.href);
++	return (
++		<li
++			className={cn(
++				'text-grey-300 hover:text-grey-100 transition-all duration-300 cursor-pointer flex items-center pl-6 pr-8 py-4 rounded-br-xl rounded-tr-xl  border-l-6 border-transparent',
++				isActive && 'bg-white text-grey-900 border-green hover:text-grey-900',
++				!isOpen && 'pl-3 pr-4',
++			)}>
++			<span>
++				<Icon className={cn('w-6 h-6', isActive && 'text-green')} />
++			</span>
++			<span
++				className={cn(
++					'ml-5 font-preset-3 font-bold overflow-hidden transition-all duration-300 whitespace-nowrap',
++					isOpen
++						? 'opacity-100 basis-auto max-w-[200px]'
++						: 'opacity-0 basis-0 max-w-0',
++				)}>
++				{link.label}
++			</span>
++		</li>
++	);
++}
+diff --git a/lib/shared.ts b/lib/shared.ts
+new file mode 100644
+index 0000000..71b9c91
+--- /dev/null
++++ b/lib/shared.ts
+@@ -0,0 +1,5 @@
++export type Link = {
++	label: string;
++	href: string;
++	icon: any;
++};
+diff --git a/lib/utils.ts b/lib/utils.ts
+index 106c8e0..f50bffc 100644
+--- a/lib/utils.ts
++++ b/lib/utils.ts
+@@ -1,6 +1,7 @@
+ import { ClassValue, clsx } from 'clsx';
+ import { twMerge } from 'tailwind-merge';
+ import { ZodType } from 'zod';
++import { usePathname } from 'next/navigation';
+ 
+ export const cn = (...inputs: ClassValue[]) => {
+ 	return twMerge(clsx(inputs));
+@@ -19,3 +20,8 @@ export function validate<T>(schema: ZodType<T>, form: FormData) {
+ 
+ 	return { data: result.data as T, errors: null };
+ }
++
++export function useIsRoute(route: string): boolean {
++	const pathname = usePathname();
++	return pathname === route;
++}
+diff --git a/next.config.ts b/next.config.ts
+index e9ffa30..797346a 100644
+--- a/next.config.ts
++++ b/next.config.ts
+@@ -1,7 +1,9 @@
+ import type { NextConfig } from "next";
+ 
+ const nextConfig: NextConfig = {
+-  /* config options here */
++	experimental: {
++		optimizePackageImports: ['@phosphor-icons/react'],
++	},
+ };
+ 
+ export default nextConfig;
+diff --git a/package.json b/package.json
+index 0024be3..0faa94c 100644
+--- a/package.json
++++ b/package.json
+@@ -9,12 +9,13 @@
+ 		"lint": "eslint"
+ 	},
+ 	"dependencies": {
++		"@heroicons/react": "^2.2.0",
+ 		"@prisma/adapter-pg": "^7.2.0",
+ 		"@prisma/client": "^7.2.0",
++		"@tabler/icons-react": "^3.36.0",
+ 		"axios": "^1.13.2",
+ 		"bcryptjs": "^3.0.3",
+ 		"clsx": "^2.1.1",
+-		"lucide-react": "^0.562.0",
+ 		"motion": "^12.23.26",
+ 		"next": "16.0.10",
+ 		"pg": "^8.16.3",
+diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
+index 23f07c4..99fd95d 100644
+--- a/pnpm-lock.yaml
++++ b/pnpm-lock.yaml
+@@ -8,12 +8,18 @@ importers:
+ 
+   .:
+     dependencies:
++      '@heroicons/react':
++        specifier: ^2.2.0
++        version: 2.2.0(react@19.2.1)
+       '@prisma/adapter-pg':
+         specifier: ^7.2.0
+         version: 7.2.0
+       '@prisma/client':
+         specifier: ^7.2.0
+         version: 7.2.0(prisma@7.2.0(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(typescript@5.9.3))(typescript@5.9.3)
++      '@tabler/icons-react':
++        specifier: ^3.36.0
++        version: 3.36.0(react@19.2.1)
+       axios:
+         specifier: ^1.13.2
+         version: 1.13.2
+@@ -23,9 +29,6 @@ importers:
+       clsx:
+         specifier: ^2.1.1
+         version: 2.1.1
+-      lucide-react:
+-        specifier: ^0.562.0
+-        version: 0.562.0(react@19.2.1)
+       motion:
+         specifier: ^12.23.26
+         version: 12.23.26(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+@@ -225,6 +228,11 @@ packages:
+     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
+     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+ 
++  '@heroicons/react@2.2.0':
++    resolution: {integrity: sha512-LMcepvRaS9LYHJGsF0zzmgKCUim/X3N/DQKc4jepAXJ7l8QxJ1PmxJzqplF2Z3FE4PqBAIGyJAQ/w4B5dsqbtQ==}
++    peerDependencies:
++      react: '>= 16 || ^19.0.0-rc'
++
+   '@hono/node-server@1.19.6':
+     resolution: {integrity: sha512-Shz/KjlIeAhfiuE93NDKVdZ7HdBVLQAfdbaXEaoAVO3ic9ibRSLGIQGkcBbFyuLr+7/1D5ZCINM8B+6IvXeMtw==}
+     engines: {node: '>=18.14.1'}
+@@ -544,6 +552,14 @@ packages:
+   '@swc/helpers@0.5.15':
+     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
+ 
++  '@tabler/icons-react@3.36.0':
++    resolution: {integrity: sha512-sSZ00bEjTdTTskVFykq294RJq+9cFatwy4uYa78HcYBCXU1kSD1DIp5yoFsQXmybkIOKCjp18OnhAYk553UIfQ==}
++    peerDependencies:
++      react: '>= 16'
++
++  '@tabler/icons@3.36.0':
++    resolution: {integrity: sha512-z9OfTEG6QbaQWM9KBOxxUdpgvMUn0atageXyiaSc2gmYm51ORO8Ua7eUcjlks+Dc0YMK4rrodAFdK9SfjJ4ZcA==}
++
+   '@tailwindcss/node@4.1.18':
+     resolution: {integrity: sha512-DoR7U1P7iYhw16qJ49fgXUlry1t4CpXeErJHnQ44JgTSKMaZUdf17cfn5mHchfJ4KRBZRFA/Coo+MUF5+gOaCQ==}
+ 
+@@ -1743,11 +1759,6 @@ packages:
+     resolution: {integrity: sha512-Lkk/vx6ak3rYkRR0Nhu4lFUT2VDnQSxBe8Hbl7f36358p6ow8Bnvr8lrLt98H8J1aGxfhbX4Fs5tYg2+FTwr5Q==}
+     engines: {bun: '>=1.0.0', deno: '>=1.30.0', node: '>=8.0.0'}
+ 
+-  lucide-react@0.562.0:
+-    resolution: {integrity: sha512-82hOAu7y0dbVuFfmO4bYF1XEwYk/mEbM5E+b1jgci/udUBEE/R7LF5Ip0CCEmXe8AybRM8L+04eP+LGZeDvkiw==}
+-    peerDependencies:
+-      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+-
+   magic-string@0.30.21:
+     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
+ 
+@@ -2603,6 +2614,10 @@ snapshots:
+       '@eslint/core': 0.17.0
+       levn: 0.4.1
+ 
++  '@heroicons/react@2.2.0(react@19.2.1)':
++    dependencies:
++      react: 19.2.1
++
+   '@hono/node-server@1.19.6(hono@4.10.6)':
+     dependencies:
+       hono: 4.10.6
+@@ -2885,6 +2900,13 @@ snapshots:
+     dependencies:
+       tslib: 2.8.1
+ 
++  '@tabler/icons-react@3.36.0(react@19.2.1)':
++    dependencies:
++      '@tabler/icons': 3.36.0
++      react: 19.2.1
++
++  '@tabler/icons@3.36.0': {}
++
+   '@tailwindcss/node@4.1.18':
+     dependencies:
+       '@jridgewell/remapping': 2.3.5
+@@ -4202,10 +4224,6 @@ snapshots:
+ 
+   lru.min@1.1.3: {}
+ 
+-  lucide-react@0.562.0(react@19.2.1):
+-    dependencies:
+-      react: 19.2.1
+-
+   magic-string@0.30.21:
+     dependencies:
+       '@jridgewell/sourcemap-codec': 1.5.5
+diff --git a/public/assets/images/icon-nav-overview.svg b/public/assets/images/icon-nav-overview.svg
+index 915fe75..addcdac 100644
+--- a/public/assets/images/icon-nav-overview.svg
++++ b/public/assets/images/icon-nav-overview.svg
+@@ -1 +1 @@
+-<svg fill="none" height="19" viewBox="0 0 18 19" width="18" xmlns="http://www.w3.org/2000/svg"><path d="m18 8.59282v8.66718c0 .3978-.158.7794-.4393 1.0607s-.6629.4393-1.0607.4393h-3.75c-.3978 0-.7794-.158-1.0607-.4393s-.4393-.6629-.4393-1.0607v-3.75c0-.1989-.079-.3897-.2197-.5303-.1406-.1407-.3314-.2197-.5303-.2197h-3c-.19891 0-.38968.079-.53033.2197-.14065.1406-.21967.3314-.21967.5303v3.75c0 .3978-.15804.7794-.43934 1.0607s-.66284.4393-1.06066.4393h-3.75c-.39782 0-.779356-.158-1.06066-.4393-.281305-.2813-.43933998-.6629-.43933998-1.0607v-8.66718c-.00003156-.20761.04303048-.41295.12646098-.60305.08343-.1901.205412-.36081.358226-.50133l7.500003-7.07625.01031-.010313c.27613-.251125.63597-.3902803 1.00922-.3902803s.73308.1391553 1.00918.3902803c.0032.003669.0067.007114.0103.010313l7.5 7.07625c.1513.14126.2717.3123.3537.50237.082.19006.1237.39503.1226.60201z" fill="#b3b3b3"/></svg>
+\ No newline at end of file
++<svg fill="none" height="19" viewBox="0 0 18 19" width="18" xmlns="http://www.w3.org/2000/svg"><path d="m18 8.59282v8.66718c0 .3978-.158.7794-.4393 1.0607s-.6629.4393-1.0607.4393h-3.75c-.3978 0-.7794-.158-1.0607-.4393s-.4393-.6629-.4393-1.0607v-3.75c0-.1989-.079-.3897-.2197-.5303-.1406-.1407-.3314-.2197-.5303-.2197h-3c-.19891 0-.38968.079-.53033.2197-.14065.1406-.21967.3314-.21967.5303v3.75c0 .3978-.15804.7794-.43934 1.0607s-.66284.4393-1.06066.4393h-3.75c-.39782 0-.779356-.158-1.06066-.4393-.281305-.2813-.43933998-.6629-.43933998-1.0607v-8.66718c-.00003156-.20761.04303048-.41295.12646098-.60305.08343-.1901.205412-.36081.358226-.50133l7.500003-7.07625.01031-.010313c.27613-.251125.63597-.3902803 1.00922-.3902803s.73308.1391553 1.00918.3902803c.0032.003669.0067.007114.0103.010313l7.5 7.07625c.1513.14126.2717.3123.3537.50237.082.19006.1237.39503.1226.60201z" fill="currentColor"/></svg>
