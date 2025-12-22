@@ -1,4 +1,7 @@
-import { Link } from '@/lib/shared';
+'use client';
+
+import { Link as LinkSharedType } from '@/lib/shared';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useIsRoute } from '@/lib/utils';
 
@@ -22,31 +25,46 @@ export default function NavLink({
 	link,
 	isOpen,
 }: Readonly<{
-	link: Link;
+	link: LinkSharedType;
 	isOpen: boolean;
 }>) {
 	const Icon = mapIcon[link.icon as keyof typeof mapIcon];
-
 	const isActive = useIsRoute(link.href);
+
 	return (
-		<li
-			className={cn(
-				'text-grey-300 hover:text-grey-100 transition-all duration-300 cursor-pointer flex items-center pl-6 pr-8 py-4 rounded-br-xl rounded-tr-xl  border-l-6 border-transparent',
-				isActive && 'bg-white text-grey-900 border-green hover:text-grey-900',
-				!isOpen && 'pl-3 pr-4',
-			)}>
-			<span>
-				<Icon className={cn('w-6 h-6', isActive && 'text-green')} />
-			</span>
-			<span
+		<li className='flex-1'>
+			<Link
+				href={link.href}
 				className={cn(
-					'ml-5 font-preset-3 font-bold overflow-hidden transition-all duration-300 whitespace-nowrap',
-					isOpen
-						? 'opacity-100 basis-auto max-w-[200px]'
-						: 'opacity-0 basis-0 max-w-0',
+					'cursor-pointer transition-colors duration-300 border-transparent',
+					'text-grey-300 hover:text-grey-100',
+					'flex items-center pt-3 pb-2 px-2 md:pt-4 md:pb-3 md:px-4 lg:px-0 lg:pl-6 lg:pr-8 lg:py-4',
+					'lg:flex-row lg:rounded-br-xl lg:border-l-6',
+					'flex-col rounded-tl-xl lg:rounded-tl-none rounded-tr-xl border-b-6 lg:border-b-0',
+					'gap-1',
+					isOpen ? 'lg:gap-5' : 'lg:justify-center lg:gap-0',
+
+					isActive && 'bg-white text-grey-900 border-green hover:text-grey-900',
+					!isOpen && 'lg:pl-3 lg:pr-4',
 				)}>
-				{link.label}
-			</span>
+				<Icon
+					className={cn(
+						'shrink-0 font-preset-5 lg:font-preset-3 ',
+						isActive && 'text-green',
+					)}
+				/>
+
+				<div
+					className={cn(
+						'hidden overflow-hidden transition-all duration-300',
+						'md:block',
+						isOpen ? 'max-w-[200px] opacity-100' : 'max-w-0 opacity-0',
+					)}>
+					<span className='font-preset-5 lg:font-preset-3 font-bold whitespace-nowrap'>
+						{link.label}
+					</span>
+				</div>
+			</Link>
 		</li>
 	);
 }

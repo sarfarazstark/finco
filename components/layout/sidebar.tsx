@@ -1,7 +1,10 @@
 'use client';
 import { motion } from 'motion/react';
 import Image from 'next/image';
-import { IconArrowBigLeftLinesFilled } from '@tabler/icons-react';
+import {
+	IconLayoutSidebarLeftCollapseFilled,
+	IconLayoutSidebarLeftExpandFilled,
+} from '@tabler/icons-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Link } from '@/lib/shared';
@@ -23,22 +26,25 @@ export default function Sidebar({ links }: { links: Link[] }) {
 				duration: 0.7,
 			}}
 			className={cn(
-				'w-full bg-grey-900 h-screen transition-none flex flex-col gap-12',
+				'h-screen grid grid-rows-[auto_1fr_auto] gap-6 py-6 lg:bg-grey-900',
+				'fixed left-full lg:static',
 				{
 					'max-w-64': isOpen,
 					'w-16': !isOpen,
 				},
 			)}>
-			<div className={cn('flex py-6 px-8', { 'px-4': !isOpen })}>
+			<div
+				className={cn(
+					'flex px-4',
+					'fixed top-0 left-0 right-0 z-10 bg-grey-900 lg:bg-transparent py-6 lg:py-0 lg:static lg:z-auto',
+				)}>
 				<Image
 					src='/assets/images/logo-large.svg'
 					alt='logo'
 					width={100}
 					height={100}
-					className={cn('w-28 mr-auto', {
-						block: isOpen,
-						hidden: !isOpen,
-					})}
+					priority
+					className={cn('w-28 mx-auto lg:mx-0 lg:mr-auto', !isOpen && 'hidden')}
 				/>
 
 				<Image
@@ -46,43 +52,40 @@ export default function Sidebar({ links }: { links: Link[] }) {
 					alt='logo'
 					width={100}
 					height={100}
-					className={cn('h-6 mx-auto', {
-						block: !isOpen,
-						hidden: isOpen,
-					})}
+					className={cn('h-5 w-max mx-auto hidden', { block: !isOpen })}
 				/>
 			</div>
 
-			<nav className={cn('pr-6', !isOpen && 'pr-2')}>
-				<ul className='flex flex-col gap-2'>
+			<nav
+				className={cn(
+					'p-4 lg:p-0 lg:pr-6 w-full lg:static',
+					!isOpen && 'lg:pr-2',
+					'fixed bottom-0 left-0 right-0 bg-grey-900 lg:bg-transparent',
+				)}>
+				<ul className='flex flex-row justify-between lg:justify-start lg:flex-col gap-2 md:gap-5 lg:gap-2 w-full'>
 					{links.map((link) => (
-						<NavLink isOpen={isOpen} key={link.href} link={link} />
+						<NavLink key={link.href} isOpen={isOpen} link={link} />
 					))}
 				</ul>
 			</nav>
+
 			<div
 				className={cn(
-					'text-grey-100 cursor-pointer py-6 px-8 mt-auto transition-transform flex items-center',
+					'text-grey-100 cursor-pointer px-4 mt-auto items-center hidden lg:flex w-fit',
 					{
-						'px-4': !isOpen,
+						'justify-center': !isOpen,
 					},
 				)}
 				onClick={() => setIsOpen((prev) => !prev)}>
-				<IconArrowBigLeftLinesFilled
-					className={cn('w-7 h-7 ml-auto transition-transform duration-500', {
-						'rotate-180': !isOpen,
-					})}
-				/>
-
-				<span
-					className={cn(
-						'font-preset-3 font-bold overflow-hidden transition-all duration-300 whitespace-nowrap',
-						isOpen
-							? 'opacity-100 ml-5 basis-auto max-w-[200px]'
-							: 'opacity-0 ml-0 basis-0 max-w-0',
-					)}>
-					Minimize Menu
-				</span>
+				{isOpen ? (
+					<IconLayoutSidebarLeftCollapseFilled
+						className={cn('w-7 h-7 transition-transform duration-500')}
+					/>
+				) : (
+					<IconLayoutSidebarLeftExpandFilled
+						className={cn('w-7 h-7 transition-transform duration-500')}
+					/>
+				)}
 			</div>
 		</motion.div>
 	);

@@ -56,27 +56,22 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.font-preset-1 {
-	font-size: 2rem;
-	line-height: 120%;
+@utility font-preset-1 {
+	@apply text-[2rem] leading-[1.2];
 }
 
-.font-preset-2 {
-	font-size: 1.25rem;
-	line-height: 120%;
+@utility font-preset-2 {
+	@apply text-[1.25rem] leading-[1.2];
 }
 
-.font-preset-3 {
-	font-size: 1rem;
-	line-height: 150%;
+@utility font-preset-3 {
+	@apply text-base leading-[1.5];
 }
 
-.font-preset-4 {
-	font-size: 0.875rem;
-	line-height: 150%;
+@utility font-preset-4 {
+	@apply text-sm leading-[1.5];
 }
 
-.font-preset-5 {
-	font-size: 0.75rem;
-	line-height: 150%;
+@utility font-preset-5 {
+	@apply text-xs leading-[1.5];
 }

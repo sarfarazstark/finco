@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
-import { User } from '@/lib/generated/prisma/client';
+import { User } from '@prisma/client';
 import { randomBytes } from 'crypto';
 
 export async function getSessionUser() {

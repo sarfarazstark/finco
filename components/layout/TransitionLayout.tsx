@@ -27,18 +27,16 @@ export default function TransitionLayout({ children }: { children: React.ReactNo
 	const pathname = usePathname();
 
 	return (
-		<AnimatePresence mode="wait">
+		<AnimatePresence mode='wait'>
 			<motion.div
 				key={pathname}
-				initial="initial"
-				animate="animate"
-				exit="exit"
+				initial='initial'
+				animate='animate'
+				exit='exit'
 				variants={variants}
-				transition={{ duration: 0.35, ease: "easeInOut" }}
-			>
-				<FrozenRouter>
-					{children}
-				</FrozenRouter>
+				transition={{ duration: 0.35, ease: 'easeInOut' }}
+				className='overflow-hidden'>
+				<FrozenRouter>{children}</FrozenRouter>
 			</motion.div>
 		</AnimatePresence>
 	);

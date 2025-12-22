@@ -1,5 +1,5 @@
 'use client';
-
+import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ import axios, { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 
 export default function Login() {
+	const [loading, setLoading] = useState(false);
 	const { errors, parse } = useZodForm(login_schema);
 	const router = useRouter();
 
@@ -20,9 +21,11 @@ export default function Login() {
 		const data = parse(formData);
 		if (!data) return;
 		try {
+			setLoading(true);
 			const response = await axios.post('/api/auth/login', data);
 			toast.success(response.data.message || 'Login successful');
 			router.push('/');
+			setLoading(false);
 		} catch (error: AxiosError | unknown) {
 			if (axios.isAxiosError(error)) {
 				const errorMessage = error.response?.data.error || 'Login failed';
@@ -59,7 +62,7 @@ export default function Login() {
 						autoComplete='off'
 						error={errors.password}
 					/>
-					<Button type='submit'>Login</Button>
+					<Button type='submit'>{loading ? 'Logging in...' : 'Login'}</Button>
 				</form>
 				<div className='text-center text-grey-500'>
 					Need to create an account?{' '}
