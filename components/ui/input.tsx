@@ -62,7 +62,7 @@ export function Input({
 					<button
 						type='button'
 						onClick={() => setShowPassword((v) => !v)}
-						className='absolute right-3 top-1/2 -translate-y-1/2 text-grey-600 hover:text-grey-900 transition-all duration-200 active:scale-90'>
+						className='absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-grey-600 hover:text-grey-900 transition-all duration-200 active:scale-90'>
 						{showPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
 					</button>
 				)}
