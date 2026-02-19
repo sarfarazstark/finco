@@ -7,6 +7,7 @@ import { motion } from 'motion/react';
 import { login_schema } from '@/lib/schema';
 import { useZodForm } from '@/hooks/use-zod-form';
 import { useRouter } from 'next/navigation';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 

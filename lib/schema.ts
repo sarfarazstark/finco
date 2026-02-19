@@ -11,7 +11,7 @@ const passwordSchema = z
 
 export const login_schema = z.object({
 	email: z.email(),
-	password: passwordSchema,
+	password: z.string(),
 });
 
 export const signup_schema = login_schema.extend({
