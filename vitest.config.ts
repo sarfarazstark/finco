@@ -1,16 +1,16 @@
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
-import tsconfigPaths from 'vite-tsconfig-paths'
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   test: {
-    environment: 'jsdom',
+    environment: "jsdom",
     globals: true,
-    setupFiles: ['./tests/setup.ts'],
+    setupFiles: ["./tests/setup.ts"],
     coverage: {
-      provider: 'v8',
-      include: ['app/**/*', 'components/**/*', 'lib/**/*'],
+      provider: "v8",
+      include: ["app/**/*", "components/**/*", "lib/**/*"],
     },
   },
-})
+});
