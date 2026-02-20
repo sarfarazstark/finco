@@ -123,13 +123,13 @@ const getItemLayout = useCallback(
 
 ```javascript
 // Consider FlashList for better performance
-import { FlashList } from "@shopify/flash-list";
+import { FlashList } from '@shopify/flash-list';
 
 <FlashList
-  data={items}
-  renderItem={renderItem}
-  estimatedItemSize={ITEM_HEIGHT}
-  keyExtractor={keyExtractor}
+	data={items}
+	renderItem={renderItem}
+	estimatedItemSize={ITEM_HEIGHT}
+	keyExtractor={keyExtractor}
 />;
 
 // Benefits over FlatList:
@@ -144,16 +144,16 @@ import { FlashList } from "@shopify/flash-list";
 ```javascript
 // ❌ JS-driven animation (blocks JS thread)
 Animated.timing(value, {
-  toValue: 1,
-  duration: 300,
-  useNativeDriver: false, // BAD!
+	toValue: 1,
+	duration: 300,
+	useNativeDriver: false, // BAD!
 }).start();
 
 // ✅ Native-driver animation (runs on UI thread)
 Animated.timing(value, {
-  toValue: 1,
-  duration: 300,
-  useNativeDriver: true, // GOOD!
+	toValue: 1,
+	duration: 300,
+	useNativeDriver: true, // GOOD!
 }).start();
 
 // Native driver supports ONLY:
@@ -173,19 +173,19 @@ Animated.timing(value, {
 // For animations native driver can't handle, use Reanimated 3
 
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from "react-native-reanimated";
+	useSharedValue,
+	useAnimatedStyle,
+	withSpring,
+} from 'react-native-reanimated';
 
 const Component = () => {
-  const offset = useSharedValue(0);
+	const offset = useSharedValue(0);
 
-  const animatedStyles = useAnimatedStyle(() => ({
-    transform: [{ translateX: withSpring(offset.value) }],
-  }));
+	const animatedStyles = useAnimatedStyle(() => ({
+		transform: [{ translateX: withSpring(offset.value) }],
+	}));
 
-  return <Animated.View style={animatedStyles} />;
+	return <Animated.View style={animatedStyles} />;
 };
 
 // Benefits:
@@ -200,19 +200,19 @@ const Component = () => {
 ```javascript
 // ❌ Memory leak: uncleared interval
 useEffect(() => {
-  const interval = setInterval(() => {
-    fetchData();
-  }, 5000);
-  // Missing cleanup!
+	const interval = setInterval(() => {
+		fetchData();
+	}, 5000);
+	// Missing cleanup!
 }, []);
 
 // ✅ Proper cleanup
 useEffect(() => {
-  const interval = setInterval(() => {
-    fetchData();
-  }, 5000);
+	const interval = setInterval(() => {
+		fetchData();
+	}, 5000);
 
-  return () => clearInterval(interval); // CLEANUP!
+	return () => clearInterval(interval); // CLEANUP!
 }, []);
 
 // Common memory leak sources:
@@ -727,18 +727,18 @@ COMPRESS: Reduce payload size
 ```javascript
 // List: Always use
 <FlatList
-  data={data}
-  renderItem={useCallback(
-    ({ item }) => (
-      <MemoItem item={item} />
-    ),
-    [],
-  )}
-  keyExtractor={useCallback((item) => item.id, [])}
-  getItemLayout={useCallback(
-    (_, i) => ({ length: H, offset: H * i, index: i }),
-    [],
-  )}
+	data={data}
+	renderItem={useCallback(
+		({ item }) => (
+			<MemoItem item={item} />
+		),
+		[]
+	)}
+	keyExtractor={useCallback(item => item.id, [])}
+	getItemLayout={useCallback(
+		(_, i) => ({ length: H, offset: H * i, index: i }),
+		[]
+	)}
 />;
 
 // Animation: Always native
@@ -746,7 +746,7 @@ useNativeDriver: true;
 
 // Cleanup: Always present
 useEffect(() => {
-  return () => cleanup();
+	return () => cleanup();
 }, []);
 ```
 

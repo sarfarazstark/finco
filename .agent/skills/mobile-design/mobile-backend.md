@@ -289,19 +289,19 @@ REQUEST FLOW:
 
 ```json
 {
-  "error": {
-    "code": "PAYMENT_DECLINED",
-    "message": "Your payment was declined",
-    "user_message": "Please check your card details or try another payment method",
-    "action": {
-      "type": "navigate",
-      "destination": "payment_methods"
-    },
-    "retry": {
-      "allowed": true,
-      "after_seconds": 5
-    }
-  }
+	"error": {
+		"code": "PAYMENT_DECLINED",
+		"message": "Your payment was declined",
+		"user_message": "Please check your card details or try another payment method",
+		"action": {
+			"type": "navigate",
+			"destination": "payment_methods"
+		},
+		"retry": {
+			"allowed": true,
+			"after_seconds": 5
+		}
+	}
 }
 ```
 

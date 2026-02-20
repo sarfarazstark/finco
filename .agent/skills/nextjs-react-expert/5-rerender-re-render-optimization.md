@@ -24,15 +24,15 @@ If a value can be computed from current props/state, do not store it in state or
 
 ```tsx
 function Form() {
-  const [firstName, setFirstName] = useState("First");
-  const [lastName, setLastName] = useState("Last");
-  const [fullName, setFullName] = useState("");
+	const [firstName, setFirstName] = useState('First');
+	const [lastName, setLastName] = useState('Last');
+	const [fullName, setFullName] = useState('');
 
-  useEffect(() => {
-    setFullName(firstName + " " + lastName);
-  }, [firstName, lastName]);
+	useEffect(() => {
+		setFullName(firstName + ' ' + lastName);
+	}, [firstName, lastName]);
 
-  return <p>{fullName}</p>;
+	return <p>{fullName}</p>;
 }
 ```
 
@@ -40,11 +40,11 @@ function Form() {
 
 ```tsx
 function Form() {
-  const [firstName, setFirstName] = useState("First");
-  const [lastName, setLastName] = useState("Last");
-  const fullName = firstName + " " + lastName;
+	const [firstName, setFirstName] = useState('First');
+	const [lastName, setLastName] = useState('Last');
+	const fullName = firstName + ' ' + lastName;
 
-  return <p>{fullName}</p>;
+	return <p>{fullName}</p>;
 }
 ```
 
@@ -65,14 +65,14 @@ Don't subscribe to dynamic state (searchParams, localStorage) if you only read i
 
 ```tsx
 function ShareButton({ chatId }: { chatId: string }) {
-  const searchParams = useSearchParams();
+	const searchParams = useSearchParams();
 
-  const handleShare = () => {
-    const ref = searchParams.get("ref");
-    shareChat(chatId, { ref });
-  };
+	const handleShare = () => {
+		const ref = searchParams.get('ref');
+		shareChat(chatId, { ref });
+	};
 
-  return <button onClick={handleShare}>Share</button>;
+	return <button onClick={handleShare}>Share</button>;
 }
 ```
 
@@ -80,13 +80,13 @@ function ShareButton({ chatId }: { chatId: string }) {
 
 ```tsx
 function ShareButton({ chatId }: { chatId: string }) {
-  const handleShare = () => {
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get("ref");
-    shareChat(chatId, { ref });
-  };
+	const handleShare = () => {
+		const params = new URLSearchParams(window.location.search);
+		const ref = params.get('ref');
+		shareChat(chatId, { ref });
+	};
 
-  return <button onClick={handleShare}>Share</button>;
+	return <button onClick={handleShare}>Share</button>;
 }
 ```
 
@@ -106,12 +106,12 @@ Calling `useMemo` and comparing hook dependencies may consume more resources tha
 
 ```tsx
 function Header({ user, notifications }: Props) {
-  const isLoading = useMemo(() => {
-    return user.isLoading || notifications.isLoading;
-  }, [user.isLoading, notifications.isLoading]);
+	const isLoading = useMemo(() => {
+		return user.isLoading || notifications.isLoading;
+	}, [user.isLoading, notifications.isLoading]);
 
-  if (isLoading) return <Skeleton />;
-  // return some markup
+	if (isLoading) return <Skeleton />;
+	// return some markup
 }
 ```
 
@@ -119,10 +119,10 @@ function Header({ user, notifications }: Props) {
 
 ```tsx
 function Header({ user, notifications }: Props) {
-  const isLoading = user.isLoading || notifications.isLoading;
+	const isLoading = user.isLoading || notifications.isLoading;
 
-  if (isLoading) return <Skeleton />;
-  // return some markup
+	if (isLoading) return <Skeleton />;
+	// return some markup
 }
 ```
 
@@ -178,13 +178,13 @@ Extract expensive work into memoized components to enable early returns before c
 
 ```tsx
 function Profile({ user, loading }: Props) {
-  const avatar = useMemo(() => {
-    const id = computeAvatarId(user);
-    return <Avatar id={id} />;
-  }, [user]);
+	const avatar = useMemo(() => {
+		const id = computeAvatarId(user);
+		return <Avatar id={id} />;
+	}, [user]);
 
-  if (loading) return <Skeleton />;
-  return <div>{avatar}</div>;
+	if (loading) return <Skeleton />;
+	return <div>{avatar}</div>;
 }
 ```
 
@@ -192,17 +192,17 @@ function Profile({ user, loading }: Props) {
 
 ```tsx
 const UserAvatar = memo(function UserAvatar({ user }: { user: User }) {
-  const id = useMemo(() => computeAvatarId(user), [user]);
-  return <Avatar id={id} />;
+	const id = useMemo(() => computeAvatarId(user), [user]);
+	return <Avatar id={id} />;
 });
 
 function Profile({ user, loading }: Props) {
-  if (loading) return <Skeleton />;
-  return (
-    <div>
-      <UserAvatar user={user} />
-    </div>
-  );
+	if (loading) return <Skeleton />;
+	return (
+		<div>
+			<UserAvatar user={user} />
+		</div>
+	);
 }
 ```
 
@@ -223,7 +223,7 @@ Specify primitive dependencies instead of objects to minimize effect re-runs.
 
 ```tsx
 useEffect(() => {
-  console.log(user.id);
+	console.log(user.id);
 }, [user]);
 ```
 
@@ -231,7 +231,7 @@ useEffect(() => {
 
 ```tsx
 useEffect(() => {
-  console.log(user.id);
+	console.log(user.id);
 }, [user.id]);
 ```
 
@@ -240,17 +240,17 @@ useEffect(() => {
 ```tsx
 // Incorrect: runs on width=767, 766, 765...
 useEffect(() => {
-  if (width < 768) {
-    enableMobileMode();
-  }
+	if (width < 768) {
+		enableMobileMode();
+	}
 }, [width]);
 
 // Correct: runs only on boolean transition
 const isMobile = width < 768;
 useEffect(() => {
-  if (isMobile) {
-    enableMobileMode();
-  }
+	if (isMobile) {
+		enableMobileMode();
+	}
 }, [isMobile]);
 ```
 
@@ -269,17 +269,17 @@ If a side effect is triggered by a specific user action (submit, click, drag), r
 
 ```tsx
 function Form() {
-  const [submitted, setSubmitted] = useState(false);
-  const theme = useContext(ThemeContext);
+	const [submitted, setSubmitted] = useState(false);
+	const theme = useContext(ThemeContext);
 
-  useEffect(() => {
-    if (submitted) {
-      post("/api/register");
-      showToast("Registered", theme);
-    }
-  }, [submitted, theme]);
+	useEffect(() => {
+		if (submitted) {
+			post('/api/register');
+			showToast('Registered', theme);
+		}
+	}, [submitted, theme]);
 
-  return <button onClick={() => setSubmitted(true)}>Submit</button>;
+	return <button onClick={() => setSubmitted(true)}>Submit</button>;
 }
 ```
 
@@ -287,14 +287,14 @@ function Form() {
 
 ```tsx
 function Form() {
-  const theme = useContext(ThemeContext);
+	const theme = useContext(ThemeContext);
 
-  function handleSubmit() {
-    post("/api/register");
-    showToast("Registered", theme);
-  }
+	function handleSubmit() {
+		post('/api/register');
+		showToast('Registered', theme);
+	}
 
-  return <button onClick={handleSubmit}>Submit</button>;
+	return <button onClick={handleSubmit}>Submit</button>;
 }
 ```
 
@@ -315,9 +315,9 @@ Subscribe to derived boolean state instead of continuous values to reduce re-ren
 
 ```tsx
 function Sidebar() {
-  const width = useWindowWidth(); // updates continuously
-  const isMobile = width < 768;
-  return <nav className={isMobile ? "mobile" : "desktop"} />;
+	const width = useWindowWidth(); // updates continuously
+	const isMobile = width < 768;
+	return <nav className={isMobile ? 'mobile' : 'desktop'} />;
 }
 ```
 
@@ -325,8 +325,8 @@ function Sidebar() {
 
 ```tsx
 function Sidebar() {
-  const isMobile = useMediaQuery("(max-width: 767px)");
-  return <nav className={isMobile ? "mobile" : "desktop"} />;
+	const isMobile = useMediaQuery('(max-width: 767px)');
+	return <nav className={isMobile ? 'mobile' : 'desktop'} />;
 }
 ```
 
@@ -345,22 +345,22 @@ When updating state based on the current state value, use the functional update 
 
 ```tsx
 function TodoList() {
-  const [items, setItems] = useState(initialItems);
+	const [items, setItems] = useState(initialItems);
 
-  // Callback must depend on items, recreated on every items change
-  const addItems = useCallback(
-    (newItems: Item[]) => {
-      setItems([...items, ...newItems]);
-    },
-    [items],
-  ); // ❌ items dependency causes recreations
+	// Callback must depend on items, recreated on every items change
+	const addItems = useCallback(
+		(newItems: Item[]) => {
+			setItems([...items, ...newItems]);
+		},
+		[items]
+	); // ❌ items dependency causes recreations
 
-  // Risk of stale closure if dependency is forgotten
-  const removeItem = useCallback((id: string) => {
-    setItems(items.filter((item) => item.id !== id));
-  }, []); // ❌ Missing items dependency - will use stale items!
+	// Risk of stale closure if dependency is forgotten
+	const removeItem = useCallback((id: string) => {
+		setItems(items.filter(item => item.id !== id));
+	}, []); // ❌ Missing items dependency - will use stale items!
 
-  return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />;
+	return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />;
 }
 ```
 
@@ -370,19 +370,19 @@ The first callback is recreated every time `items` changes, which can cause chil
 
 ```tsx
 function TodoList() {
-  const [items, setItems] = useState(initialItems);
+	const [items, setItems] = useState(initialItems);
 
-  // Stable callback, never recreated
-  const addItems = useCallback((newItems: Item[]) => {
-    setItems((curr) => [...curr, ...newItems]);
-  }, []); // ✅ No dependencies needed
+	// Stable callback, never recreated
+	const addItems = useCallback((newItems: Item[]) => {
+		setItems(curr => [...curr, ...newItems]);
+	}, []); // ✅ No dependencies needed
 
-  // Always uses latest state, no stale closure risk
-  const removeItem = useCallback((id: string) => {
-    setItems((curr) => curr.filter((item) => item.id !== id));
-  }, []); // ✅ Safe and stable
+	// Always uses latest state, no stale closure risk
+	const removeItem = useCallback((id: string) => {
+		setItems(curr => curr.filter(item => item.id !== id));
+	}, []); // ✅ Safe and stable
 
-  return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />;
+	return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />;
 }
 ```
 
@@ -423,21 +423,21 @@ Pass a function to `useState` for expensive initial values. Without the function
 
 ```tsx
 function FilteredList({ items }: { items: Item[] }) {
-  // buildSearchIndex() runs on EVERY render, even after initialization
-  const [searchIndex, setSearchIndex] = useState(buildSearchIndex(items));
-  const [query, setQuery] = useState("");
+	// buildSearchIndex() runs on EVERY render, even after initialization
+	const [searchIndex, setSearchIndex] = useState(buildSearchIndex(items));
+	const [query, setQuery] = useState('');
 
-  // When query changes, buildSearchIndex runs again unnecessarily
-  return <SearchResults index={searchIndex} query={query} />;
+	// When query changes, buildSearchIndex runs again unnecessarily
+	return <SearchResults index={searchIndex} query={query} />;
 }
 
 function UserProfile() {
-  // JSON.parse runs on every render
-  const [settings, setSettings] = useState(
-    JSON.parse(localStorage.getItem("settings") || "{}"),
-  );
+	// JSON.parse runs on every render
+	const [settings, setSettings] = useState(
+		JSON.parse(localStorage.getItem('settings') || '{}')
+	);
 
-  return <SettingsForm settings={settings} onChange={setSettings} />;
+	return <SettingsForm settings={settings} onChange={setSettings} />;
 }
 ```
 
@@ -445,21 +445,23 @@ function UserProfile() {
 
 ```tsx
 function FilteredList({ items }: { items: Item[] }) {
-  // buildSearchIndex() runs ONLY on initial render
-  const [searchIndex, setSearchIndex] = useState(() => buildSearchIndex(items));
-  const [query, setQuery] = useState("");
+	// buildSearchIndex() runs ONLY on initial render
+	const [searchIndex, setSearchIndex] = useState(() =>
+		buildSearchIndex(items)
+	);
+	const [query, setQuery] = useState('');
 
-  return <SearchResults index={searchIndex} query={query} />;
+	return <SearchResults index={searchIndex} query={query} />;
 }
 
 function UserProfile() {
-  // JSON.parse runs only on initial render
-  const [settings, setSettings] = useState(() => {
-    const stored = localStorage.getItem("settings");
-    return stored ? JSON.parse(stored) : {};
-  });
+	// JSON.parse runs only on initial render
+	const [settings, setSettings] = useState(() => {
+		const stored = localStorage.getItem('settings');
+		return stored ? JSON.parse(stored) : {};
+	});
 
-  return <SettingsForm settings={settings} onChange={setSettings} />;
+	return <SettingsForm settings={settings} onChange={setSettings} />;
 }
 ```
 
@@ -482,29 +484,29 @@ Mark frequent, non-urgent state updates as transitions to maintain UI responsive
 
 ```tsx
 function ScrollTracker() {
-  const [scrollY, setScrollY] = useState(0);
-  useEffect(() => {
-    const handler = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
+	const [scrollY, setScrollY] = useState(0);
+	useEffect(() => {
+		const handler = () => setScrollY(window.scrollY);
+		window.addEventListener('scroll', handler, { passive: true });
+		return () => window.removeEventListener('scroll', handler);
+	}, []);
 }
 ```
 
 **Correct (non-blocking updates):**
 
 ```tsx
-import { startTransition } from "react";
+import { startTransition } from 'react';
 
 function ScrollTracker() {
-  const [scrollY, setScrollY] = useState(0);
-  useEffect(() => {
-    const handler = () => {
-      startTransition(() => setScrollY(window.scrollY));
-    };
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
+	const [scrollY, setScrollY] = useState(0);
+	useEffect(() => {
+		const handler = () => {
+			startTransition(() => setScrollY(window.scrollY));
+		};
+		window.addEventListener('scroll', handler, { passive: true });
+		return () => window.removeEventListener('scroll', handler);
+	}, []);
 }
 ```
 
@@ -523,26 +525,26 @@ When a value changes frequently and you don't want a re-render on every update (
 
 ```tsx
 function Tracker() {
-  const [lastX, setLastX] = useState(0);
+	const [lastX, setLastX] = useState(0);
 
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => setLastX(e.clientX);
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+	useEffect(() => {
+		const onMove = (e: MouseEvent) => setLastX(e.clientX);
+		window.addEventListener('mousemove', onMove);
+		return () => window.removeEventListener('mousemove', onMove);
+	}, []);
 
-  return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: lastX,
-        width: 8,
-        height: 8,
-        background: "black",
-      }}
-    />
-  );
+	return (
+		<div
+			style={{
+				position: 'fixed',
+				top: 0,
+				left: lastX,
+				width: 8,
+				height: 8,
+				background: 'black',
+			}}
+		/>
+	);
 }
 ```
 
@@ -550,34 +552,34 @@ function Tracker() {
 
 ```tsx
 function Tracker() {
-  const lastXRef = useRef(0);
-  const dotRef = useRef<HTMLDivElement>(null);
+	const lastXRef = useRef(0);
+	const dotRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      lastXRef.current = e.clientX;
-      const node = dotRef.current;
-      if (node) {
-        node.style.transform = `translateX(${e.clientX}px)`;
-      }
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+	useEffect(() => {
+		const onMove = (e: MouseEvent) => {
+			lastXRef.current = e.clientX;
+			const node = dotRef.current;
+			if (node) {
+				node.style.transform = `translateX(${e.clientX}px)`;
+			}
+		};
+		window.addEventListener('mousemove', onMove);
+		return () => window.removeEventListener('mousemove', onMove);
+	}, []);
 
-  return (
-    <div
-      ref={dotRef}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: 8,
-        height: 8,
-        background: "black",
-        transform: "translateX(0px)",
-      }}
-    />
-  );
+	return (
+		<div
+			ref={dotRef}
+			style={{
+				position: 'fixed',
+				top: 0,
+				left: 0,
+				width: 8,
+				height: 8,
+				background: 'black',
+				transform: 'translateX(0px)',
+			}}
+		/>
+	);
 }
 ```

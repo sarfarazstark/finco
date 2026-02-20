@@ -60,23 +60,23 @@ Before responding to ANY request:
 ```javascript
 // Pseudo-code for decision tree
 function analyzeRequest(userMessage) {
-  // 1. Classify request type
-  const requestType = classifyRequest(userMessage);
+	// 1. Classify request type
+	const requestType = classifyRequest(userMessage);
 
-  // 2. Detect domains
-  const domains = detectDomains(userMessage);
+	// 2. Detect domains
+	const domains = detectDomains(userMessage);
 
-  // 3. Determine complexity
-  const complexity = assessComplexity(domains);
+	// 3. Determine complexity
+	const complexity = assessComplexity(domains);
 
-  // 4. Select agent(s)
-  if (complexity === "SIMPLE" && domains.length === 1) {
-    return selectSingleAgent(domains[0]);
-  } else if (complexity === "MODERATE" && domains.length <= 2) {
-    return selectMultipleAgents(domains);
-  } else {
-    return "orchestrator"; // Complex task
-  }
+	// 4. Select agent(s)
+	if (complexity === 'SIMPLE' && domains.length === 1) {
+		return selectSingleAgent(domains[0]);
+	} else if (complexity === 'MODERATE' && domains.length <= 2) {
+		return selectMultipleAgents(domains);
+	} else {
+		return 'orchestrator'; // Complex task
+	}
 }
 ```
 

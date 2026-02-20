@@ -76,44 +76,44 @@ project-name/
 
 1. Initialize Project:
 
-   ```bash
-   npx create-next-app@latest my-app --typescript --tailwind --eslint
-   # Select Yes for App Router
-   # Select No for src directory (optional, this template uses src)
-   ```
+    ```bash
+    npx create-next-app@latest my-app --typescript --tailwind --eslint
+    # Select Yes for App Router
+    # Select No for src directory (optional, this template uses src)
+    ```
 
 2. Install DB & Validation:
 
-   ```bash
-   npm install prisma @prisma/client zod
-   npm install -D ts-node # For running seed scripts
-   ```
+    ```bash
+    npm install prisma @prisma/client zod
+    npm install -D ts-node # For running seed scripts
+    ```
 
 3. Configure Tailwind v4 (If missing):
    Ensure `src/app/globals.css` uses the new import syntax instead of a config file:
 
-   ```css
-   @import "tailwindcss";
+    ```css
+    @import 'tailwindcss';
 
-   @theme {
-     --color-primary: oklch(0.5 0.2 240);
-     --font-sans: "Inter", sans-serif;
-   }
-   ```
+    @theme {
+    	--color-primary: oklch(0.5 0.2 240);
+    	--font-sans: 'Inter', sans-serif;
+    }
+    ```
 
 4. Initialize Database:
 
-   ```bash
-   npx prisma init
-   # Update schema.prisma
-   npm run db:push
-   ```
+    ```bash
+    npx prisma init
+    # Update schema.prisma
+    npm run db:push
+    ```
 
 5. Run Developer Server:
-   ```bash
-   npm run dev --turbo
-   # --turbo to enable faster Turbopack
-   ```
+    ```bash
+    npm run dev --turbo
+    # --turbo to enable faster Turbopack
+    ```
 
 ---
 

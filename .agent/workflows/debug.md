@@ -19,24 +19,24 @@ This command activates DEBUG mode for systematic investigation of issues, errors
 When `/debug` is triggered:
 
 1. **Gather information**
-   - Error message
-   - Reproduction steps
-   - Expected vs actual behavior
-   - Recent changes
+    - Error message
+    - Reproduction steps
+    - Expected vs actual behavior
+    - Recent changes
 
 2. **Form hypotheses**
-   - List possible causes
-   - Order by likelihood
+    - List possible causes
+    - Order by likelihood
 
 3. **Investigate systematically**
-   - Test each hypothesis
-   - Check logs, data flow
-   - Use elimination method
+    - Test each hypothesis
+    - Check logs, data flow
+    - Use elimination method
 
 4. **Fix and prevent**
-   - Apply fix
-   - Explain root cause
-   - Add prevention measures
+    - Apply fix
+    - Explain root cause
+    - Add prevention measures
 
 ---
 

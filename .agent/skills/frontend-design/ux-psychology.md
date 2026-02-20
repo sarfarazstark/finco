@@ -55,24 +55,24 @@ Where D = distance, W = width
 ```css
 /* Size by importance */
 .btn-primary {
-  height: 48px;
-  padding: 0 24px;
+	height: 48px;
+	padding: 0 24px;
 }
 .btn-secondary {
-  height: 40px;
-  padding: 0 16px;
+	height: 40px;
+	padding: 0 16px;
 }
 .btn-tertiary {
-  height: 36px;
-  padding: 0 12px;
+	height: 36px;
+	padding: 0 12px;
 }
 
 /* Mobile touch targets */
 @media (hover: none) {
-  .btn {
-    min-height: 44px;
-    min-width: 44px;
-  }
+	.btn {
+		min-height: 44px;
+		min-width: 44px;
+	}
 }
 ```
 
@@ -119,19 +119,19 @@ Where D = distance, W = width
 ```css
 /* All buttons gray, primary stands out */
 .btn {
-  background: #e5e7eb;
+	background: #e5e7eb;
 }
 .btn-primary {
-  background: #3b82f6;
+	background: #3b82f6;
 }
 
 /* Recommended plan highlighted */
 .pricing-card {
-  border: 1px solid #e5e7eb;
+	border: 1px solid #e5e7eb;
 }
 .pricing-card.popular {
-  border: 2px solid #3b82f6;
-  box-shadow: var(--shadow-lg);
+	border: 2px solid #3b82f6;
+	box-shadow: var(--shadow-lg);
 }
 ```
 
@@ -802,14 +802,14 @@ Long landing page:
 ```css
 /* Beautiful first impression */
 .hero {
-  background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);
-  color: white;
+	background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);
+	color: white;
 }
 
 /* Pleasing microinteractions */
 .button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-lg);
 }
 ```
 
@@ -818,12 +818,12 @@ Long landing page:
 ```javascript
 // Instant feedback
 button.onclick = () => {
-  button.disabled = true;
-  button.textContent = "Saving...";
+	button.disabled = true;
+	button.textContent = 'Saving...';
 
-  save().then(() => {
-    showSuccess("Saved!"); // Immediate confirmation
-  });
+	save().then(() => {
+		showSuccess('Saved!'); // Immediate confirmation
+	});
 };
 ```
 
@@ -832,13 +832,13 @@ button.onclick = () => {
 ```html
 <!-- Brand story and values -->
 <section class="about">
-  <h2>Why We Exist</h2>
-  <p>We believe technology should empower, not complicate...</p>
+	<h2>Why We Exist</h2>
+	<p>We believe technology should empower, not complicate...</p>
 </section>
 
 <!-- Social proof connecting to identity -->
 <blockquote>
-  "This tool helped me become the designer I wanted to be."
+	"This tool helped me become the designer I wanted to be."
 </blockquote>
 ```
 
@@ -878,39 +878,39 @@ button.onclick = () => {
 ```css
 /* Trust badge styling */
 .trust-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: #f0fdf4; /* Light green = security */
-  border-radius: 2px; /* Sharp for trust = precision feel */
-  font-size: 14px;
-  color: #166534;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 16px;
+	background: #f0fdf4; /* Light green = security */
+	border-radius: 2px; /* Sharp for trust = precision feel */
+	font-size: 14px;
+	color: #166534;
 }
 
 /* Secure form indicator */
 .secure-form::before {
-  content: "🔒 Secure form";
-  display: block;
-  font-size: 12px;
-  color: #166534;
-  margin-bottom: 8px;
+	content: '🔒 Secure form';
+	display: block;
+	font-size: 12px;
+	color: #166534;
+	margin-bottom: 8px;
 }
 
 /* Testimonial card */
 .testimonial {
-  display: flex;
-  gap: 16px;
-  padding: 24px;
-  background: white;
-  border-radius: 16px; /* Friendly = larger radius */
-  box-shadow: var(--shadow-sm);
+	display: flex;
+	gap: 16px;
+	padding: 24px;
+	background: white;
+	border-radius: 16px; /* Friendly = larger radius */
+	box-shadow: var(--shadow-sm);
 }
 
 .testimonial-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%; /* Real photos > initials */
+	width: 48px;
+	height: 48px;
+	border-radius: 50%; /* Real photos > initials */
 }
 ```
 
@@ -933,17 +933,17 @@ button.onclick = () => {
 ```css
 /* Visual noise → Clean */
 .card-busy {
-  border: 2px solid red;
-  background: linear-gradient(...);
-  box-shadow: 0 0 20px...;
-  /* Too much! */
+	border: 2px solid red;
+	background: linear-gradient(...);
+	box-shadow: 0 0 20px...;
+	/* Too much! */
 }
 
 .card-clean {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
-  /* Calm, focused */
+	background: white;
+	border-radius: 16px;
+	box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+	/* Calm, focused */
 }
 ```
 
@@ -952,19 +952,19 @@ button.onclick = () => {
 ```html
 <!-- Overwhelming -->
 <form>
-  <!-- 15 fields at once -->
+	<!-- 15 fields at once -->
 </form>
 
 <!-- Chunked -->
 <form>
-  <fieldset>
-    <legend>Step 1: Personal Info</legend>
-    <!-- 3-4 fields -->
-  </fieldset>
-  <fieldset>
-    <legend>Step 2: Shipping</legend>
-    <!-- 3-4 fields -->
-  </fieldset>
+	<fieldset>
+		<legend>Step 1: Personal Info</legend>
+		<!-- 3-4 fields -->
+	</fieldset>
+	<fieldset>
+		<legend>Step 2: Shipping</legend>
+		<!-- 3-4 fields -->
+	</fieldset>
 </form>
 ```
 
@@ -973,13 +973,13 @@ button.onclick = () => {
 ```html
 <!-- Hide complexity until needed -->
 <div class="filters">
-  <div class="filters-basic">
-    <!-- Common filters visible -->
-  </div>
-  <button onclick="toggleAdvanced()">Advanced Options ▼</button>
-  <div class="filters-advanced" hidden>
-    <!-- Complex filters hidden -->
-  </div>
+	<div class="filters-basic">
+		<!-- Common filters visible -->
+	</div>
+	<button onclick="toggleAdvanced()">Advanced Options ▼</button>
+	<div class="filters-advanced" hidden>
+		<!-- Complex filters hidden -->
+	</div>
 </div>
 ```
 
@@ -997,19 +997,19 @@ button.onclick = () => {
 ```html
 <!-- Don't make users remember -->
 <label>
-  Card Number
-  <input
-    type="text"
-    inputmode="numeric"
-    autocomplete="cc-number"
-    placeholder="1234 5678 9012 3456"
-  />
+	Card Number
+	<input
+		type="text"
+		inputmode="numeric"
+		autocomplete="cc-number"
+		placeholder="1234 5678 9012 3456"
+	/>
 </label>
 
 <!-- Show what they entered -->
 <div class="order-summary">
-  <p>Shipping to: <strong>John Doe, 123 Main St...</strong></p>
-  <a href="#">Edit</a>
+	<p>Shipping to: <strong>John Doe, 123 Main St...</strong></p>
+	<a href="#">Edit</a>
 </div>
 ```
 
@@ -1043,9 +1043,9 @@ Annual (Save 20%)
 ```html
 <!-- Show original price to frame discount -->
 <div class="price">
-  <span class="original">$99</span>
-  <span class="current">$79</span>
-  <span class="savings">Save 20%</span>
+	<span class="original">$99</span>
+	<span class="current">$79</span>
+	<span class="savings">Save 20%</span>
 </div>
 ```
 
@@ -1054,8 +1054,8 @@ Annual (Save 20%)
 ```html
 <!-- Real-time activity -->
 <div class="activity">
-  <span class="avatar">👤</span>
-  <span>Sarah from NYC just purchased</span>
+	<span class="avatar">👤</span>
+	<span>Sarah from NYC just purchased</span>
 </div>
 
 <!-- Aggregate proof -->
@@ -1067,8 +1067,8 @@ Annual (Save 20%)
 ```html
 <!-- Show progress to encourage completion -->
 <div class="progress">
-  <div class="progress-bar" style="width: 60%"></div>
-  <span>60% complete - almost there!</span>
+	<div class="progress-bar" style="width: 60%"></div>
+	<span>60% complete - almost there!</span>
 </div>
 ```
 

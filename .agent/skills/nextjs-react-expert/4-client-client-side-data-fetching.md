@@ -24,15 +24,15 @@ Use `useSWRSubscription()` to share global event listeners across component inst
 
 ```tsx
 function useKeyboardShortcut(key: string, callback: () => void) {
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.metaKey && e.key === key) {
-        callback();
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [key, callback]);
+	useEffect(() => {
+		const handler = (e: KeyboardEvent) => {
+			if (e.metaKey && e.key === key) {
+				callback();
+			}
+		};
+		window.addEventListener('keydown', handler);
+		return () => window.removeEventListener('keydown', handler);
+	}, [key, callback]);
 }
 ```
 
@@ -41,50 +41,50 @@ When using the `useKeyboardShortcut` hook multiple times, each instance will reg
 **Correct (N instances = 1 listener):**
 
 ```tsx
-import useSWRSubscription from "swr/subscription";
+import useSWRSubscription from 'swr/subscription';
 
 // Module-level Map to track callbacks per key
 const keyCallbacks = new Map<string, Set<() => void>>();
 
 function useKeyboardShortcut(key: string, callback: () => void) {
-  // Register this callback in the Map
-  useEffect(() => {
-    if (!keyCallbacks.has(key)) {
-      keyCallbacks.set(key, new Set());
-    }
-    keyCallbacks.get(key)!.add(callback);
+	// Register this callback in the Map
+	useEffect(() => {
+		if (!keyCallbacks.has(key)) {
+			keyCallbacks.set(key, new Set());
+		}
+		keyCallbacks.get(key)!.add(callback);
 
-    return () => {
-      const set = keyCallbacks.get(key);
-      if (set) {
-        set.delete(callback);
-        if (set.size === 0) {
-          keyCallbacks.delete(key);
-        }
-      }
-    };
-  }, [key, callback]);
+		return () => {
+			const set = keyCallbacks.get(key);
+			if (set) {
+				set.delete(callback);
+				if (set.size === 0) {
+					keyCallbacks.delete(key);
+				}
+			}
+		};
+	}, [key, callback]);
 
-  useSWRSubscription("global-keydown", () => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.metaKey && keyCallbacks.has(e.key)) {
-        keyCallbacks.get(e.key)!.forEach((cb) => cb());
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  });
+	useSWRSubscription('global-keydown', () => {
+		const handler = (e: KeyboardEvent) => {
+			if (e.metaKey && keyCallbacks.has(e.key)) {
+				keyCallbacks.get(e.key)!.forEach(cb => cb());
+			}
+		};
+		window.addEventListener('keydown', handler);
+		return () => window.removeEventListener('keydown', handler);
+	});
 }
 
 function Profile() {
-  // Multiple shortcuts will share the same listener
-  useKeyboardShortcut("p", () => {
-    /* ... */
-  });
-  useKeyboardShortcut("k", () => {
-    /* ... */
-  });
-  // ...
+	// Multiple shortcuts will share the same listener
+	useKeyboardShortcut('p', () => {
+		/* ... */
+	});
+	useKeyboardShortcut('k', () => {
+		/* ... */
+	});
+	// ...
 }
 ```
 
@@ -103,16 +103,16 @@ Add `{ passive: true }` to touch and wheel event listeners to enable immediate s
 
 ```typescript
 useEffect(() => {
-  const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX);
-  const handleWheel = (e: WheelEvent) => console.log(e.deltaY);
+	const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX);
+	const handleWheel = (e: WheelEvent) => console.log(e.deltaY);
 
-  document.addEventListener("touchstart", handleTouch);
-  document.addEventListener("wheel", handleWheel);
+	document.addEventListener('touchstart', handleTouch);
+	document.addEventListener('wheel', handleWheel);
 
-  return () => {
-    document.removeEventListener("touchstart", handleTouch);
-    document.removeEventListener("wheel", handleWheel);
-  };
+	return () => {
+		document.removeEventListener('touchstart', handleTouch);
+		document.removeEventListener('wheel', handleWheel);
+	};
 }, []);
 ```
 
@@ -120,16 +120,16 @@ useEffect(() => {
 
 ```typescript
 useEffect(() => {
-  const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX);
-  const handleWheel = (e: WheelEvent) => console.log(e.deltaY);
+	const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX);
+	const handleWheel = (e: WheelEvent) => console.log(e.deltaY);
 
-  document.addEventListener("touchstart", handleTouch, { passive: true });
-  document.addEventListener("wheel", handleWheel, { passive: true });
+	document.addEventListener('touchstart', handleTouch, { passive: true });
+	document.addEventListener('wheel', handleWheel, { passive: true });
 
-  return () => {
-    document.removeEventListener("touchstart", handleTouch);
-    document.removeEventListener("wheel", handleWheel);
-  };
+	return () => {
+		document.removeEventListener('touchstart', handleTouch);
+		document.removeEventListener('wheel', handleWheel);
+	};
 }, []);
 ```
 
@@ -152,43 +152,43 @@ SWR enables request deduplication, caching, and revalidation across component in
 
 ```tsx
 function UserList() {
-  const [users, setUsers] = useState([]);
-  useEffect(() => {
-    fetch("/api/users")
-      .then((r) => r.json())
-      .then(setUsers);
-  }, []);
+	const [users, setUsers] = useState([]);
+	useEffect(() => {
+		fetch('/api/users')
+			.then(r => r.json())
+			.then(setUsers);
+	}, []);
 }
 ```
 
 **Correct (multiple instances share one request):**
 
 ```tsx
-import useSWR from "swr";
+import useSWR from 'swr';
 
 function UserList() {
-  const { data: users } = useSWR("/api/users", fetcher);
+	const { data: users } = useSWR('/api/users', fetcher);
 }
 ```
 
 **For immutable data:**
 
 ```tsx
-import { useImmutableSWR } from "@/lib/swr";
+import { useImmutableSWR } from '@/lib/swr';
 
 function StaticContent() {
-  const { data } = useImmutableSWR("/api/config", fetcher);
+	const { data } = useImmutableSWR('/api/config', fetcher);
 }
 ```
 
 **For mutations:**
 
 ```tsx
-import { useSWRMutation } from "swr/mutation";
+import { useSWRMutation } from 'swr/mutation';
 
 function UpdateButton() {
-  const { trigger } = useSWRMutation("/api/user", updateUser);
-  return <button onClick={() => trigger()}>Update</button>;
+	const { trigger } = useSWRMutation('/api/user', updateUser);
+	return <button onClick={() => trigger()}>Update</button>;
 }
 ```
 
@@ -209,45 +209,45 @@ Add version prefix to keys and store only needed fields. Prevents schema conflic
 
 ```typescript
 // No version, stores everything, no error handling
-localStorage.setItem("userConfig", JSON.stringify(fullUserObject));
-const data = localStorage.getItem("userConfig");
+localStorage.setItem('userConfig', JSON.stringify(fullUserObject));
+const data = localStorage.getItem('userConfig');
 ```
 
 **Correct:**
 
 ```typescript
-const VERSION = "v2";
+const VERSION = 'v2';
 
 function saveConfig(config: { theme: string; language: string }) {
-  try {
-    localStorage.setItem(`userConfig:${VERSION}`, JSON.stringify(config));
-  } catch {
-    // Throws in incognito/private browsing, quota exceeded, or disabled
-  }
+	try {
+		localStorage.setItem(`userConfig:${VERSION}`, JSON.stringify(config));
+	} catch {
+		// Throws in incognito/private browsing, quota exceeded, or disabled
+	}
 }
 
 function loadConfig() {
-  try {
-    const data = localStorage.getItem(`userConfig:${VERSION}`);
-    return data ? JSON.parse(data) : null;
-  } catch {
-    return null;
-  }
+	try {
+		const data = localStorage.getItem(`userConfig:${VERSION}`);
+		return data ? JSON.parse(data) : null;
+	} catch {
+		return null;
+	}
 }
 
 // Migration from v1 to v2
 function migrate() {
-  try {
-    const v1 = localStorage.getItem("userConfig:v1");
-    if (v1) {
-      const old = JSON.parse(v1);
-      saveConfig({
-        theme: old.darkMode ? "dark" : "light",
-        language: old.lang,
-      });
-      localStorage.removeItem("userConfig:v1");
-    }
-  } catch {}
+	try {
+		const v1 = localStorage.getItem('userConfig:v1');
+		if (v1) {
+			const old = JSON.parse(v1);
+			saveConfig({
+				theme: old.darkMode ? 'dark' : 'light',
+				language: old.lang,
+			});
+			localStorage.removeItem('userConfig:v1');
+		}
+	} catch {}
 }
 ```
 
@@ -256,15 +256,15 @@ function migrate() {
 ```typescript
 // User object has 20+ fields, only store what UI needs
 function cachePrefs(user: FullUser) {
-  try {
-    localStorage.setItem(
-      "prefs:v1",
-      JSON.stringify({
-        theme: user.preferences.theme,
-        notifications: user.preferences.notifications,
-      }),
-    );
-  } catch {}
+	try {
+		localStorage.setItem(
+			'prefs:v1',
+			JSON.stringify({
+				theme: user.preferences.theme,
+				notifications: user.preferences.notifications,
+			})
+		);
+	} catch {}
 }
 ```
 

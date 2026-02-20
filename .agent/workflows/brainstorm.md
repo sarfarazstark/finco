@@ -19,18 +19,18 @@ This command activates BRAINSTORM mode for structured idea exploration. Use when
 When `/brainstorm` is triggered:
 
 1. **Understand the goal**
-   - What problem are we solving?
-   - Who is the user?
-   - What constraints exist?
+    - What problem are we solving?
+    - Who is the user?
+    - What constraints exist?
 
 2. **Generate options**
-   - Provide at least 3 different approaches
-   - Each with pros and cons
-   - Consider unconventional solutions
+    - Provide at least 3 different approaches
+    - Each with pros and cons
+    - Consider unconventional solutions
 
 3. **Compare and recommend**
-   - Summarize tradeoffs
-   - Give a recommendation with reasoning
+    - Summarize tradeoffs
+    - Give a recommendation with reasoning
 
 ---
 

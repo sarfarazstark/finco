@@ -75,13 +75,13 @@
 
 ```css
 :root {
-  /* 60% - Pick based on light/dark mode and mood */
-  --color-bg: /* neutral: white, off-white, or dark gray */ --color-surface:
-    /* slightly different from bg */
-    /* 30% - Pick based on brand or context */
-    --color-secondary: /* muted version of primary or neutral */
-    /* 10% - Pick based on desired action/emotion */
-    --color-accent: /* vibrant, attention-grabbing */;
+	/* 60% - Pick based on light/dark mode and mood */
+	--color-bg: /* neutral: white, off-white, or dark gray */ --color-surface:
+		/* slightly different from bg */
+		/* 30% - Pick based on brand or context */
+		--color-secondary: /* muted version of primary or neutral */
+		/* 10% - Pick based on desired action/emotion */
+		--color-accent: /* vibrant, attention-grabbing */;
 }
 ```
 

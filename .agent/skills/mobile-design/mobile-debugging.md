@@ -73,8 +73,8 @@ Web Debugging:      Mobile Debugging:
 
 - **Cause:** Native module failure, memory OOM, permission usage without declaration.
 - **Tools:**
-  - **Android:** `adb logcat *:E` (Filter for Errors)
-  - **iOS:** Open Xcode → Window → Devices → View Device Logs
+    - **Android:** `adb logcat *:E` (Filter for Errors)
+    - **iOS:** Open Xcode → Window → Devices → View Device Logs
 
 > **💡 Pro Tip:** If app crashes immediately on launch, it's almost 100% a native configuration issue (Info.plist, AndroidManifest.xml).
 
@@ -99,8 +99,8 @@ Web Debugging:      Mobile Debugging:
 - **React Native:** Performance Monitor (Shake menu).
 - **Android:** "Profile GPU Rendering" in Developer Options.
 - **Issues:**
-  - **JS FPS drop:** Heavy calculation in JS thread.
-  - **UI FPS drop:** Too many views, intricate hierarchy, heavy images.
+    - **JS FPS drop:** Heavy calculation in JS thread.
+    - **UI FPS drop:** Too many views, intricate hierarchy, heavy images.
 
 ---
 

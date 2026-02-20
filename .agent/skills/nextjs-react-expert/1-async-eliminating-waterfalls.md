@@ -24,15 +24,15 @@ Move `await` operations into the branches where they're actually used to avoid b
 
 ```typescript
 async function handleRequest(userId: string, skipProcessing: boolean) {
-  const userData = await fetchUserData(userId);
+	const userData = await fetchUserData(userId);
 
-  if (skipProcessing) {
-    // Returns immediately but still waited for userData
-    return { skipped: true };
-  }
+	if (skipProcessing) {
+		// Returns immediately but still waited for userData
+		return { skipped: true };
+	}
 
-  // Only this branch uses userData
-  return processUserData(userData);
+	// Only this branch uses userData
+	return processUserData(userData);
 }
 ```
 
@@ -40,14 +40,14 @@ async function handleRequest(userId: string, skipProcessing: boolean) {
 
 ```typescript
 async function handleRequest(userId: string, skipProcessing: boolean) {
-  if (skipProcessing) {
-    // Returns immediately without waiting
-    return { skipped: true };
-  }
+	if (skipProcessing) {
+		// Returns immediately without waiting
+		return { skipped: true };
+	}
 
-  // Fetch only when needed
-  const userData = await fetchUserData(userId);
-  return processUserData(userData);
+	// Fetch only when needed
+	const userData = await fetchUserData(userId);
+	return processUserData(userData);
 }
 ```
 
@@ -56,35 +56,35 @@ async function handleRequest(userId: string, skipProcessing: boolean) {
 ```typescript
 // Incorrect: always fetches permissions
 async function updateResource(resourceId: string, userId: string) {
-  const permissions = await fetchPermissions(userId);
-  const resource = await getResource(resourceId);
+	const permissions = await fetchPermissions(userId);
+	const resource = await getResource(resourceId);
 
-  if (!resource) {
-    return { error: "Not found" };
-  }
+	if (!resource) {
+		return { error: 'Not found' };
+	}
 
-  if (!permissions.canEdit) {
-    return { error: "Forbidden" };
-  }
+	if (!permissions.canEdit) {
+		return { error: 'Forbidden' };
+	}
 
-  return await updateResourceData(resource, permissions);
+	return await updateResourceData(resource, permissions);
 }
 
 // Correct: fetches only when needed
 async function updateResource(resourceId: string, userId: string) {
-  const resource = await getResource(resourceId);
+	const resource = await getResource(resourceId);
 
-  if (!resource) {
-    return { error: "Not found" };
-  }
+	if (!resource) {
+		return { error: 'Not found' };
+	}
 
-  const permissions = await fetchPermissions(userId);
+	const permissions = await fetchPermissions(userId);
 
-  if (!permissions.canEdit) {
-    return { error: "Forbidden" };
-  }
+	if (!permissions.canEdit) {
+		return { error: 'Forbidden' };
+	}
 
-  return await updateResourceData(resource, permissions);
+	return await updateResourceData(resource, permissions);
 }
 ```
 
@@ -111,18 +111,18 @@ const profile = await fetchProfile(user.id);
 **Correct (config and profile run in parallel):**
 
 ```typescript
-import { all } from "better-all";
+import { all } from 'better-all';
 
 const { user, config, profile } = await all({
-  async user() {
-    return fetchUser();
-  },
-  async config() {
-    return fetchConfig();
-  },
-  async profile() {
-    return fetchProfile((await this.$.user).id);
-  },
+	async user() {
+		return fetchUser();
+	},
+	async config() {
+		return fetchConfig();
+	},
+	async profile() {
+		return fetchProfile((await this.$.user).id);
+	},
 });
 ```
 
@@ -132,12 +132,12 @@ We can also create all the promises first, and do `Promise.all()` at the end.
 
 ```typescript
 const userPromise = fetchUser();
-const profilePromise = userPromise.then((user) => fetchProfile(user.id));
+const profilePromise = userPromise.then(user => fetchProfile(user.id));
 
 const [user, config, profile] = await Promise.all([
-  userPromise,
-  fetchConfig(),
-  profilePromise,
+	userPromise,
+	fetchConfig(),
+	profilePromise,
 ]);
 ```
 
@@ -158,10 +158,10 @@ In API routes and Server Actions, start independent operations immediately, even
 
 ```typescript
 export async function GET(request: Request) {
-  const session = await auth();
-  const config = await fetchConfig();
-  const data = await fetchData(session.user.id);
-  return Response.json({ data, config });
+	const session = await auth();
+	const config = await fetchConfig();
+	const data = await fetchData(session.user.id);
+	return Response.json({ data, config });
 }
 ```
 
@@ -169,14 +169,14 @@ export async function GET(request: Request) {
 
 ```typescript
 export async function GET(request: Request) {
-  const sessionPromise = auth();
-  const configPromise = fetchConfig();
-  const session = await sessionPromise;
-  const [config, data] = await Promise.all([
-    configPromise,
-    fetchData(session.user.id),
-  ]);
-  return Response.json({ data, config });
+	const sessionPromise = auth();
+	const configPromise = fetchConfig();
+	const session = await sessionPromise;
+	const [config, data] = await Promise.all([
+		configPromise,
+		fetchData(session.user.id),
+	]);
+	return Response.json({ data, config });
 }
 ```
 
@@ -205,9 +205,9 @@ const comments = await fetchComments();
 
 ```typescript
 const [user, posts, comments] = await Promise.all([
-  fetchUser(),
-  fetchPosts(),
-  fetchComments(),
+	fetchUser(),
+	fetchPosts(),
+	fetchComments(),
 ]);
 ```
 
@@ -226,18 +226,18 @@ Instead of awaiting data in async components before returning JSX, use Suspense 
 
 ```tsx
 async function Page() {
-  const data = await fetchData(); // Blocks entire page
+	const data = await fetchData(); // Blocks entire page
 
-  return (
-    <div>
-      <div>Sidebar</div>
-      <div>Header</div>
-      <div>
-        <DataDisplay data={data} />
-      </div>
-      <div>Footer</div>
-    </div>
-  );
+	return (
+		<div>
+			<div>Sidebar</div>
+			<div>Header</div>
+			<div>
+				<DataDisplay data={data} />
+			</div>
+			<div>Footer</div>
+		</div>
+	);
 }
 ```
 
@@ -247,23 +247,23 @@ The entire layout waits for data even though only the middle section needs it.
 
 ```tsx
 function Page() {
-  return (
-    <div>
-      <div>Sidebar</div>
-      <div>Header</div>
-      <div>
-        <Suspense fallback={<Skeleton />}>
-          <DataDisplay />
-        </Suspense>
-      </div>
-      <div>Footer</div>
-    </div>
-  );
+	return (
+		<div>
+			<div>Sidebar</div>
+			<div>Header</div>
+			<div>
+				<Suspense fallback={<Skeleton />}>
+					<DataDisplay />
+				</Suspense>
+			</div>
+			<div>Footer</div>
+		</div>
+	);
 }
 
 async function DataDisplay() {
-  const data = await fetchData(); // Only blocks this component
-  return <div>{data.content}</div>;
+	const data = await fetchData(); // Only blocks this component
+	return <div>{data.content}</div>;
 }
 ```
 
@@ -273,30 +273,30 @@ Sidebar, Header, and Footer render immediately. Only DataDisplay waits for data.
 
 ```tsx
 function Page() {
-  // Start fetch immediately, but don't await
-  const dataPromise = fetchData();
+	// Start fetch immediately, but don't await
+	const dataPromise = fetchData();
 
-  return (
-    <div>
-      <div>Sidebar</div>
-      <div>Header</div>
-      <Suspense fallback={<Skeleton />}>
-        <DataDisplay dataPromise={dataPromise} />
-        <DataSummary dataPromise={dataPromise} />
-      </Suspense>
-      <div>Footer</div>
-    </div>
-  );
+	return (
+		<div>
+			<div>Sidebar</div>
+			<div>Header</div>
+			<Suspense fallback={<Skeleton />}>
+				<DataDisplay dataPromise={dataPromise} />
+				<DataSummary dataPromise={dataPromise} />
+			</Suspense>
+			<div>Footer</div>
+		</div>
+	);
 }
 
 function DataDisplay({ dataPromise }: { dataPromise: Promise<Data> }) {
-  const data = use(dataPromise); // Unwraps the promise
-  return <div>{data.content}</div>;
+	const data = use(dataPromise); // Unwraps the promise
+	return <div>{data.content}</div>;
 }
 
 function DataSummary({ dataPromise }: { dataPromise: Promise<Data> }) {
-  const data = use(dataPromise); // Reuses the same promise
-  return <div>{data.summary}</div>;
+	const data = use(dataPromise); // Reuses the same promise
+	return <div>{data.summary}</div>;
 }
 ```
 

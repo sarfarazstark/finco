@@ -92,14 +92,14 @@ project-name/
 
 ```json
 {
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"],
-      "@/features/*": ["./src/features/*"],
-      "@/shared/*": ["./src/shared/*"],
-      "@/server/*": ["./src/server/*"]
-    }
-  }
+	"compilerOptions": {
+		"paths": {
+			"@/*": ["./src/*"],
+			"@/features/*": ["./src/features/*"],
+			"@/shared/*": ["./src/shared/*"],
+			"@/server/*": ["./src/server/*"]
+		}
+	}
 }
 ```
 

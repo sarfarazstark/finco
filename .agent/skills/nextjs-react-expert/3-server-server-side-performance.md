@@ -27,80 +27,80 @@ Next.js documentation explicitly states: "Treat Server Actions with the same sec
 **Incorrect (no authentication check):**
 
 ```typescript
-"use server";
+'use server';
 
 export async function deleteUser(userId: string) {
-  // Anyone can call this! No auth check
-  await db.user.delete({ where: { id: userId } });
-  return { success: true };
+	// Anyone can call this! No auth check
+	await db.user.delete({ where: { id: userId } });
+	return { success: true };
 }
 ```
 
 **Correct (authentication inside the action):**
 
 ```typescript
-"use server";
+'use server';
 
-import { verifySession } from "@/lib/auth";
-import { unauthorized } from "@/lib/errors";
+import { verifySession } from '@/lib/auth';
+import { unauthorized } from '@/lib/errors';
 
 export async function deleteUser(userId: string) {
-  // Always check auth inside the action
-  const session = await verifySession();
+	// Always check auth inside the action
+	const session = await verifySession();
 
-  if (!session) {
-    throw unauthorized("Must be logged in");
-  }
+	if (!session) {
+		throw unauthorized('Must be logged in');
+	}
 
-  // Check authorization too
-  if (session.user.role !== "admin" && session.user.id !== userId) {
-    throw unauthorized("Cannot delete other users");
-  }
+	// Check authorization too
+	if (session.user.role !== 'admin' && session.user.id !== userId) {
+		throw unauthorized('Cannot delete other users');
+	}
 
-  await db.user.delete({ where: { id: userId } });
-  return { success: true };
+	await db.user.delete({ where: { id: userId } });
+	return { success: true };
 }
 ```
 
 **With input validation:**
 
 ```typescript
-"use server";
+'use server';
 
-import { verifySession } from "@/lib/auth";
-import { z } from "zod";
+import { verifySession } from '@/lib/auth';
+import { z } from 'zod';
 
 const updateProfileSchema = z.object({
-  userId: z.string().uuid(),
-  name: z.string().min(1).max(100),
-  email: z.string().email(),
+	userId: z.string().uuid(),
+	name: z.string().min(1).max(100),
+	email: z.string().email(),
 });
 
 export async function updateProfile(data: unknown) {
-  // Validate input first
-  const validated = updateProfileSchema.parse(data);
+	// Validate input first
+	const validated = updateProfileSchema.parse(data);
 
-  // Then authenticate
-  const session = await verifySession();
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
+	// Then authenticate
+	const session = await verifySession();
+	if (!session) {
+		throw new Error('Unauthorized');
+	}
 
-  // Then authorize
-  if (session.user.id !== validated.userId) {
-    throw new Error("Can only update own profile");
-  }
+	// Then authorize
+	if (session.user.id !== validated.userId) {
+		throw new Error('Can only update own profile');
+	}
 
-  // Finally perform the mutation
-  await db.user.update({
-    where: { id: validated.userId },
-    data: {
-      name: validated.name,
-      email: validated.email,
-    },
-  });
+	// Finally perform the mutation
+	await db.user.update({
+		where: { id: validated.userId },
+		data: {
+			name: validated.name,
+			email: validated.email,
+		},
+	});
 
-  return { success: true };
+	return { success: true };
 }
 ```
 
@@ -133,7 +133,7 @@ RSC→client serialization deduplicates by object reference, not value. Same ref
 <ClientList usernames={usernames} />;
 
 // Client: transform there
-("use client");
+('use client');
 const sorted = useMemo(() => [...usernames].sort(), [usernames]);
 ```
 
@@ -186,20 +186,20 @@ users={[{id:1},{id:2}]} sorted={users.toSorted()} // sends 2 arrays + 2 unique o
 **Implementation:**
 
 ```typescript
-import { LRUCache } from "lru-cache";
+import { LRUCache } from 'lru-cache';
 
 const cache = new LRUCache<string, any>({
-  max: 1000,
-  ttl: 5 * 60 * 1000, // 5 minutes
+	max: 1000,
+	ttl: 5 * 60 * 1000, // 5 minutes
 });
 
 export async function getUser(id: string) {
-  const cached = cache.get(id);
-  if (cached) return cached;
+	const cached = cache.get(id);
+	if (cached) return cached;
 
-  const user = await db.user.findUnique({ where: { id } });
-  cache.set(id, user);
-  return user;
+	const user = await db.user.findUnique({ where: { id } });
+	cache.set(id, user);
+	return user;
 }
 
 // Request 1: DB query, result cached
@@ -229,13 +229,13 @@ The React Server/Client boundary serializes all object properties into strings a
 
 ```tsx
 async function Page() {
-  const user = await fetchUser(); // 50 fields
-  return <Profile user={user} />;
+	const user = await fetchUser(); // 50 fields
+	return <Profile user={user} />;
 }
 
-("use client");
+('use client');
 function Profile({ user }: { user: User }) {
-  return <div>{user.name}</div>; // uses 1 field
+	return <div>{user.name}</div>; // uses 1 field
 }
 ```
 
@@ -243,13 +243,13 @@ function Profile({ user }: { user: User }) {
 
 ```tsx
 async function Page() {
-  const user = await fetchUser();
-  return <Profile name={user.name} />;
+	const user = await fetchUser();
+	return <Profile name={user.name} />;
 }
 
-("use client");
+('use client');
 function Profile({ name }: { name: string }) {
-  return <div>{name}</div>;
+	return <div>{name}</div>;
 }
 ```
 
@@ -268,18 +268,18 @@ React Server Components execute sequentially within a tree. Restructure with com
 
 ```tsx
 export default async function Page() {
-  const header = await fetchHeader();
-  return (
-    <div>
-      <div>{header}</div>
-      <Sidebar />
-    </div>
-  );
+	const header = await fetchHeader();
+	return (
+		<div>
+			<div>{header}</div>
+			<Sidebar />
+		</div>
+	);
 }
 
 async function Sidebar() {
-  const items = await fetchSidebarItems();
-  return <nav>{items.map(renderItem)}</nav>;
+	const items = await fetchSidebarItems();
+	return <nav>{items.map(renderItem)}</nav>;
 }
 ```
 
@@ -287,22 +287,22 @@ async function Sidebar() {
 
 ```tsx
 async function Header() {
-  const data = await fetchHeader();
-  return <div>{data}</div>;
+	const data = await fetchHeader();
+	return <div>{data}</div>;
 }
 
 async function Sidebar() {
-  const items = await fetchSidebarItems();
-  return <nav>{items.map(renderItem)}</nav>;
+	const items = await fetchSidebarItems();
+	return <nav>{items.map(renderItem)}</nav>;
 }
 
 export default function Page() {
-  return (
-    <div>
-      <Header />
-      <Sidebar />
-    </div>
-  );
+	return (
+		<div>
+			<Header />
+			<Sidebar />
+		</div>
+	);
 }
 ```
 
@@ -310,30 +310,30 @@ export default function Page() {
 
 ```tsx
 async function Header() {
-  const data = await fetchHeader();
-  return <div>{data}</div>;
+	const data = await fetchHeader();
+	return <div>{data}</div>;
 }
 
 async function Sidebar() {
-  const items = await fetchSidebarItems();
-  return <nav>{items.map(renderItem)}</nav>;
+	const items = await fetchSidebarItems();
+	return <nav>{items.map(renderItem)}</nav>;
 }
 
 function Layout({ children }: { children: ReactNode }) {
-  return (
-    <div>
-      <Header />
-      {children}
-    </div>
-  );
+	return (
+		<div>
+			<Header />
+			{children}
+		</div>
+	);
 }
 
 export default function Page() {
-  return (
-    <Layout>
-      <Sidebar />
-    </Layout>
-  );
+	return (
+		<Layout>
+			<Sidebar />
+		</Layout>
+	);
 }
 ```
 
@@ -351,14 +351,14 @@ Use `React.cache()` for server-side request deduplication. Authentication and da
 **Usage:**
 
 ```typescript
-import { cache } from "react";
+import { cache } from 'react';
 
 export const getCurrentUser = cache(async () => {
-  const session = await auth();
-  if (!session?.user?.id) return null;
-  return await db.user.findUnique({
-    where: { id: session.user.id },
-  });
+	const session = await auth();
+	if (!session?.user?.id) return null;
+	return await db.user.findUnique({
+		where: { id: session.user.id },
+	});
 });
 ```
 
@@ -372,7 +372,7 @@ Within a single request, multiple calls to `getCurrentUser()` execute the query 
 
 ```typescript
 const getUser = cache(async (params: { uid: number }) => {
-  return await db.user.findUnique({ where: { id: params.uid } });
+	return await db.user.findUnique({ where: { id: params.uid } });
 });
 
 // Each call creates new object, never hits cache
@@ -384,7 +384,7 @@ getUser({ uid: 1 }); // Cache miss, runs query again
 
 ```typescript
 const getUser = cache(async (uid: number) => {
-  return await db.user.findUnique({ where: { id: uid } });
+	return await db.user.findUnique({ where: { id: uid } });
 });
 
 // Primitive args use value equality
@@ -428,47 +428,47 @@ Use Next.js's `after()` to schedule work that should execute after a response is
 **Incorrect (blocks response):**
 
 ```tsx
-import { logUserAction } from "@/app/utils";
+import { logUserAction } from '@/app/utils';
 
 export async function POST(request: Request) {
-  // Perform mutation
-  await updateDatabase(request);
+	// Perform mutation
+	await updateDatabase(request);
 
-  // Logging blocks the response
-  const userAgent = request.headers.get("user-agent") || "unknown";
-  await logUserAction({ userAgent });
+	// Logging blocks the response
+	const userAgent = request.headers.get('user-agent') || 'unknown';
+	await logUserAction({ userAgent });
 
-  return new Response(JSON.stringify({ status: "success" }), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+	return new Response(JSON.stringify({ status: 'success' }), {
+		status: 200,
+		headers: { 'Content-Type': 'application/json' },
+	});
 }
 ```
 
 **Correct (non-blocking):**
 
 ```tsx
-import { after } from "next/server";
-import { headers, cookies } from "next/headers";
-import { logUserAction } from "@/app/utils";
+import { after } from 'next/server';
+import { headers, cookies } from 'next/headers';
+import { logUserAction } from '@/app/utils';
 
 export async function POST(request: Request) {
-  // Perform mutation
-  await updateDatabase(request);
+	// Perform mutation
+	await updateDatabase(request);
 
-  // Log after response is sent
-  after(async () => {
-    const userAgent = (await headers()).get("user-agent") || "unknown";
-    const sessionCookie =
-      (await cookies()).get("session-id")?.value || "anonymous";
+	// Log after response is sent
+	after(async () => {
+		const userAgent = (await headers()).get('user-agent') || 'unknown';
+		const sessionCookie =
+			(await cookies()).get('session-id')?.value || 'anonymous';
 
-    logUserAction({ sessionCookie, userAgent });
-  });
+		logUserAction({ sessionCookie, userAgent });
+	});
 
-  return new Response(JSON.stringify({ status: "success" }), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+	return new Response(JSON.stringify({ status: 'success' }), {
+		status: 200,
+		headers: { 'Content-Type': 'application/json' },
+	});
 }
 ```
 

@@ -38,22 +38,22 @@ allowed-tools: Read, Glob, Grep
 ### React (react-i18next)
 
 ```tsx
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 function Welcome() {
-  const { t } = useTranslation();
-  return <h1>{t("welcome.title")}</h1>;
+	const { t } = useTranslation();
+	return <h1>{t('welcome.title')}</h1>;
 }
 ```
 
 ### Next.js (next-intl)
 
 ```tsx
-import { useTranslations } from "next-intl";
+import { useTranslations } from 'next-intl';
 
 export default function Page() {
-  const t = useTranslations("Home");
-  return <h1>{t("title")}</h1>;
+	const t = useTranslations('Home');
+	return <h1>{t('title')}</h1>;
 }
 ```
 
@@ -123,12 +123,12 @@ locales/
 ```css
 /* CSS Logical Properties */
 .container {
-  margin-inline-start: 1rem; /* Not margin-left */
-  padding-inline-end: 1rem; /* Not padding-right */
+	margin-inline-start: 1rem; /* Not margin-left */
+	padding-inline-end: 1rem; /* Not padding-right */
 }
 
-[dir="rtl"] .icon {
-  transform: scaleX(-1);
+[dir='rtl'] .icon {
+	transform: scaleX(-1);
 }
 ```
 

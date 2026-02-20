@@ -82,33 +82,33 @@ project-name/
 
 1. Initialize Project:
 
-   ```bash
-   npx create-expo-app@latest my-app --template default
-   cd my-app
-   ```
+    ```bash
+    npx create-expo-app@latest my-app --template default
+    cd my-app
+    ```
 
 2. Install Core Dependencies:
 
-   ```bash
-   npx expo install expo-router react-native-safe-area-context react-native-screens expo-link expo-constants expo-status-bar
-   ```
+    ```bash
+    npx expo install expo-router react-native-safe-area-context react-native-screens expo-link expo-constants expo-status-bar
+    ```
 
 3. Install NativeWind v4:
 
-   ```bash
-   npm install nativewind tailwindcss react-native-reanimated
-   ```
+    ```bash
+    npm install nativewind tailwindcss react-native-reanimated
+    ```
 
 4. Configure NativeWind (Babel & CSS):
-   - Add plugin to `babel.config.js`: `plugins: ["nativewind/babel"]`.
-   - Create `global.css` with: `@import "tailwindcss";`.
-   - Import `global.css` in `app/_layout.tsx`.
+    - Add plugin to `babel.config.js`: `plugins: ["nativewind/babel"]`.
+    - Create `global.css` with: `@import "tailwindcss";`.
+    - Import `global.css` in `app/_layout.tsx`.
 
 5. Run Project:
-   ```bash
-   npx expo start -c
-   # Press 'i' for iOS simulator or 'a' for Android emulator
-   ```
+    ```bash
+    npx expo start -c
+    # Press 'i' for iOS simulator or 'a' for Android emulator
+    ```
 
 ---
 

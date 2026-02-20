@@ -6,27 +6,27 @@
 
 ```yaml
 Frontend:
-  framework: Next.js 16 (Stable)
-  language: TypeScript 5.7+
-  styling: Tailwind CSS v4
-  state: React 19 Actions / Server Components
-  bundler: Turbopack (Stable for Dev)
+    framework: Next.js 16 (Stable)
+    language: TypeScript 5.7+
+    styling: Tailwind CSS v4
+    state: React 19 Actions / Server Components
+    bundler: Turbopack (Stable for Dev)
 
 Backend:
-  runtime: Node.js 23
-  framework: Next.js API Routes / Hono (for Edge)
-  validation: Zod / TypeBox
+    runtime: Node.js 23
+    framework: Next.js API Routes / Hono (for Edge)
+    validation: Zod / TypeBox
 
 Database:
-  primary: PostgreSQL
-  orm: Prisma / Drizzle
-  hosting: Supabase / Neon
+    primary: PostgreSQL
+    orm: Prisma / Drizzle
+    hosting: Supabase / Neon
 
 Auth:
-  provider: Auth.js (v5) / Clerk
+    provider: Auth.js (v5) / Clerk
 
 Monorepo:
-  tool: Turborepo 2.0
+    tool: Turborepo 2.0
 ```
 
 ## Alternative Options

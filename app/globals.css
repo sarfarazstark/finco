@@ -1,77 +1,77 @@
-@import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import 'tailwindcss';
 
 @theme {
-  --color-beige-500: #98908b;
-  --color-beige-100: #f8f4f0;
-  --color-grey-900: #201f24;
-  --color-grey-500: #696868;
-  --color-grey-300: #b3b3b3;
-  --color-grey-100: #f2f2f2;
+	--color-beige-500: #98908b;
+	--color-beige-100: #f8f4f0;
+	--color-grey-900: #201f24;
+	--color-grey-500: #696868;
+	--color-grey-300: #b3b3b3;
+	--color-grey-100: #f2f2f2;
 
-  --color-green: #277c78;
-  --color-yellow: #f2cdac;
-  --color-cyan: #82c9d7;
-  --color-navy: #626070;
-  --color-red: #c94736;
-  --color-purple: #826cb0;
-  --color-purpleAlt: #af81ba;
-  --color-turquoise: #597c7c;
-  --color-brown: #93674f;
-  --color-magenta: #934f6f;
-  --color-blue: #3f82b2;
-  --color-navyGrey: #97a0ac;
-  --color-armyGreen: #7f9161;
-  --color-gold: #cab361;
-  --color-orange: #be6c49;
-  --color-white: #ffffff;
+	--color-green: #277c78;
+	--color-yellow: #f2cdac;
+	--color-cyan: #82c9d7;
+	--color-navy: #626070;
+	--color-red: #c94736;
+	--color-purple: #826cb0;
+	--color-purpleAlt: #af81ba;
+	--color-turquoise: #597c7c;
+	--color-brown: #93674f;
+	--color-magenta: #934f6f;
+	--color-blue: #3f82b2;
+	--color-navyGrey: #97a0ac;
+	--color-armyGreen: #7f9161;
+	--color-gold: #cab361;
+	--color-orange: #be6c49;
+	--color-white: #ffffff;
 
-  --color-main: #f8f4f0;
+	--color-main: #f8f4f0;
 
-  --font-sans: "Public Sans", sans-serif;
+	--font-sans: 'Public Sans', sans-serif;
 
-  --font-weight-bold: 700;
-  --font-weight-regular: 400;
+	--font-weight-bold: 700;
+	--font-weight-regular: 400;
 
-  --spacing-500: 40px;
-  --spacing-400: 32px;
-  --spacing-300: 24px;
-  --spacing-250: 20px;
-  --spacing-200: 16px;
-  --spacing-150: 12px;
-  --spacing-100: 8px;
-  --spacing-50: 4px;
+	--spacing-500: 40px;
+	--spacing-400: 32px;
+	--spacing-300: 24px;
+	--spacing-250: 20px;
+	--spacing-200: 16px;
+	--spacing-150: 12px;
+	--spacing-100: 8px;
+	--spacing-50: 4px;
 
-  --shadow-custom: 0px 0px 14px 1px rgba(0, 0, 0, 0.1);
+	--shadow-custom: 0px 0px 14px 1px rgba(0, 0, 0, 0.1);
 }
 
 html,
 body {
-  margin: 0;
-  padding: 0;
-  font-family: var(--font-sans);
-  color: var(--color-grey-900);
-  background: var(--color-main);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	padding: 0;
+	font-family: var(--font-sans);
+	color: var(--color-grey-900);
+	background: var(--color-main);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 @utility font-preset-1 {
-  @apply text-[2rem] leading-[1.2];
+	@apply text-[2rem] leading-[1.2];
 }
 
 @utility font-preset-2 {
-  @apply text-[1.25rem] leading-[1.2];
+	@apply text-[1.25rem] leading-[1.2];
 }
 
 @utility font-preset-3 {
-  @apply text-base leading-[1.5];
+	@apply text-base leading-[1.5];
 }
 
 @utility font-preset-4 {
-  @apply text-sm leading-[1.5];
+	@apply text-sm leading-[1.5];
 }
 
 @utility font-preset-5 {
-  @apply text-xs leading-[1.5];
+	@apply text-xs leading-[1.5];
 }

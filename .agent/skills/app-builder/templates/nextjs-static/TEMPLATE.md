@@ -52,15 +52,15 @@ Using `next.config.ts` instead of `.js` for better type safety.
 
 ```typescript
 // next.config.ts
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  output: "export", // Required for Static Hosting (S3, GitHub Pages)
-  images: {
-    unoptimized: true, // Required if not using Node.js server image optimization
-  },
-  trailingSlash: true, // Recommended for SEO and fixing 404s on some hosts
-  reactStrictMode: true,
+	output: 'export', // Required for Static Hosting (S3, GitHub Pages)
+	images: {
+		unoptimized: true, // Required if not using Node.js server image optimization
+	},
+	trailingSlash: true, // Recommended for SEO and fixing 404s on some hosts
+	reactStrictMode: true,
 };
 
 export default nextConfig;
@@ -74,20 +74,20 @@ Deprecated next-seo. Configure directly in layout.tsx or page.tsx.
 
 ```typescript
 // src/app/layout.tsx
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: {
-    template: "%s | Product Name",
-    default: "Home - Product Name",
-  },
-  description: "SEO optimized description for the landing page.",
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://mysite.com",
-    siteName: "My Brand",
-  },
+	title: {
+		template: '%s | Product Name',
+		default: 'Home - Product Name',
+	},
+	description: 'SEO optimized description for the landing page.',
+	openGraph: {
+		type: 'website',
+		locale: 'en_US',
+		url: 'https://mysite.com',
+		siteName: 'My Brand',
+	},
 };
 ```
 
@@ -122,34 +122,34 @@ export const metadata: Metadata = {
 
 1. Initialize Project:
 
-   ```bash
-   npx create-next-app@latest my-site --typescript --tailwind --eslint
-   # Select 'Yes' for App Router
-   # Select 'No' for 'Would you like to customize the default import alias?'
-   ```
+    ```bash
+    npx create-next-app@latest my-site --typescript --tailwind --eslint
+    # Select 'Yes' for App Router
+    # Select 'No' for 'Would you like to customize the default import alias?'
+    ```
 
 2. Install Auxiliary Libraries:
 
-   ```bash
-   npm install framer-motion lucide-react clsx tailwind-merge
-   # clsx and tailwind-merge help handle dynamic classes better
-   ```
+    ```bash
+    npm install framer-motion lucide-react clsx tailwind-merge
+    # clsx and tailwind-merge help handle dynamic classes better
+    ```
 
 3. Configure Tailwind v4 (in `src/app/globals.css`):
 
-   ```css
-   @import "tailwindcss";
+    ```css
+    @import 'tailwindcss';
 
-   @theme {
-     --color-primary: #3b82f6;
-     --font-sans: "Inter", sans-serif;
-   }
-   ```
+    @theme {
+    	--color-primary: #3b82f6;
+    	--font-sans: 'Inter', sans-serif;
+    }
+    ```
 
 4. Development:
-   ```bash
-   npm run dev --turbopack
-   ```
+    ```bash
+    npm run dev --turbopack
+    ```
 
 ---
 

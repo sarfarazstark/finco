@@ -15,25 +15,25 @@ This command starts a new application creation process.
 ### Steps:
 
 1. **Request Analysis**
-   - Understand what the user wants
-   - If information is missing, use `conversation-manager` skill to ask
+    - Understand what the user wants
+    - If information is missing, use `conversation-manager` skill to ask
 
 2. **Project Planning**
-   - Use `project-planner` agent for task breakdown
-   - Determine tech stack
-   - Plan file structure
-   - Create plan file and proceed to building
+    - Use `project-planner` agent for task breakdown
+    - Determine tech stack
+    - Plan file structure
+    - Create plan file and proceed to building
 
 3. **Application Building (After Approval)**
-   - Orchestrate with `app-builder` skill
-   - Coordinate expert agents:
-     - `database-architect` → Schema
-     - `backend-specialist` → API
-     - `frontend-specialist` → UI
+    - Orchestrate with `app-builder` skill
+    - Coordinate expert agents:
+        - `database-architect` → Schema
+        - `backend-specialist` → API
+        - `frontend-specialist` → UI
 
 4. **Preview**
-   - Start with `auto_preview.py` when complete
-   - Present URL to user
+    - Start with `auto_preview.py` when complete
+    - Present URL to user
 
 ---
 

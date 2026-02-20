@@ -66,17 +66,17 @@ Easing = how speed changes over time
 ```css
 /* Entering view = ease-out (decelerate) */
 .enter {
-  animation-timing-function: ease-out;
+	animation-timing-function: ease-out;
 }
 
 /* Leaving view = ease-in (accelerate) */
 .exit {
-  animation-timing-function: ease-in;
+	animation-timing-function: ease-in;
 }
 
 /* Continuous = ease-in-out */
 .continuous {
-  animation-timing-function: ease-in-out;
+	animation-timing-function: ease-in-out;
 }
 ```
 
@@ -297,9 +297,9 @@ CPU-intensive (SLOW):
 
 ```css
 @media (prefers-reduced-motion: reduce) {
-  /* Honor this preference */
-  /* Essential animations only */
-  /* Reduce or remove decorative motion */
+	/* Honor this preference */
+	/* Essential animations only */
+	/* Reduce or remove decorative motion */
 }
 ```
 

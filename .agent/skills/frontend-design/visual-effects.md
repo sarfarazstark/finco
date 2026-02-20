@@ -21,20 +21,20 @@ Key Properties:
 
 ```css
 .glass {
-  /* Transparency: adjust opacity based on content readability */
-  background: rgba(R, G, B, OPACITY);
-  /* OPACITY: 0.1-0.3 for dark bg, 0.5-0.8 for light bg */
+	/* Transparency: adjust opacity based on content readability */
+	background: rgba(R, G, B, OPACITY);
+	/* OPACITY: 0.1-0.3 for dark bg, 0.5-0.8 for light bg */
 
-  /* Blur: higher = more frosted */
-  backdrop-filter: blur(AMOUNT);
-  /* AMOUNT: 8-12px subtle, 16-24px strong */
+	/* Blur: higher = more frosted */
+	backdrop-filter: blur(AMOUNT);
+	/* AMOUNT: 8-12px subtle, 16-24px strong */
 
-  /* Border: defines edges */
-  border: 1px solid rgba(255, 255, 255, OPACITY);
-  /* OPACITY: 0.1-0.3 typically */
+	/* Border: defines edges */
+	border: 1px solid rgba(255, 255, 255, OPACITY);
+	/* OPACITY: 0.1-0.3 typically */
 
-  /* Radius: match your design system */
-  border-radius: YOUR_RADIUS;
+	/* Radius: match your design system */
+	border-radius: YOUR_RADIUS;
 }
 ```
 
@@ -69,23 +69,23 @@ Key Concept: Soft, extruded elements using DUAL shadows
 
 ```css
 .neo-raised {
-  /* Background MUST match parent */
-  background: SAME_AS_PARENT;
+	/* Background MUST match parent */
+	background: SAME_AS_PARENT;
 
-  /* Two shadows: light direction + dark direction */
-  box-shadow:
-    OFFSET OFFSET BLUR rgba(light-color),
-    -OFFSET -OFFSET BLUR rgba(dark-color);
+	/* Two shadows: light direction + dark direction */
+	box-shadow:
+		OFFSET OFFSET BLUR rgba(light-color),
+		-OFFSET -OFFSET BLUR rgba(dark-color);
 
-  /* OFFSET: typically 6-12px */
-  /* BLUR: typically 12-20px */
+	/* OFFSET: typically 6-12px */
+	/* BLUR: typically 12-20px */
 }
 
 .neo-pressed {
-  /* Inset creates "pushed in" effect */
-  box-shadow:
-    inset OFFSET OFFSET BLUR rgba(dark-color),
-    inset -OFFSET -OFFSET BLUR rgba(light-color);
+	/* Inset creates "pushed in" effect */
+	box-shadow:
+		inset OFFSET OFFSET BLUR rgba(dark-color),
+		inset -OFFSET -OFFSET BLUR rgba(light-color);
 }
 ```
 
@@ -164,11 +164,11 @@ Good Gradient Rules:
 
 ```css
 .gradient {
-  background: linear-gradient(
-    DIRECTION,
-    /* angle or to-keyword */ COLOR-STOP-1,
-    /* color + optional position */ COLOR-STOP-2 /* ... more stops */
-  );
+	background: linear-gradient(
+		DIRECTION,
+		/* angle or to-keyword */ COLOR-STOP-1,
+		/* color + optional position */ COLOR-STOP-2 /* ... more stops */
+	);
 }
 
 /* DIRECTION examples: */
@@ -212,9 +212,9 @@ Technique: Rotating gradient or conic sweep
 ```css
 /* Multiple box-shadows create glow */
 box-shadow:
-  0 0 SMALL-BLUR COLOR,
-  0 0 MEDIUM-BLUR COLOR,
-  0 0 LARGE-BLUR COLOR;
+	0 0 SMALL-BLUR COLOR,
+	0 0 MEDIUM-BLUR COLOR,
+	0 0 LARGE-BLUR COLOR;
 
 /* Each layer adds to the glow */
 ```
@@ -227,9 +227,9 @@ box-shadow:
 
 ```css
 text-shadow:
-  0 0 BLUR-1 COLOR,
-  0 0 BLUR-2 COLOR,
-  0 0 BLUR-3 COLOR;
+	0 0 BLUR-1 COLOR,
+	0 0 BLUR-2 COLOR,
+	0 0 BLUR-3 COLOR;
 
 /* Multiple layers = stronger glow */
 /* Larger blur = softer spread */
@@ -239,8 +239,8 @@ text-shadow:
 
 ```css
 box-shadow:
-  0 0 BLUR-1 COLOR,
-  0 0 BLUR-2 COLOR;
+	0 0 BLUR-1 COLOR,
+	0 0 BLUR-2 COLOR;
 
 /* Use color matching element for realistic glow */
 /* Lower opacity for subtle, higher for neon */
@@ -250,13 +250,13 @@ box-shadow:
 
 ```css
 @keyframes glow-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 SMALL-BLUR COLOR;
-  }
-  50% {
-    box-shadow: 0 0 LARGE-BLUR COLOR;
-  }
+	0%,
+	100% {
+		box-shadow: 0 0 SMALL-BLUR COLOR;
+	}
+	50% {
+		box-shadow: 0 0 LARGE-BLUR COLOR;
+	}
 }
 
 /* Easing and duration affect feel */
@@ -276,14 +276,14 @@ Position: Where text will appear
 
 ```css
 .overlay::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    DIRECTION,
-    transparent PERCENTAGE,
-    rgba(0, 0, 0, OPACITY) 100%
-  );
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		DIRECTION,
+		transparent PERCENTAGE,
+		rgba(0, 0, 0, OPACITY) 100%
+	);
 }
 ```
 
@@ -291,7 +291,7 @@ Position: Where text will appear
 
 ```css
 /* Blend mode or layered gradient */
-background: linear-gradient(YOUR-COLOR-WITH-OPACITY), url("image.jpg");
+background: linear-gradient(YOUR-COLOR-WITH-OPACITY), url('image.jpg');
 ```
 
 ---
@@ -349,7 +349,7 @@ EXPENSIVE to animate (CPU):
 ```css
 /* Use sparingly, only for heavy animations */
 .heavy-animation {
-  will-change: transform;
+	will-change: transform;
 }
 
 /* Remove after animation if possible */
@@ -359,8 +359,8 @@ EXPENSIVE to animate (CPU):
 
 ```css
 @media (prefers-reduced-motion: reduce) {
-  /* Disable or minimize animations */
-  /* Respect user preference */
+	/* Disable or minimize animations */
+	/* Respect user preference */
 }
 ```
 

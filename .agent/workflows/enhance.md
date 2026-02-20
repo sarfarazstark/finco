@@ -15,32 +15,32 @@ This command adds features or makes updates to existing application.
 ### Steps:
 
 1. **Understand Current State**
-   - Load project state with `python .agent/scripts/session_manager.py info`
-   - Understand existing features, tech stack
+    - Load project state with `python .agent/scripts/session_manager.py info`
+    - Understand existing features, tech stack
 
 2. **Plan Changes**
-   - Determine what will be added/changed
-   - Detect affected files
-   - Check dependencies
+    - Determine what will be added/changed
+    - Detect affected files
+    - Check dependencies
 
 3. **Present Plan to User** (for major changes)
 
-   ```
-   "To add admin panel:
-   - I'll create 15 new files
-   - Update 8 files
-   - Takes ~10 minutes
+    ```
+    "To add admin panel:
+    - I'll create 15 new files
+    - Update 8 files
+    - Takes ~10 minutes
 
-   Should I start?"
-   ```
+    Should I start?"
+    ```
 
 4. **Apply**
-   - Call relevant agents
-   - Make changes
-   - Test
+    - Call relevant agents
+    - Make changes
+    - Test
 
 5. **Update Preview**
-   - Hot reload or restart
+    - Hot reload or restart
 
 ---
 

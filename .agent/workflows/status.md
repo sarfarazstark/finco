@@ -15,23 +15,23 @@ Show current project and agent status.
 ### What It Shows
 
 1. **Project Info**
-   - Project name and path
-   - Tech stack
-   - Current features
+    - Project name and path
+    - Tech stack
+    - Current features
 
 2. **Agent Status Board**
-   - Which agents are running
-   - Which tasks are completed
-   - Pending work
+    - Which agents are running
+    - Which tasks are completed
+    - Pending work
 
 3. **File Statistics**
-   - Files created count
-   - Files modified count
+    - Files created count
+    - Files modified count
 
 4. **Preview Status**
-   - Is server running
-   - URL
-   - Health check
+    - Is server running
+    - URL
+    - Health check
 
 ---
 

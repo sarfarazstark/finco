@@ -25,9 +25,9 @@ allowed-tools: Read, Glob, Grep
 
 1. **STOP** - Do NOT start coding
 2. **ASK** - Minimum 3 questions:
-   - 🎯 Purpose: What problem are you solving?
-   - 👥 Users: Who will use this?
-   - 📦 Scope: Must-have vs nice-to-have?
+    - 🎯 Purpose: What problem are you solving?
+    - 👥 Users: Who will use this?
+    - 📦 Scope: Must-have vs nice-to-have?
 3. **WAIT** - Get response before proceeding
 
 ---

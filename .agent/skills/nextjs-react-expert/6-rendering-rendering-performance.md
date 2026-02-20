@@ -24,11 +24,16 @@ Many browsers don't have hardware acceleration for CSS3 animations on SVG elemen
 
 ```tsx
 function LoadingSpinner() {
-  return (
-    <svg className="animate-spin" width="24" height="24" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" stroke="currentColor" />
-    </svg>
-  );
+	return (
+		<svg
+			className="animate-spin"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+		>
+			<circle cx="12" cy="12" r="10" stroke="currentColor" />
+		</svg>
+	);
 }
 ```
 
@@ -36,13 +41,13 @@ function LoadingSpinner() {
 
 ```tsx
 function LoadingSpinner() {
-  return (
-    <div className="animate-spin">
-      <svg width="24" height="24" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="10" stroke="currentColor" />
-      </svg>
-    </div>
-  );
+	return (
+		<div className="animate-spin">
+			<svg width="24" height="24" viewBox="0 0 24 24">
+				<circle cx="12" cy="12" r="10" stroke="currentColor" />
+			</svg>
+		</div>
+	);
 }
 ```
 
@@ -63,8 +68,8 @@ Apply `content-visibility: auto` to defer off-screen rendering.
 
 ```css
 .message-item {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 80px;
+	content-visibility: auto;
+	contain-intrinsic-size: 0 80px;
 }
 ```
 
@@ -72,16 +77,16 @@ Apply `content-visibility: auto` to defer off-screen rendering.
 
 ```tsx
 function MessageList({ messages }: { messages: Message[] }) {
-  return (
-    <div className="overflow-y-auto h-screen">
-      {messages.map((msg) => (
-        <div key={msg.id} className="message-item">
-          <Avatar user={msg.author} />
-          <div>{msg.content}</div>
-        </div>
-      ))}
-    </div>
-  );
+	return (
+		<div className="overflow-y-auto h-screen">
+			{messages.map(msg => (
+				<div key={msg.id} className="message-item">
+					<Avatar user={msg.author} />
+					<div>{msg.content}</div>
+				</div>
+			))}
+		</div>
+	);
 }
 ```
 
@@ -102,11 +107,11 @@ Extract static JSX outside components to avoid re-creation.
 
 ```tsx
 function LoadingSkeleton() {
-  return <div className="animate-pulse h-20 bg-gray-200" />;
+	return <div className="animate-pulse h-20 bg-gray-200" />;
 }
 
 function Container() {
-  return <div>{loading && <LoadingSkeleton />}</div>;
+	return <div>{loading && <LoadingSkeleton />}</div>;
 }
 ```
 
@@ -116,7 +121,7 @@ function Container() {
 const loadingSkeleton = <div className="animate-pulse h-20 bg-gray-200" />;
 
 function Container() {
-  return <div>{loading && loadingSkeleton}</div>;
+	return <div>{loading && loadingSkeleton}</div>;
 }
 ```
 
@@ -168,10 +173,10 @@ When rendering content that depends on client-side storage (localStorage, cookie
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
-  // localStorage is not available on server - throws error
-  const theme = localStorage.getItem("theme") || "light";
+	// localStorage is not available on server - throws error
+	const theme = localStorage.getItem('theme') || 'light';
 
-  return <div className={theme}>{children}</div>;
+	return <div className={theme}>{children}</div>;
 }
 ```
 
@@ -181,17 +186,17 @@ Server-side rendering will fail because `localStorage` is undefined.
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState("light");
+	const [theme, setTheme] = useState('light');
 
-  useEffect(() => {
-    // Runs after hydration - causes visible flash
-    const stored = localStorage.getItem("theme");
-    if (stored) {
-      setTheme(stored);
-    }
-  }, []);
+	useEffect(() => {
+		// Runs after hydration - causes visible flash
+		const stored = localStorage.getItem('theme');
+		if (stored) {
+			setTheme(stored);
+		}
+	}, []);
 
-  return <div className={theme}>{children}</div>;
+	return <div className={theme}>{children}</div>;
 }
 ```
 
@@ -201,12 +206,12 @@ Component first renders with default value (`light`), then updates after hydrati
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
-  return (
-    <>
-      <div id="theme-wrapper">{children}</div>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
+	return (
+		<>
+			<div id="theme-wrapper">{children}</div>
+			<script
+				dangerouslySetInnerHTML={{
+					__html: `
             (function() {
               try {
                 var theme = localStorage.getItem('theme') || 'light';
@@ -215,10 +220,10 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
               } catch (e) {}
             })();
           `,
-        }}
-      />
-    </>
-  );
+				}}
+			/>
+		</>
+	);
 }
 ```
 
@@ -241,7 +246,7 @@ In SSR frameworks (e.g., Next.js), some values are intentionally different on se
 
 ```tsx
 function Timestamp() {
-  return <span>{new Date().toLocaleString()}</span>;
+	return <span>{new Date().toLocaleString()}</span>;
 }
 ```
 
@@ -249,7 +254,7 @@ function Timestamp() {
 
 ```tsx
 function Timestamp() {
-  return <span suppressHydrationWarning>{new Date().toLocaleString()}</span>;
+	return <span suppressHydrationWarning>{new Date().toLocaleString()}</span>;
 }
 ```
 
@@ -267,14 +272,14 @@ Use React's `<Activity>` to preserve state/DOM for expensive components that fre
 **Usage:**
 
 ```tsx
-import { Activity } from "react";
+import { Activity } from 'react';
 
 function Dropdown({ isOpen }: Props) {
-  return (
-    <Activity mode={isOpen ? "visible" : "hidden"}>
-      <ExpensiveMenu />
-    </Activity>
-  );
+	return (
+		<Activity mode={isOpen ? 'visible' : 'hidden'}>
+			<ExpensiveMenu />
+		</Activity>
+	);
 }
 ```
 
@@ -295,7 +300,7 @@ Use explicit ternary operators (`? :`) instead of `&&` for conditional rendering
 
 ```tsx
 function Badge({ count }: { count: number }) {
-  return <div>{count && <span className="badge">{count}</span>}</div>;
+	return <div>{count && <span className="badge">{count}</span>}</div>;
 }
 
 // When count = 0, renders: <div>0</div>
@@ -306,7 +311,9 @@ function Badge({ count }: { count: number }) {
 
 ```tsx
 function Badge({ count }: { count: number }) {
-  return <div>{count > 0 ? <span className="badge">{count}</span> : null}</div>;
+	return (
+		<div>{count > 0 ? <span className="badge">{count}</span> : null}</div>
+	);
 }
 
 // When count = 0, renders: <div></div>
@@ -328,55 +335,55 @@ Use `useTransition` instead of manual `useState` for loading states. This provid
 
 ```tsx
 function SearchResults() {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+	const [query, setQuery] = useState('');
+	const [results, setResults] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 
-  const handleSearch = async (value: string) => {
-    setIsLoading(true);
-    setQuery(value);
-    const data = await fetchResults(value);
-    setResults(data);
-    setIsLoading(false);
-  };
+	const handleSearch = async (value: string) => {
+		setIsLoading(true);
+		setQuery(value);
+		const data = await fetchResults(value);
+		setResults(data);
+		setIsLoading(false);
+	};
 
-  return (
-    <>
-      <input onChange={(e) => handleSearch(e.target.value)} />
-      {isLoading && <Spinner />}
-      <ResultsList results={results} />
-    </>
-  );
+	return (
+		<>
+			<input onChange={e => handleSearch(e.target.value)} />
+			{isLoading && <Spinner />}
+			<ResultsList results={results} />
+		</>
+	);
 }
 ```
 
 **Correct (useTransition with built-in pending state):**
 
 ```tsx
-import { useTransition, useState } from "react";
+import { useTransition, useState } from 'react';
 
 function SearchResults() {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [isPending, startTransition] = useTransition();
+	const [query, setQuery] = useState('');
+	const [results, setResults] = useState([]);
+	const [isPending, startTransition] = useTransition();
 
-  const handleSearch = (value: string) => {
-    setQuery(value); // Update input immediately
+	const handleSearch = (value: string) => {
+		setQuery(value); // Update input immediately
 
-    startTransition(async () => {
-      // Fetch and update results
-      const data = await fetchResults(value);
-      setResults(data);
-    });
-  };
+		startTransition(async () => {
+			// Fetch and update results
+			const data = await fetchResults(value);
+			setResults(data);
+		});
+	};
 
-  return (
-    <>
-      <input onChange={(e) => handleSearch(e.target.value)} />
-      {isPending && <Spinner />}
-      <ResultsList results={results} />
-    </>
-  );
+	return (
+		<>
+			<input onChange={e => handleSearch(e.target.value)} />
+			{isPending && <Spinner />}
+			<ResultsList results={results} />
+		</>
+	);
 }
 ```
 
