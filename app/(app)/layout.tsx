@@ -37,7 +37,7 @@ export default function AppLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<main className="grid grid-cols-[auto_1fr] h-screen">
+		<main className="grid grid-cols-[auto_1fr] h-screen overflow-hidden">
 			<Sidebar links={links} />
 			<Logout />
 			<TransitionLayout>{children}</TransitionLayout>
