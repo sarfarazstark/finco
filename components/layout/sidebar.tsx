@@ -1,5 +1,6 @@
 'use client';
-import { motion } from 'motion/react';
+
+import { motion, AnimatePresence } from 'motion/react';
 import Image from 'next/image';
 import {
 	IconLayoutSidebarLeftCollapseFilled,
@@ -10,83 +11,98 @@ import { cn } from '@/lib/utils';
 import { Link } from '@/lib/shared';
 import NavLink from '../ui/nav-link';
 
+const sidebarVariants = {
+	open: { width: 256 },
+	closed: { width: 64 },
+};
+
 export default function Sidebar({ links }: { links: Link[] }) {
 	const [isOpen, setIsOpen] = useState(true);
 
 	return (
-		<motion.div
-			animate={{
-				width: isOpen ? 256 : 64,
-			}}
+		<motion.aside
 			initial={false}
-			transition={{
-				type: 'spring',
-				stiffness: 160,
-				damping: 20,
-				duration: 0.7,
-			}}
+			animate={isOpen ? 'open' : 'closed'}
+			variants={sidebarVariants}
+			transition={{ type: 'spring', stiffness: 200, damping: 25 }}
 			className={cn(
-				'h-screen grid grid-rows-[auto_1fr_auto] gap-6 py-6 lg:bg-grey-900',
+				'h-screen flex flex-col bg-grey-900 overflow-hidden shrink-0',
 				'fixed left-full lg:static',
-				{
-					'max-w-64': isOpen,
-					'w-16': !isOpen,
-				},
 			)}>
 			<div
 				className={cn(
-					'flex px-4',
-					'fixed top-0 left-0 right-0 z-10 bg-grey-900 lg:bg-transparent py-6 lg:py-0 lg:static lg:z-auto',
+					'h-14 flex items-center shrink-0 transition-all duration-200',
+					isOpen ? 'px-8' : 'px-0 justify-center',
 				)}>
-				<Image
-					src='/assets/images/logo-large.svg'
-					alt='logo'
-					width={100}
-					height={100}
-					priority
-					className={cn('w-28 mx-auto lg:mx-0 lg:mr-auto', !isOpen && 'hidden')}
-				/>
-
-				<Image
-					src='/assets/images/logo-small.svg'
-					alt='logo'
-					width={100}
-					height={100}
-					className={cn('h-5 w-max mx-auto hidden', { block: !isOpen })}
-				/>
+				<AnimatePresence mode='wait' initial={false}>
+					{isOpen ? (
+						<motion.div
+							key='logo-lg'
+							initial={{ opacity: 0, x: -10 }}
+							animate={{ opacity: 1, x: 0 }}
+							exit={{ opacity: 0, x: -10 }}
+							transition={{ duration: 0.2 }}>
+							<Image
+								src='/assets/images/logo-large.svg'
+								alt='logo'
+								width={112}
+								height={32}
+								priority
+								className='w-28'
+							/>
+						</motion.div>
+					) : (
+						<motion.div
+							key='logo-sm'
+							initial={{ opacity: 0, scale: 0.5 }}
+							animate={{ opacity: 1, scale: 1 }}
+							exit={{ opacity: 0, scale: 0.5 }}
+							transition={{ duration: 0.2 }}
+							className='flex justify-center'>
+							<Image
+								src='/assets/images/logo-small.svg'
+								alt='logo'
+								width={16}
+								height={16}
+							/>
+						</motion.div>
+					)}
+				</AnimatePresence>
 			</div>
 
-			<nav
-				className={cn(
-					'p-4 lg:p-0 lg:pr-6 w-full lg:static',
-					!isOpen && 'lg:pr-2',
-					'fixed bottom-0 left-0 right-0 bg-grey-900 lg:bg-transparent',
-				)}>
-				<ul className='flex flex-row justify-between lg:justify-start lg:flex-col gap-2 md:gap-5 lg:gap-2 w-full'>
+			<nav className='flex-1 py-4'>
+				<ul className='flex flex-col gap-2'>
 					{links.map((link) => (
 						<NavLink key={link.href} isOpen={isOpen} link={link} />
 					))}
 				</ul>
 			</nav>
 
-			<div
-				className={cn(
-					'text-grey-100 cursor-pointer px-4 mt-auto items-center hidden lg:flex w-fit',
-					{
-						'justify-center': !isOpen,
-					},
-				)}
-				onClick={() => setIsOpen((prev) => !prev)}>
-				{isOpen ? (
-					<IconLayoutSidebarLeftCollapseFilled
-						className={cn('w-7 h-7 transition-transform duration-500')}
-					/>
-				) : (
-					<IconLayoutSidebarLeftExpandFilled
-						className={cn('w-7 h-7 transition-transform duration-500')}
-					/>
-				)}
+			<div className='p-4 mt-auto'>
+				<button
+					onClick={() => setIsOpen(!isOpen)}
+					className='w-full flex items-center text-grey-300 hover:text-white transition-colors duration-200'>
+					<div className='w-8 flex justify-center shrink-0'>
+						{isOpen ? (
+							<IconLayoutSidebarLeftCollapseFilled className='w-6 h-6' />
+						) : (
+							<IconLayoutSidebarLeftExpandFilled className='w-6 h-6' />
+						)}
+					</div>
+
+					<AnimatePresence>
+						{isOpen && (
+							<motion.span
+								initial={{ opacity: 0, x: -10 }}
+								animate={{ opacity: 1, x: 0 }}
+								exit={{ opacity: 0, x: -10 }}
+								className='ml-4 font-bold text-sm whitespace-nowrap overflow-hidden'>
+								Minimize Menu
+							</motion.span>
+						)}
+					</AnimatePresence>
+				</button>
 			</div>
-		</motion.div>
+		</motion.aside>
 	);
 }

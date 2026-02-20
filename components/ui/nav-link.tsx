@@ -4,6 +4,7 @@ import { Link as LinkSharedType } from '@/lib/shared';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useIsRoute } from '@/lib/utils';
+import { motion, AnimatePresence } from 'motion/react';
 
 import {
 	IconHomeFilled,
@@ -32,38 +33,52 @@ export default function NavLink({
 	const isActive = useIsRoute(link.href);
 
 	return (
-		<li className='flex-1'>
+		<li>
 			<Link
 				href={link.href}
 				className={cn(
-					'cursor-pointer transition-colors duration-300 border-transparent',
-					'text-grey-300 hover:text-grey-100',
-					'flex items-center pt-3 pb-2 px-2 md:pt-4 md:pb-3 md:px-4 lg:px-0 lg:pl-6 lg:pr-8 lg:py-4',
-					'lg:flex-row lg:rounded-br-xl lg:border-l-6',
-					'flex-col rounded-tl-xl lg:rounded-tl-none rounded-tr-xl border-b-6 lg:border-b-0',
-					'gap-1',
-					isOpen ? 'lg:gap-5' : 'lg:justify-center lg:gap-0',
-
-					isActive && 'bg-white text-grey-900 border-green hover:text-grey-900',
-					!isOpen && 'lg:pl-3 lg:pr-4',
+					'group relative flex items-center h-12 transition-colors duration-200',
+					isActive
+						? 'text-grey-900'
+						: 'text-grey-300 hover:text-white',
 				)}>
-				<Icon
-					className={cn(
-						'shrink-0 font-preset-5 lg:font-preset-3 ',
-						isActive && 'text-green',
+				<AnimatePresence initial={false}>
+					{isActive && (
+						<motion.div
+							layoutId='active-bg'
+							className='absolute inset-y-0 left-0 right-2 bg-white rounded-r-xl border-l-[6px] border-green z-0'
+							transition={{
+								type: 'spring',
+								stiffness: 300,
+								damping: 30,
+							}}
+						/>
 					)}
-				/>
+				</AnimatePresence>
 
-				<div
-					className={cn(
-						'hidden overflow-hidden transition-all duration-300',
-						'md:block',
-						isOpen ? 'max-w-[200px] opacity-100' : 'max-w-0 opacity-0',
-					)}>
-					<span className='font-preset-5 lg:font-preset-3 font-bold whitespace-nowrap'>
-						{link.label}
-					</span>
+				<div className='relative z-10 w-16 flex justify-center shrink-0'>
+					<Icon
+						className={cn(
+							'w-5 h-5 transition-colors duration-200',
+							isActive
+								? 'text-green'
+								: 'text-grey-300 group-hover:text-white',
+						)}
+					/>
 				</div>
+
+				<AnimatePresence>
+					{isOpen && (
+						<motion.span
+							initial={{ opacity: 0, x: -10 }}
+							animate={{ opacity: 1, x: 0 }}
+							exit={{ opacity: 0, x: -10 }}
+							transition={{ duration: 0.2 }}
+							className='relative z-10 font-bold text-base whitespace-nowrap overflow-hidden pr-6'>
+							{link.label}
+						</motion.span>
+					)}
+				</AnimatePresence>
 			</Link>
 		</li>
 	);
