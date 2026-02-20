@@ -90,6 +90,7 @@ async function seedDummyData() {
 		where: { email: 'demo@finco.app' },
 		update: {},
 		create: {
+			id: 'demo-user-001',
 			name: 'Demo User',
 			email: 'demo@finco.app',
 			emailVerified: true,
@@ -98,12 +99,12 @@ async function seedDummyData() {
 	console.log(`👤 Demo user: ${user.email}`);
 
 	// ── 2. Account ─────────────────────────────────────────────────
-	let account = await prisma.account.findFirst({
+	let account = await prisma.financialAccount.findFirst({
 		where: { userId: user.id, name: 'Main Checking' },
 	});
 
 	if (!account) {
-		account = await prisma.account.create({
+		account = await prisma.financialAccount.create({
 			data: { userId: user.id, name: 'Main Checking' },
 		});
 	}
