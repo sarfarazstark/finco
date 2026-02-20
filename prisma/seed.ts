@@ -1,6 +1,7 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 import data from '../starter-code/data.json';
+import { auth } from '@/lib/auth';
 
 const prisma = new PrismaClient({
 	adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
@@ -86,17 +87,26 @@ async function seedMainData(userId: string) {
 
 async function seedDummyData() {
 	// ── 1. Demo User ────────────────────────────────────────────────────────
-	const user = await prisma.user.upsert({
+	let user = await prisma.user.findUnique({
 		where: { email: 'demo@finco.app' },
-		update: {},
-		create: {
-			id: 'demo-user-001',
-			name: 'Demo User',
-			email: 'demo@finco.app',
-			emailVerified: true,
-		},
 	});
-	console.log(`👤 Demo user: ${user.email}`);
+
+	if (!user) {
+		// Use Better Auth's API to sign up the user so password handling is correct
+		const res = await auth.api.signUpEmail({
+			body: {
+				name: 'Demo User',
+				email: 'demo@finco.app',
+				password: 'Password1!',
+			},
+		});
+
+		user = await prisma.user.update({
+			where: { id: res.user.id },
+			data: { emailVerified: true },
+		});
+	}
+	console.log(`👤 Demo user: ${user.email} (Password: Password1!)`);
 
 	// ── 2. Account ─────────────────────────────────────────────────
 	let account = await prisma.financialAccount.findFirst({
