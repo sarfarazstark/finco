@@ -4,117 +4,83 @@ datasource db {
 
 generator client {
     provider = "prisma-client-js"
-    // output   = "../lib/generated/prisma"
 }
 
 /**
  * ──────────────────────────────────────────────
- * ENUMS
+ * BETTER AUTH MODELS
  * ──────────────────────────────────────────────
  */
 
-enum AuthProvider {
-    GOOGLE
-    CREDENTIALS
-}
-
-enum UserRole {
-    USER
-    ADMIN
-}
-
-enum TransactionType {
-    INCOME
-    EXPENSE
-}
-
-enum RecurringInterval {
-    DAILY
-    WEEKLY
-    BIWEEKLY
-    MONTHLY
-    YEARLY
-}
-
-/**
- * ──────────────────────────────────────────────
- * USER + AUTH
- * ──────────────────────────────────────────────
- */
-
+/// Represents a user in the system
 model User {
-    id           String    @id @default(cuid())
-    name         String
-    email        String    @unique
-    passwordHash String?
-    avatar       String    @default("/avatar.jpg")
-    role         UserRole  @default(USER)
+    id            String   @id @default(cuid())
+    name          String
+    email         String   @unique
+    emailVerified Boolean  @default(false)
+    image         String?
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
 
-    accounts     Account[]
     sessions     Session[]
+    authAccounts AuthAccount[]
 
-    balances     Balance?
+    // Financial relationships
+    accounts     Account[]
+    categories   Category[]
+    themes       Theme[]
     transactions Transaction[]
     budgets      Budget[]
     pots         Pot[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    @@map("user")
 }
 
-model Account {
-    id                String       @id @default(cuid())
-    userId            String
-    provider          AuthProvider
-    providerAccountId String
-
-    user User @relation(fields: [userId], references: [id])
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@unique([provider, providerAccountId])
-}
-
+/// Stores active user sessions
 model Session {
-    id           String   @id @default(cuid())
-    userId       String
-    sessionToken String   @unique
-    expires      DateTime
-
-    user User @relation(fields: [userId], references: [id])
-
+    id        String   @id @default(cuid())
+    expiresAt DateTime
+    token     String   @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    ipAddress String?
+    userAgent String?
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("session")
 }
 
-/**
- * ──────────────────────────────────────────────
- * SUPPORTING TABLES
- * ──────────────────────────────────────────────
- */
+/// Stores OAuth provider accounts (e.g. Google, GitHub) - renamed from Account to AuthAccount to free up Account for finance
+model AuthAccount {
+    id                    String    @id @default(cuid())
+    accountId             String
+    providerId            String
+    userId                String
+    user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    accessToken           String?
+    refreshToken          String?
+    idToken               String?
+    accessTokenExpiresAt  DateTime?
+    refreshTokenExpiresAt DateTime?
+    scope                 String?
+    password              String?
+    createdAt             DateTime  @default(now())
+    updatedAt             DateTime  @updatedAt
 
-model Category {
-    id           String        @id @default(cuid())
-    name         String        @unique
-    image        String
-    transactions Transaction[]
-    budgets      Budget[]
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    @@map("auth_account")
 }
 
-model Theme {
-    id   String @id @default(cuid())
-    name String @unique
-    hex  String
+/// Stores verification tokens for email/passwordless login
+model Verification {
+    id         String    @id @default(cuid())
+    identifier String
+    value      String
+    expiresAt  DateTime
+    createdAt  DateTime? @default(now())
+    updatedAt  DateTime? @updatedAt
 
-    budgets Budget[]
-    pots    Pot[]
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    @@map("verification")
 }
 
 /**
@@ -123,63 +89,113 @@ model Theme {
  * ──────────────────────────────────────────────
  */
 
-model Balance {
-    id       String @id @default(cuid())
-    userId   String @unique
-    current  Float
-    income   Float
-    expenses Float
+/// Represents a financial account (e.g., Checking, Savings, Credit Card) owned by a user
+model Account {
+    id     String @id @default(cuid())
+    userId String
+    name   String /// e.g., "Main Checking", "Credit Card"
 
-    user User @relation(fields: [userId], references: [id])
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    transactions Transaction[] /// All transactions associated with this specific account
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("account")
 }
 
+/// User-specific categories for grouping transactions (e.g., "Groceries", "Entertainment")
+model Category {
+    id     String  @id @default(cuid())
+    userId String
+    name   String /// Name of the category
+    image  String? /// Optional image or icon representation
+
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    transactions Transaction[]
+    budgets      Budget[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([userId, name]) /// Ensure categories are unique per user
+    @@map("category")
+}
+
+/// User-specific color themes used for budgets and pots
+model Theme {
+    id     String @id @default(cuid())
+    userId String
+    name   String /// Name of the theme (e.g., "Navy Blue")
+    hex    String /// Hex color code (e.g., "#000080")
+
+    user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    budgets Budget[]
+    pots    Pot[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([userId, name]) /// Ensure theme names are unique per user
+    @@map("theme")
+}
+
+/// The core financial record. Represents incomes, expenses, and pot transfers.
 model Transaction {
-    id                String             @id @default(cuid())
-    userId            String
-    categoryId        String
-    name              String
-    amount            Float
-    date              DateTime
+    id          String   @id @default(cuid())
+    userId      String
+    accountId   String /// The financial account where this transaction occurred
+    categoryId  String? /// The category this transaction belongs to (optional for initial balance or transfers)
+    potId       String? /// If set, this transaction represents a transfer to/from a Pot
+    name        String /// Description or payee of the transaction
+    amount      Float /// Positive for income/refunds, negative for expenses/pot-deposits
+    date        DateTime /// When the transaction occurred
+    isRecurring Boolean  @default(false) /// Indicates if this is part of a recurring bill
 
-    type              TransactionType    @default(EXPENSE)
-    recurringInterval RecurringInterval?
-
-    user     User     @relation(fields: [userId], references: [id])
-    category Category @relation(fields: [categoryId], references: [id])
+    user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    account  Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+    category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+    pot      Pot?      @relation(fields: [potId], references: [id], onDelete: SetNull)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("transaction")
 }
 
+/// Represents a spending limit for a specific category within a month
 model Budget {
-    id         String  @id @default(cuid())
+    id         String @id @default(cuid())
     userId     String
     categoryId String
-    maximum    Float
-    themeId    String
+    maximum    Float /// The maximum allowed spend for the category
+    themeId    String /// The visual theme for this budget
 
-    user     User      @relation(fields: [userId], references: [id])
-    category Category @relation(fields: [categoryId], references: [id])
-    theme    Theme    @relation(fields: [themeId], references: [id])
+    user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    theme    Theme    @relation(fields: [themeId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@unique([userId, categoryId]) /// A user can only have one budget per category
+    @@map("budget")
 }
 
+/// Represents a savings goal or "bucket" of money set aside
 model Pot {
-    id      String  @id @default(cuid())
+    id      String @id @default(cuid())
     userId  String
-    name    String
-    target  Float
-    total   Float
-    themeId String
+    name    String /// Name of the savings pot
+    target  Float /// The goal amount to save
+    themeId String /// The visual theme for this pot
 
-    user  User   @relation(fields: [userId], references: [id])
-    theme Theme @relation(fields: [themeId], references: [id])
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    theme        Theme         @relation(fields: [themeId], references: [id], onDelete: Cascade)
+    transactions Transaction[] /// The transactions (deposits/withdrawals) associated with this pot. This is the source of truth for the pot's total balance.
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("pot")
 }
