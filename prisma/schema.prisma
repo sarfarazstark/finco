@@ -75,12 +75,22 @@ model Theme {
   @@unique([name])
 }
 
+model Icon {
+  id    String @id @default(cuid())
+  name  String @unique /// e.g. 'building-bank', 'pizza'
+  color String /// e.g. 'text-indigo-600'
+  bg    String /// e.g. 'bg-indigo-50'
+
+  categories Category[]
+}
+
 model Category {
   id     String @id @default(cuid())
   userId String
 
   name   String
-  image  String?
+  iconId String
+  icon   Icon   @relation(fields: [iconId], references: [id])
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
@@ -101,8 +111,6 @@ model Transaction {
   type       TransactionType
   date       DateTime
   recurring  Boolean  @default(false)
-
-  image      String?  /// explicit override (highest priority)
 
   user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)

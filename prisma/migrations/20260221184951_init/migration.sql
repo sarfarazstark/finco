@@ -37,11 +37,21 @@ CREATE TABLE "Theme" (
 );
 
 -- CreateTable
+CREATE TABLE "Icon" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "color" TEXT NOT NULL,
+    "bg" TEXT NOT NULL,
+
+    CONSTRAINT "Icon_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Category" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "image" TEXT,
+    "iconId" TEXT NOT NULL,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
 );
@@ -58,7 +68,6 @@ CREATE TABLE "Transaction" (
     "type" "TransactionType" NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "recurring" BOOLEAN NOT NULL DEFAULT false,
-    "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -142,6 +151,9 @@ CREATE INDEX "FinancialAccount_userId_idx" ON "FinancialAccount"("userId");
 CREATE UNIQUE INDEX "Theme_name_key" ON "Theme"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Icon_name_key" ON "Icon"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Category_userId_name_key" ON "Category"("userId", "name");
 
 -- CreateIndex
@@ -176,6 +188,9 @@ CREATE INDEX "verification_identifier_idx" ON "verification"("identifier");
 
 -- AddForeignKey
 ALTER TABLE "FinancialAccount" ADD CONSTRAINT "FinancialAccount_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Category" ADD CONSTRAINT "Category_iconId_fkey" FOREIGN KEY ("iconId") REFERENCES "Icon"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Category" ADD CONSTRAINT "Category_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
