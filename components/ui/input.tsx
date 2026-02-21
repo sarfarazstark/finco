@@ -23,7 +23,10 @@ export function Input({
 	error?: string;
 	autoComplete?: React.HTMLInputAutoCompleteAttribute;
 	className?: string;
-}) {
+} & Omit<
+	React.InputHTMLAttributes<HTMLInputElement>,
+	'type' | 'id' | 'name' | 'placeholder' | 'autoComplete' | 'className'
+>) {
 	const [showPassword, setShowPassword] = useState(false);
 	const isPassword = type === 'password';
 
