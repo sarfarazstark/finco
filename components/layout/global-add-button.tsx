@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
 import dynamic from 'next/dynamic';
+import { Category } from '../transactions/category-dialog';
 
 const IncomeDialog = dynamic(
 	() => import('../transactions/income-dialog').then(mod => mod.IncomeDialog),
@@ -47,7 +48,22 @@ const OPTIONS = [
 	},
 ] as const;
 
-export default function GlobalAddButton() {
+export type AccountSelectorProps = {
+	id: string;
+	name: string;
+	icon: string;
+	balance: number;
+};
+
+export default function GlobalAddButton({
+	categories,
+	accounts,
+	settings,
+}: {
+	categories: Category[];
+	accounts: AccountSelectorProps[];
+	settings?: { currency: string; theme: string };
+}) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [activeDialog, setActiveDialog] = useState<
 		'INCOME' | 'EXPENSE' | 'TRANSFER' | null
@@ -165,14 +181,22 @@ export default function GlobalAddButton() {
 
 			<IncomeDialog
 				open={activeDialog === 'INCOME'}
+				categories={categories}
+				accounts={accounts}
+				settings={settings}
 				onOpenChange={open => !open && setActiveDialog(null)}
 			/>
 			<ExpenseDialog
 				open={activeDialog === 'EXPENSE'}
+				categories={categories}
+				accounts={accounts}
+				settings={settings}
 				onOpenChange={open => !open && setActiveDialog(null)}
 			/>
 			<TransferDialog
 				open={activeDialog === 'TRANSFER'}
+				accounts={accounts}
+				settings={settings}
 				onOpenChange={open => !open && setActiveDialog(null)}
 			/>
 		</>

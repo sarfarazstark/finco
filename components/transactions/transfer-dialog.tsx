@@ -1,39 +1,59 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import {
-	Dropdown,
-	DropdownTrigger,
-	DropdownContent,
-	DropdownItem,
-} from '@/components/ui/dropdown';
+import { getCurrencySymbol } from '@/lib/utils';
 import { DatePicker } from '@/components/ui/date-picker';
-
-const ACCOUNTS = [
-	{ id: '1', name: 'Main Account', icon: 'wallet' },
-	{ id: '2', name: 'Savings', icon: 'building-bank' },
-	{ id: '3', name: 'Investment', icon: 'chart-pie' },
-];
+import { AccountDropdown } from './account-dropdown';
+import { addTransaction } from '@/app/actions/transactions';
+import { AccountSelectorProps } from '../layout/global-add-button';
 
 export function TransferDialog({
 	open,
 	onOpenChange,
+	accounts,
+	settings,
 }: {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
+	accounts: AccountSelectorProps[];
+	settings?: { currency: string; theme: string };
 }) {
 	const [amount, setAmount] = useState('');
 	const [name, setName] = useState('');
 	const [fromAccountId, setFromAccountId] = useState('1');
 	const [toAccountId, setToAccountId] = useState('2');
 	const [date, setDate] = useState<Date>(new Date());
+	const [isPending, startTransition] = useTransition();
 
-	const fromAccount = ACCOUNTS.find(a => a.id === fromAccountId);
-	const toAccount = ACCOUNTS.find(a => a.id === toAccountId);
-	const currencySymbol = '$';
+	const handleSave = () => {
+		if (!amount || !name || !fromAccountId || !toAccountId) return;
+		if (fromAccountId === toAccountId) return; // Can't transfer to same account
+
+		startTransition(async () => {
+			const res = await addTransaction({
+				type: 'TRANSFER',
+				amount: parseFloat(amount),
+				name,
+				date,
+				accountId: fromAccountId,
+				toAccountId: toAccountId,
+			});
+
+			if (res.success) {
+				onOpenChange(false);
+				setAmount('');
+				setName('');
+				setDate(new Date());
+			} else {
+				console.error(res.error);
+			}
+		});
+	};
+
+
+	const currencySymbol = getCurrencySymbol(settings?.currency);
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
@@ -77,40 +97,12 @@ export function TransferDialog({
 								<label className="text-[10px] font-bold text-grey-500 uppercase tracking-wider pl-1">
 									From
 								</label>
-								<Dropdown
+								<AccountDropdown
+									accounts={accounts}
 									value={fromAccountId}
-									onValueChange={setFromAccountId}
-									className="w-full"
-								>
-									<DropdownTrigger className="h-11 bg-grey-50 border-grey-200 hover:bg-white w-full px-3">
-										<div className="flex items-center gap-2 overflow-hidden">
-											<i
-												className={cn(
-													'ti ti-' + (fromAccount?.icon || 'wallet'),
-													'text-lg text-grey-400 shrink-0'
-												)}
-											/>
-											<span className="text-sm font-medium text-grey-900 truncate">
-												{fromAccount?.name || 'Select Account'}
-											</span>
-										</div>
-									</DropdownTrigger>
-									<DropdownContent>
-										{ACCOUNTS.map(acc => (
-											<DropdownItem key={acc.id} value={acc.id}>
-												<div className="flex items-center gap-2">
-													<i
-														className={cn(
-															'ti ti-' + acc.icon,
-															'text-lg text-grey-400'
-														)}
-													/>
-													<span className="truncate">{acc.name}</span>
-												</div>
-											</DropdownItem>
-										))}
-									</DropdownContent>
-								</Dropdown>
+									onChange={setFromAccountId}
+									currency={settings?.currency}
+								/>
 							</div>
 
 							<div className="relative h-2 flex justify-center items-center z-10">
@@ -132,40 +124,12 @@ export function TransferDialog({
 								<label className="text-[10px] font-bold text-grey-500 uppercase tracking-wider pl-1">
 									To
 								</label>
-								<Dropdown
+								<AccountDropdown
+									accounts={accounts}
 									value={toAccountId}
-									onValueChange={setToAccountId}
-									className="w-full"
-								>
-									<DropdownTrigger className="h-11 bg-grey-50 border-grey-200 hover:bg-white w-full px-3">
-										<div className="flex items-center gap-2 overflow-hidden">
-											<i
-												className={cn(
-													'ti ti-' + (toAccount?.icon || 'wallet'),
-													'text-lg text-grey-400 shrink-0'
-												)}
-											/>
-											<span className="text-sm font-medium text-grey-900 truncate">
-												{toAccount?.name || 'Select Account'}
-											</span>
-										</div>
-									</DropdownTrigger>
-									<DropdownContent>
-										{ACCOUNTS.map(acc => (
-											<DropdownItem key={acc.id} value={acc.id}>
-												<div className="flex items-center gap-2">
-													<i
-														className={cn(
-															'ti ti-' + acc.icon,
-															'text-lg text-grey-400'
-														)}
-													/>
-													<span className="truncate">{acc.name}</span>
-												</div>
-											</DropdownItem>
-										))}
-									</DropdownContent>
-								</Dropdown>
+									onChange={setToAccountId}
+									currency={settings?.currency}
+								/>
 							</div>
 						</div>
 
@@ -192,9 +156,10 @@ export function TransferDialog({
 								type="button"
 								variant="primary"
 								className="w-1/2"
-								onClick={() => onOpenChange(false)}
+								onClick={handleSave}
+								disabled={isPending || !amount || !name || fromAccountId === toAccountId}
 							>
-								Transfer Funds
+								{isPending ? 'Transferring...' : 'Transfer Funds'}
 							</Button>
 						</div>
 					</div>

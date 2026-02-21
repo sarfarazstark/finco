@@ -39,6 +39,7 @@ model User {
   transactions      Transaction[]
   budgets           Budget[]
   pots              Pot[]
+  setting           Setting?
 
   @@map("user")
 }
@@ -151,6 +152,18 @@ model Pot {
   theme Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
 
   @@unique([userId, name])
+}
+
+model Setting {
+  id       String @id @default(cuid())
+  userId   String @unique
+  currency String @default("USD")
+  theme    String @default("light")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 /* ============================

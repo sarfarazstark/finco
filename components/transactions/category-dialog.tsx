@@ -1,0 +1,78 @@
+'use client';
+
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'motion/react';
+import { IconX } from '@tabler/icons-react';
+
+export type Category = {
+	id: string;
+	name: string;
+	icon: string;
+	color: string;
+};
+
+
+
+export function CategorySelectorOverlay({
+	open,
+	onClose,
+	onSelect,
+	categories,
+}: {
+	open: boolean;
+	onClose: () => void;
+	onSelect: (category: Category) => void;
+	categories: Category[];
+}) {
+	return (
+		<AnimatePresence>
+			{open && (
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					exit={{ opacity: 0, y: 20 }}
+					transition={{ duration: 0.2, ease: 'easeOut' }}
+					className="absolute inset-0 z-50 bg-white rounded-xl flex flex-col overflow-hidden"
+				>
+					<div className="flex items-center justify-between p-4 border-b border-grey-100 shrink-0">
+						<h3 className="text-xl font-bold font-preset-4 text-grey-900 tracking-tight pl-2">
+							Select Category
+						</h3>
+						<button
+							type="button"
+							onClick={onClose}
+							className="w-9 h-9 rounded-full bg-grey-50 flex items-center justify-center text-grey-500 hover:bg-grey-100 hover:text-grey-900 transition-colors"
+						>
+							<IconX className="w-5 h-5" />
+						</button>
+					</div>
+
+					<div className="flex-1 overflow-y-auto p-4 pt-6">
+						<div className="grid grid-cols-3 gap-x-3 gap-y-5">
+							{categories.map(cat => (
+								<button
+									key={cat.id}
+									type="button"
+									onClick={() => onSelect(cat)}
+									className="flex flex-col items-center justify-start gap-2 p-2 rounded-2xl hover:bg-grey-50 transition-colors group cursor-pointer"
+								>
+									<div
+										className={cn(
+											'w-12 h-12 rounded-[14px] flex items-center justify-center transition-transform duration-300 group-hover:scale-105 group-active:scale-95 bg-white',
+											cat.color
+										)}
+									>
+										<i className={`ti ti-${cat.icon} text-xl`} />
+									</div>
+									<span className="text-[11px] font-bold text-grey-600 text-center tracking-widest px-1">
+										{cat.name}
+									</span>
+								</button>
+							))}
+						</div>
+					</div>
+				</motion.div>
+			)}
+		</AnimatePresence>
+	);
+}

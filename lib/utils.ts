@@ -19,3 +19,32 @@ export function validate<T>(schema: ZodType<T>, form: FormData) {
 
 	return { data: result.data as T, errors: null };
 }
+
+export function getCurrencySymbol(currencyCode: string = 'USD') {
+	return (
+		new Intl.NumberFormat('en-US', {
+			style: 'currency',
+			currency: currencyCode,
+		})
+			.formatToParts(0)
+			.find(p => p.type === 'currency')?.value || '$'
+	);
+}
+
+export function formatBalance(amount: number, currencyCode: string = 'USD') {
+	const isNegative = amount < 0;
+	const colorClass = isNegative
+		? 'text-red-500'
+		: amount > 0
+			? 'text-green-600'
+			: 'text-grey-500';
+	const formattedAmount = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: currencyCode,
+	}).format(Math.abs(amount));
+
+	return {
+		text: isNegative ? `-${formattedAmount}` : formattedAmount,
+		colorClass,
+	};
+}
