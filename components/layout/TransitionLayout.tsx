@@ -4,7 +4,6 @@ import { motion, AnimatePresence, useIsPresent } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import { LayoutRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import React, { useContext } from 'react';
-import { ScrollArea } from '../ui/scroll-area';
 function FrozenRouter(props: { children: React.ReactNode }) {
 	const context = useContext(LayoutRouterContext ?? {});
 	const isPresent = useIsPresent();
@@ -49,9 +48,7 @@ export default function TransitionLayout({
 				transition={{ duration: 0.35, ease: 'easeInOut' }}
 				className="h-full overflow-y-auto overflow-x-hidden"
 			>
-				<ScrollArea>
-					<FrozenRouter>{children}</FrozenRouter>
-				</ScrollArea>
+				<FrozenRouter>{children}</FrozenRouter>
 			</motion.div>
 		</AnimatePresence>
 	);

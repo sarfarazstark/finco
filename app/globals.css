@@ -57,6 +57,23 @@ body {
 	scroll-behavior: smooth;
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-grey-500/50 rounded-full border-2 border-transparent bg-clip-content;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-grey-500/80;
+}
+
 @utility font-preset-1 {
 	@apply text-[2rem] leading-[1.2];
 }
@@ -83,50 +100,4 @@ body {
 
 @utility font-preset-5-bold {
 	@apply text-xs leading-normal font-bold;
-}
-
-/* Kill arrows (webkit) */
-.custom-scrollbar::-webkit-scrollbar-button {
-	width: 0;
-	height: 0;
-}
-
-/* Scrollbar rail size (webkit) */
-.custom-scrollbar::-webkit-scrollbar {
-	width: 5px;
-	height: 5px;
-}
-
-/* No track — transparent bg + kill Chrome's groove shadow */
-.custom-scrollbar::-webkit-scrollbar-track {
-	background: transparent;
-	box-shadow: none;
-	border: none;
-}
-
-/* Thumb: hidden by default */
-.custom-scrollbar::-webkit-scrollbar-thumb {
-	background: transparent;
-	border-radius: 100px;
-}
-
-/* Thumb: show (50% opacity) when container is hovered */
-.custom-scrollbar:hover::-webkit-scrollbar-thumb {
-	background: rgba(179, 179, 179, 0.5);
-}
-
-/* Thumb: darken when actively dragging */
-.custom-scrollbar::-webkit-scrollbar-thumb:active {
-	background: rgba(105, 104, 104, 0.8);
-}
-
-/* Firefox: hidden by default, show thin scrollbar on hover/focus */
-.custom-scrollbar {
-	scrollbar-width: none;
-}
-
-.custom-scrollbar:hover,
-.custom-scrollbar:focus-within {
-	scrollbar-width: thin;
-	scrollbar-color: rgba(179, 179, 179, 0.5) transparent;
 }

@@ -12,7 +12,6 @@ import { IconChevronDown } from '@tabler/icons-react';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { useClickOutside } from '@/hooks/use-click-outside';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface DropdownContextType {
 	isOpen: boolean;
@@ -170,7 +169,7 @@ export const DropdownContent = ({
 			)}
 			style={{ display: isOpen ? 'block' : 'none' }}
 		>
-			<ScrollArea className="max-h-60">{children}</ScrollArea>
+			<div className="max-h-60 overflow-y-auto">{children}</div>
 		</motion.div>
 	);
 };
