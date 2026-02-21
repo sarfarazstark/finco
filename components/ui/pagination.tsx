@@ -38,9 +38,9 @@ export function Pagination({
 				variant="secondary"
 				onClick={() => handleNavigation(createPageUrl(currentPage - 1))}
 				disabled={currentPage <= 1}
-				className="w-24 border border-grey-200"
+				className="w-auto border border-grey-200"
 			>
-				<IconChevronLeft className="w-4 h-4 mr-2" /> Prev
+				<IconChevronLeft className="w-4 h-4 mr-1" /> Prev
 			</Button>
 
 			<div className="flex items-center gap-2">
@@ -70,9 +70,9 @@ export function Pagination({
 				variant="secondary"
 				onClick={() => handleNavigation(createPageUrl(currentPage + 1))}
 				disabled={currentPage >= totalPages}
-				className="w-24 border border-grey-200"
+				className="w-auto border border-grey-200"
 			>
-				Next <IconChevronRight className="w-4 h-4 ml-2" />
+				Next <IconChevronRight className="w-4 h-4 ml-1" />
 			</Button>
 		</div>
 	);
