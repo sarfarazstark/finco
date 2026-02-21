@@ -12,6 +12,8 @@ const variantStyles = {
 	tertiary:
 		'bg-transparent text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 active:bg-neutral-100',
 	destroy: 'bg-red-600 text-white hover:bg-red-500 active:bg-red-700',
+	outline:
+		'bg-transparent text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 active:bg-neutral-100',
 } as const;
 
 const sizeStyles = {
