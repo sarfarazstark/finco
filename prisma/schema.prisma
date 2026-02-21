@@ -7,12 +7,53 @@ generator client {
   provider = "prisma-client-js"
 }
 
-/// Represents a financial account (e.g., Checking, Savings, Credit Card) owned by a user
+/* ============================
+   CORE ENUMS
+============================ */
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+/* ============================
+   USER & AUTH (UNCHANGED)
+============================ */
+
+model User {
+  id            String   @id
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions Session[]
+  accounts Account[]
+
+  financialAccounts FinancialAccount[]
+  categories        Category[]
+  transactions      Transaction[]
+  budgets           Budget[]
+  pots              Pot[]
+
+  @@map("user")
+}
+
+/* ============================
+   FINANCIAL ACCOUNT
+============================ */
 
 model FinancialAccount {
-  id     String @id @default(cuid())
-  userId String
-  name   String /// e.g., "Main Checking", "Credit Card"
+  id       String @id @default(cuid())
+  userId   String
+
+  name     String   /// "Cash", "HDFC Bank", "PhonePe", "Crypto Wallet"
+  image    String   /// icon / logo chosen by user
+  currency String   @default("INR")
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
@@ -20,14 +61,24 @@ model FinancialAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("financial_account")
+  @@index([userId])
 }
 
-/// User-specific categories for grouping transactions (e.g., "Groceries", "Entertainment")
+model Theme {
+  id   String @id @default(cuid())
+  name String
+  hex  String
+
+  budgets Budget[]
+  pots    Pot[]
+
+  @@unique([name])
+}
 
 model Category {
-  id     String  @id @default(cuid())
+  id     String @id @default(cuid())
   userId String
+
   name   String
   image  String?
 
@@ -35,57 +86,36 @@ model Category {
   transactions Transaction[]
   budgets      Budget[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   @@unique([userId, name])
-  @@map("category")
 }
-
-/// User-specific color themes used for budgets and pots
-
-model Theme {
-  id     String @id @default(cuid())
-  userId String
-  name   String
-  hex    String
-
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  budgets Budget[]
-  pots    Pot[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, name])
-  @@map("theme")
-}
-
-/// The core financial record
 
 model Transaction {
-  id          String   @id @default(cuid())
-  userId      String
-  accountId   String
-  categoryId  String?
-  potId       String?
-  name        String
-  amount      Float
-  date        DateTime
-  isRecurring Boolean  @default(false)
+  id         String @id @default(cuid())
+  userId     String
+  accountId  String
+  categoryId String?
+  transferId String?
+
+  name       String
+  amount     Float    /// +income, -expense
+  type       TransactionType
+  date       DateTime
+  recurring  Boolean  @default(false)
+
+  image      String?  /// explicit override (highest priority)
 
   user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
   category Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  pot      Pot?             @relation(fields: [potId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("transaction")
+  @@index([userId])
+  @@index([accountId])
+  @@index([categoryId])
+  @@index([date])
 }
-
-/// Spending limit for a specific category
 
 model Budget {
   id         String @id @default(cuid())
@@ -98,54 +128,26 @@ model Budget {
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   theme    Theme    @relation(fields: [themeId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   @@unique([userId, categoryId])
-  @@map("budget")
 }
-
-/// Savings goal pot
 
 model Pot {
   id      String @id @default(cuid())
   userId  String
+
   name    String
   target  Float
   themeId String
 
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  theme        Theme         @relation(fields: [themeId], references: [id], onDelete: Cascade)
-  transactions Transaction[]
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("pot")
+  @@unique([userId, name])
 }
 
-model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-
-  // Financial relationships
-  financialAccounts FinancialAccount[]
-  categories        Category[]
-  themes            Theme[]
-  transactions      Transaction[]
-  budgets           Budget[]
-  pots              Pot[]
-
-  @@unique([email])
-  @@map("user")
-}
+/* ============================
+   AUTH MODELS
+============================ */
 
 model Session {
   id        String   @id

@@ -7,6 +7,7 @@ const prisma = new PrismaClient({
 	adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
 });
 
+// ─── Raw data shapes ──────────────────────────────────────────────────
 interface RawTransaction {
 	avatar: string;
 	name: string;
@@ -29,69 +30,13 @@ interface RawPot {
 	theme: string;
 }
 
-// ────────────────────────────────────────────────────────────────────────────────
-// MAIN SEED
-// ────────────────────────────────────────────────────────────────────────────────
-
-const DEFAULT_THEMES = [
-	{ name: 'Green', hex: '#277C78' },
-	{ name: 'Grey', hex: '#626070' },
-	{ name: 'Blue', hex: '#82C9D7' },
-	{ name: 'Peach', hex: '#F2CDAC' },
-	{ name: 'Purple', hex: '#826CB0' },
-];
-
-const DEFAULT_CATEGORIES = [
-	'General',
-	'Dining Out',
-	'Groceries',
-	'Entertainment',
-	'Transportation',
-	'Lifestyle',
-	'Bills',
-	'Shopping',
-	'Personal Care',
-	'Education',
-];
-
-async function seedMainData(userId: string) {
-	console.log('🎨 Seeding themes...');
-	for (const theme of DEFAULT_THEMES) {
-		await prisma.theme.upsert({
-			where: { userId_name: { userId, name: theme.name } },
-			update: {},
-			create: { userId, ...theme },
-		});
-	}
-
-	console.log('📁 Seeding categories...');
-	for (const name of DEFAULT_CATEGORIES) {
-		await prisma.category.upsert({
-			where: { userId_name: { userId, name } },
-			update: {},
-			create: {
-				userId,
-				name,
-				image: `/assets/images/categories/${name.toLowerCase().replace(/ /g, '-')}.jpg`,
-			},
-		});
-	}
-
-	console.log('✅ Main seed complete');
-}
-
-// ────────────────────────────────────────────────────────────────────────────────
-// DUMMY SEED — demo data, only for dev/staging
-// ────────────────────────────────────────────────────────────────────────────────
-
+// ──────────────────────────────────────────────────────────────────────
 async function seedDummyData() {
-	// ── 1. Demo User ────────────────────────────────────────────────────────
+	// 1. Create User
 	let user = await prisma.user.findUnique({
 		where: { email: 'demo@finco.app' },
 	});
-
 	if (!user) {
-		// Use Better Auth's API to sign up the user so password handling is correct
 		const res = await auth.api.signUpEmail({
 			body: {
 				name: 'Demo User',
@@ -99,137 +44,146 @@ async function seedDummyData() {
 				password: 'Password1!',
 			},
 		});
-
 		user = await prisma.user.update({
 			where: { id: res.user.id },
 			data: { emailVerified: true },
 		});
 	}
-	console.log(`👤 Demo user: ${user.email} (Password: Password1!)`);
+	console.log(`👤 Demo user created/found: ${user.email}`);
 
-	// ── 2. Account ─────────────────────────────────────────────────
+	// 2. Create Account (User-Defined)
 	let account = await prisma.financialAccount.findFirst({
 		where: { userId: user.id, name: 'Main Checking' },
 	});
-
 	if (!account) {
 		account = await prisma.financialAccount.create({
-			data: { userId: user.id, name: 'Main Checking' },
-		});
-	}
-	console.log(`🏦 Account: ${account.name}`);
-
-	await seedMainData(user.id);
-
-	const themes = await prisma.theme.findMany({ where: { userId: user.id } });
-	const categories = await prisma.category.findMany({
-		where: { userId: user.id },
-	});
-
-	const themeByHex = new Map(themes.map(t => [t.hex, t]));
-	const categoryByName = new Map(categories.map(c => [c.name, c]));
-
-	// ── 4. Transactions ─────────────────────────────────────────────────────
-	const existingTxCount = await prisma.transaction.count({
-		where: { userId: user.id },
-	});
-
-	if (existingTxCount === 0) {
-		const transactions = (data.transactions as RawTransaction[]).map(t => ({
-			userId: user.id,
-			accountId: account.id,
-			categoryId: categoryByName.get(t.category)?.id ?? null,
-			name: t.name,
-			amount: t.amount,
-			date: new Date(t.date),
-			isRecurring: t.recurring,
-		}));
-
-		await prisma.transaction.createMany({ data: transactions });
-		console.log(`💸 Created ${transactions.length} transactions`);
-	} else {
-		console.log(
-			`💸 Transactions already exist (${existingTxCount}), skipping`
-		);
-	}
-
-	// ── 5. Budgets ───────────────────────────────────────────────────────────
-	for (const b of data.budgets as RawBudget[]) {
-		const category = categoryByName.get(b.category);
-		const theme = themeByHex.get(b.theme);
-		if (!category || !theme) continue;
-
-		await prisma.budget.upsert({
-			where: {
-				userId_categoryId: { userId: user.id, categoryId: category.id },
-			},
-			update: { maximum: b.maximum, themeId: theme.id },
-			create: {
+			data: {
 				userId: user.id,
-				categoryId: category.id,
-				themeId: theme.id,
-				maximum: b.maximum,
+				name: 'Main Checking',
+				image: '/assets/images/icon-nav-overview.svg', // generic icon
+				currency: 'INR',
 			},
 		});
 	}
-	console.log(`📊 Seeded ${data.budgets.length} budgets`);
+	console.log(`🏦 Account created/found: ${account.name}`);
 
-	// ── 6. Pots ──────────────────────────────────────────────────────────────
-	for (const p of data.pots as RawPot[]) {
-		const theme = themeByHex.get(p.theme);
-		if (!theme) continue;
+	// 3. Create Themes
+	const uniqueThemes = new Set<string>();
+	data.budgets.forEach(b => uniqueThemes.add(b.theme));
+	data.pots.forEach(p => uniqueThemes.add(p.theme));
 
-		const existingPot = await prisma.pot.findFirst({
-			where: { userId: user.id, name: p.name },
+	console.log(`🎨 Seeding ${uniqueThemes.size} themes...`);
+	const themeMap = new Map<string, string>(); // hex -> themeId
+	let i = 1;
+	for (const hex of uniqueThemes) {
+		let theme = await prisma.theme.findFirst({ where: { hex } });
+		if (!theme) {
+			theme = await prisma.theme.create({
+				data: { name: `Theme ${i++}`, hex },
+			});
+		}
+		themeMap.set(hex, theme.id);
+	}
+
+	// 4. Create Categories
+	const uniqueCategories = new Set<string>();
+	data.transactions.forEach(t => uniqueCategories.add(t.category));
+
+	console.log(`📁 Seeding ${uniqueCategories.size} categories...`);
+	const categoryMap = new Map<string, string>(); // name -> categoryId
+	for (const name of uniqueCategories) {
+		const slug = name.toLowerCase().replace(/ /g, '-');
+		let cat = await prisma.category.findUnique({
+			where: { userId_name: { userId: user.id, name } },
 		});
-
-		if (!existingPot) {
-			const pot = await prisma.pot.create({
+		if (!cat) {
+			cat = await prisma.category.create({
 				data: {
 					userId: user.id,
-					name: p.name,
-					target: p.target,
-					themeId: theme.id,
+					name,
+					image: `/assets/images/avatars/${slug}.jpg`,
 				},
 			});
-
-			if (p.total > 0) {
-				await prisma.transaction.create({
-					data: {
-						userId: user.id,
-						accountId: account.id,
-						potId: pot.id,
-						name: `Initial deposit – ${p.name}`,
-						amount: -p.total,
-						date: new Date('2024-07-01T00:00:00Z'),
-						isRecurring: false,
-					},
-				});
-			}
 		}
+		categoryMap.set(name, cat.id);
 	}
-	console.log(`🏺 Seeded ${data.pots.length} pots`);
 
-	console.log('✅ Dummy seed complete');
+	// 5. Create Budgets
+	console.log(`📊 Seeding ${data.budgets.length} budgets...`);
+	for (const b of data.budgets as RawBudget[]) {
+		const categoryId = categoryMap.get(b.category)!;
+		const themeId = themeMap.get(b.theme)!;
+
+		await prisma.budget.upsert({
+			where: { userId_categoryId: { userId: user.id, categoryId } },
+			update: { maximum: b.maximum, themeId },
+			create: {
+				userId: user.id,
+				categoryId,
+				maximum: b.maximum,
+				themeId,
+			},
+		});
+	}
+
+	// 6. Create Pots
+	console.log(`🏺 Seeding ${data.pots.length} pots...`);
+	const potMap = new Map<string, string>(); // name -> potId
+	for (const p of data.pots as RawPot[]) {
+		const themeId = themeMap.get(p.theme)!;
+
+		const pot = await prisma.pot.upsert({
+			where: { userId_name: { userId: user.id, name: p.name } },
+			update: { target: p.target, themeId },
+			create: {
+				userId: user.id,
+				name: p.name,
+				target: p.target,
+				themeId,
+			},
+		});
+		potMap.set(p.name, pot.id);
+	}
+
+	// 7. Create Transactions (Source of Truth)
+	const existingTx = await prisma.transaction.count({
+		where: { userId: user.id, type: { in: ['INCOME', 'EXPENSE'] } },
+	});
+	if (existingTx === 0) {
+		console.log(`💸 Seeding ${data.transactions.length} transactions...`);
+		for (const raw of data.transactions as RawTransaction[]) {
+			const type = raw.amount >= 0 ? 'INCOME' : 'EXPENSE';
+			const categoryId = categoryMap.get(raw.category);
+
+			await prisma.transaction.create({
+				data: {
+					userId: user.id,
+					accountId: account.id,
+					categoryId,
+					name: raw.name,
+					amount: Math.abs(raw.amount), // Amount is absolute, sign is inferred by type
+					type,
+					date: new Date(raw.date),
+					recurring: raw.recurring,
+					image: raw.avatar, // Explicit override provided by JSON
+				},
+			});
+		}
+	} else {
+		console.log(`💸 Transactions already seeded, skipping.`);
+	}
+
+	console.log('✅ Dummy seed complete!');
 }
 
-// ────────────────────────────────────────────────────────────────────────────────
-// ENTRY POINT
-// ────────────────────────────────────────────────────────────────────────────────
-
 async function main() {
-	console.log('🌱 Starting database seed...\n');
-
-	const isDev = process.env.NODE_ENV !== 'production';
-
-	if (isDev) {
+  console.log('🌱 Starting database seed...\n');
+  if (process.env.NODE_ENV !== 'production') {
 		await seedDummyData();
-	} else {
-		console.log('⚠️  Production mode: skipping dummy data');
-		console.log('   Run seedMainData(userId) after first user registers');
-	}
-
-	console.log('\n🌱 Seed finished!');
+  } else {
+		console.log('⚠️ Production: skipping dummy data');
+  }
+  console.log('\n🌱 Seed finished!');
 }
 
 main()

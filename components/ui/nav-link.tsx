@@ -3,7 +3,7 @@
 import { Link as LinkSharedType } from '@/lib/shared';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { useIsRoute } from '@/lib/utils';
+import { useIsRoute } from '@/hooks/use-is-route';
 import { motion, AnimatePresence } from 'motion/react';
 
 import {

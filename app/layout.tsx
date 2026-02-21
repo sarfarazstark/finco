@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 export const metadata: Metadata = {
 	title: 'Personal Finance App - Smarter spending, stronger savings',
@@ -19,14 +20,16 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body>
-				<Toaster
-					position="bottom-right"
-					toastOptions={{
-						duration: 3000,
-						style: { fontSize: '14px' },
-					}}
-				/>
-				{children}
+				<NuqsAdapter>
+					<Toaster
+						position="bottom-right"
+						toastOptions={{
+							duration: 3000,
+							style: { fontSize: '14px' },
+						}}
+					/>
+					{children}
+				</NuqsAdapter>
 			</body>
 		</html>
 	);

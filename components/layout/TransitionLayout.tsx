@@ -1,17 +1,25 @@
 'use client';
 
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useIsPresent } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import { LayoutRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import React, { useContext, useState } from 'react';
-
+import React, { useContext } from 'react';
+import { ScrollArea } from '../ui/scroll-area';
 function FrozenRouter(props: { children: React.ReactNode }) {
 	const context = useContext(LayoutRouterContext ?? {});
+	const isPresent = useIsPresent();
+	const [frozenContext, setFrozenContext] = React.useState(context);
 
-	const [frozen] = useState(context);
+	React.useEffect(() => {
+		if (isPresent) {
+			setFrozenContext(context);
+		}
+	}, [context, isPresent]);
 
 	return (
-		<LayoutRouterContext.Provider value={frozen}>
+		<LayoutRouterContext.Provider
+			value={isPresent ? context : frozenContext}
+		>
 			{props.children}
 		</LayoutRouterContext.Provider>
 	);
@@ -41,7 +49,9 @@ export default function TransitionLayout({
 				transition={{ duration: 0.35, ease: 'easeInOut' }}
 				className="h-full overflow-y-auto overflow-x-hidden"
 			>
-				<FrozenRouter>{children}</FrozenRouter>
+				<ScrollArea>
+					<FrozenRouter>{children}</FrozenRouter>
+				</ScrollArea>
 			</motion.div>
 		</AnimatePresence>
 	);

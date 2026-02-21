@@ -29,8 +29,8 @@ export function Input({
 
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="flex justify-between">
-				{label && (
+			{label && (
+				<div className="flex justify-between">
 					<label
 						className={cn(
 							'text-grey-900 font-semibold text-xs',
@@ -40,9 +40,9 @@ export function Input({
 					>
 						{label}
 					</label>
-				)}
-				{error && <p className="text-red text-sm">{error}</p>}
-			</div>
+					{error && <p className="text-red text-sm">{error}</p>}
+				</div>
+			)}
 
 			<div className="relative">
 				<input
