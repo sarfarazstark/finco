@@ -1,7 +1,6 @@
 import Sidebar from '@/components/layout/sidebar';
 import TransitionLayout from '@/components/layout/TransitionLayout';
 import { Link } from '@/lib/shared';
-import Logout from '@/components/layout/logout';
 
 const links: Link[] = [
 	{
@@ -39,7 +38,6 @@ export default function AppLayout({
 	return (
 		<main className="grid grid-cols-[auto_1fr] h-screen overflow-hidden">
 			<Sidebar links={links} />
-			<Logout />
 			<TransitionLayout>{children}</TransitionLayout>
 		</main>
 	);

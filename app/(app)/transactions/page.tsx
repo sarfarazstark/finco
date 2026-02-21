@@ -1,15 +1,12 @@
 import Image from 'next/image';
-import { prisma } from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { resolveTransactionImage } from '@/lib/resolve-transaction-image';
 import { Pagination } from '@/components/ui/pagination';
-import { paginate } from '@/lib/pagination';
 import { TransactionFilters } from './_components/transaction-filters';
 import { AnimatedTableWrapper } from './_components/animated-table-wrapper';
-import { AddTransactionDialog } from './_components/add-transaction-dialog';
+import { getTransactionsPageData } from '@/lib/data/transactions';
 
 export default async function TransactionsPage({
 	searchParams,
@@ -17,69 +14,25 @@ export default async function TransactionsPage({
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
 	const params = await searchParams;
-	const page =
-		typeof params.page === 'string' ? parseInt(params.page, 10) : 1;
-	const currentPage = isNaN(page) || page < 1 ? 1 : page;
+	const session =
+		(await auth.api.getSession({
+			headers: await headers(),
+		})) ?? redirect('/auth/login');
 
-	const search = typeof params.search === 'string' ? params.search : '';
-	const sort = typeof params.sort === 'string' ? params.sort : 'latest';
-	const category = typeof params.category === 'string' ? params.category : '';
-
-	const session = await auth.api.getSession({
-		headers: await headers(),
-	});
-
-	if (!session) {
-		redirect('/auth/login');
-	}
-
-	const categories = await prisma.category.findMany({
-		where: { userId: session.user.id },
-		select: { name: true },
-		orderBy: { name: 'asc' },
-	});
-
-	const sortMap: Record<string, object> = {
-		latest: { date: 'desc' },
-		oldest: { date: 'asc' },
-		atoz: { name: 'asc' },
-		ztoa: { name: 'desc' },
-		highest: { amount: 'desc' },
-		lowest: { amount: 'asc' },
-	};
-
-	const { data, meta } = await paginate(
-		prisma.transaction,
-		{
-			where: {
-				userId: session.user.id,
-				...(category && category !== 'All'
-					? { category: { name: category } }
-					: {}),
-				...(search
-					? { name: { contains: search, mode: 'insensitive' } }
-					: {}),
-			},
-			include: { category: true, account: true },
-			orderBy: sortMap[sort] || { date: 'desc' },
-		},
-		currentPage,
-		10
+	const { categories, transactions, meta } = await getTransactionsPageData(
+		session.user.id,
+		params
 	);
-
-	const transactions = data as Prisma.TransactionGetPayload<{
-		include: { category: true; account: true };
-	}>[];
 
 	return (
 		<section className="p-8 max-w-5xl mx-auto">
 			<header className="flex items-center justify-between mb-8">
 				<h1 className="text-3xl font-bold">Transactions</h1>
-				<AddTransactionDialog />
 			</header>
 
 			<div className="bg-white p-6 rounded-xl space-y-6">
 				<TransactionFilters categories={categories.map(c => c.name)} />
+
 				<AnimatedTableWrapper>
 					<div className="w-full overflow-x-auto">
 						<table className="table-auto w-full min-w-175">
