@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import '@tabler/icons-webfont/dist/tabler-icons.css';
 
 export const metadata: Metadata = {
 	title: 'Personal Finance App - Smarter spending, stronger savings',

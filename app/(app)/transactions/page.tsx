@@ -1,12 +1,11 @@
-import Image from 'next/image';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { resolveTransactionImage } from '@/lib/resolve-transaction-image';
 import { Pagination } from '@/components/ui/pagination';
 import { TransactionFilters } from './_components/transaction-filters';
 import { AnimatedTableWrapper } from './_components/animated-table-wrapper';
 import { getTransactionsPageData } from '@/lib/data/transactions';
+import { ResolvedImage } from '@/components/transactions/resolved-image';
 
 export default async function TransactionsPage({
 	searchParams,
@@ -54,8 +53,6 @@ export default async function TransactionsPage({
 							</thead>
 							<tbody>
 								{transactions.map(tx => {
-									const imageSrc =
-										resolveTransactionImage(tx);
 									const isPositive = tx.type === 'INCOME';
 									const sign = isPositive ? '+' : '-';
 
@@ -69,13 +66,9 @@ export default async function TransactionsPage({
 										>
 											<td className="px-3 py-4">
 												<div className="flex items-center gap-3">
-													<div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-grey-100">
-														<Image
-															src={imageSrc}
-															alt={tx.name}
-															width={40}
-															height={40}
-															className="w-full h-full object-cover"
+													<div className="w-10 h-10 rounded-full flex align-center justify-center overflow-hidden shrink-0 border border-grey-100">
+														<ResolvedImage
+															transaction={tx}
 														/>
 													</div>
 													<p className="font-preset-4-bold text-sm text-grey-900">

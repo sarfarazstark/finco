@@ -1,7 +1,6 @@
 import Sidebar from '@/components/layout/sidebar';
 import TransitionLayout from '@/components/layout/TransitionLayout';
 import { Link } from '@/lib/shared';
-
 import GlobalAddButton from '@/components/layout/global-add-button';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';

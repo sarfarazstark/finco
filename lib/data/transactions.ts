@@ -39,7 +39,10 @@ export async function getTransactionsPageData(
 						? { name: { contains: search, mode: 'insensitive' } }
 						: {}),
 				},
-				include: { category: true, account: true },
+				include: {
+					category: { include: { icon: true } },
+					account: true,
+				},
 				orderBy: SORT_MAP[sort] ?? { date: 'desc' },
 			},
 			currentPage,
@@ -50,7 +53,10 @@ export async function getTransactionsPageData(
 	return {
 		categories,
 		transactions: transactions as Prisma.TransactionGetPayload<{
-			include: { category: true; account: true };
+			include: {
+				category: { include: { icon: true } };
+				account: true;
+			};
 		}>[],
 		meta,
 	};
