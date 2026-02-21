@@ -145,7 +145,7 @@ export const DialogContent = ({
 						exit={{ opacity: 0, scale: 0.95, y: -20 }}
 						transition={{ duration: 0.2, ease: 'easeOut' }}
 						className={cn(
-							'bg-white rounded-xl shadow-lg border border-grey-100 p-6 md:p-8 w-full max-w-lg mx-4 z-50 relative focus:outline-none',
+							'bg-white rounded-xl shadow-lg border border-grey-100 p-4 md:p-6 w-full max-w-lg mx-4 z-50 relative focus:outline-none',
 							className
 						)}
 						role="dialog"
@@ -200,7 +200,10 @@ export const DialogTitle = ({
 	...props
 }: React.HTMLAttributes<HTMLHeadingElement>) => (
 	<h2
-		className={cn('text-2xl font-preset-1 tracking-tight', className)}
+		className={cn(
+			'text-xl font-preset-4 font-bold tracking-tight',
+			className
+		)}
 		{...props}
 	/>
 );

@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
@@ -10,6 +9,7 @@ import { Pagination } from '@/components/ui/pagination';
 import { paginate } from '@/lib/pagination';
 import { TransactionFilters } from './_components/transaction-filters';
 import { AnimatedTableWrapper } from './_components/animated-table-wrapper';
+import { AddTransactionDialog } from './_components/add-transaction-dialog';
 
 export default async function TransactionsPage({
 	searchParams,
@@ -75,7 +75,7 @@ export default async function TransactionsPage({
 		<section className="p-8 max-w-5xl mx-auto">
 			<header className="flex items-center justify-between mb-8">
 				<h1 className="text-3xl font-bold">Transactions</h1>
-				<Button>Add Transaction</Button>
+				<AddTransactionDialog />
 			</header>
 
 			<div className="bg-white p-6 rounded-xl space-y-6">
