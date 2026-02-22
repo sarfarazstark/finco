@@ -44,9 +44,15 @@ export function TransactionRow({
 					<div className="w-10 h-10 rounded-full flex align-center justify-center overflow-hidden shrink-0 border border-grey-100">
 						<ResolvedImage transaction={transaction} />
 					</div>
-					<p className="font-preset-4-bold text-sm text-grey-900">
-						{transaction.name}
-					</p>
+					<div className="flex flex-col">
+						<p className="font-preset-4-bold text-sm text-grey-900 leading-tight">
+							{transaction.name}
+						</p>
+						<p className="font-preset-5 text-xs text-grey-500 flex items-center gap-1 mt-0.5">
+							<i className={`ti ti-${transaction.account?.image || 'wallet'} text-[10px]`} />
+							{transaction.account?.name || 'Account'}
+						</p>
+					</div>
 				</div>
 			</td>
 			<td className="px-3 py-4">{categoryName}</td>
