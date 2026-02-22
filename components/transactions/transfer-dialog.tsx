@@ -41,7 +41,7 @@ export function TransferDialog({
 
 	const handleSave = () => {
 		if (!amount || !name || !fromAccountId || !toAccountId) return;
-		if (fromAccountId === toAccountId) return; // Can't transfer to same account
+		if (fromAccountId === toAccountId) return;
 
 		startTransition(async () => {
 			const payload = {
@@ -78,11 +78,10 @@ export function TransferDialog({
 			<DialogContent hideClose key={transactionId || 'new'} className="sm:max-w-85 p-5 pt-7">
 				<div className="flex flex-col gap-4">
 
-					{/* Amount */}
 					<div className="flex items-center justify-center my-2 p-2 bg-grey-50 rounded-xl border border-grey-200">
 						<div className="flex items-center justify-center w-full max-w-[200px] relative">
 							<div className="absolute left-0 flex items-center justify-center pointer-events-none text-grey-400">
-								<span className="text-2xl font-bold">
+								<span className="text-2xl font-medium">
 									{currencySymbol}
 								</span>
 							</div>
@@ -97,7 +96,6 @@ export function TransferDialog({
 						</div>
 					</div>
 
-					{/* Form Fields */}
 					<div className="flex flex-col gap-3">
 						<div className="flex items-center bg-grey-50 rounded-lg border border-grey-200 focus-within:border-grey-300 focus-within:bg-white transition-colors h-11 px-3 gap-2">
 							<i className="ti ti-edit text-grey-400 text-lg" />
@@ -112,7 +110,7 @@ export function TransferDialog({
 
 						<div className="flex flex-col">
 							<div className="flex flex-col gap-1.5">
-								<label className="text-[10px] font-bold text-grey-500 uppercase tracking-wider pl-1">
+								<label className="text-[10px] font-medium text-grey-500 tracking-wider pl-1">
 									From
 								</label>
 								<AccountDropdown
@@ -139,7 +137,7 @@ export function TransferDialog({
 							</div>
 
 							<div className="flex flex-col gap-1.5 mt-1">
-								<label className="text-[10px] font-bold text-grey-500 uppercase tracking-wider pl-1">
+								<label className="text-[10px] font-medium text-grey-500 tracking-wider pl-1">
 									To
 								</label>
 								<AccountDropdown
@@ -152,7 +150,7 @@ export function TransferDialog({
 						</div>
 
 						<div className="flex flex-col gap-1.5 pt-1">
-							<label className="text-[9px] font-bold text-grey-500 uppercase tracking-widest pl-1">
+							<label className="text-[9px] font-medium text-grey-500 tracking-widest pl-1">
 								Date & Time
 							</label>
 							<DatePicker

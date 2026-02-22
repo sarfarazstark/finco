@@ -3,6 +3,7 @@ import { TransactionActions } from './transaction-actions';
 import { Category } from '@/components/transactions/category-dialog';
 import { AccountSelectorProps } from '@/components/layout/global-add-button';
 import { formatTransactionDate } from '@/lib/utils';
+import { AccountAvatar } from '@/components/transactions/account-avatar';
 
 import { Transaction } from '@prisma/client';
 
@@ -48,9 +49,12 @@ export function TransactionRow({
 						<p className="font-preset-4-bold text-sm text-grey-900 leading-tight">
 							{transaction.name}
 						</p>
-						<p className="font-preset-5 text-xs text-grey-500 flex items-center gap-1 mt-0.5">
-							<i className={`ti ti-${transaction.account?.image || 'wallet'} text-[10px]`} />
-							{transaction.account?.name || 'Account'}
+						<p className="font-preset-5 text-xs text-grey-500 flex items-center gap-1.5 mt-0.5">
+							<AccountAvatar
+								url={transaction.account?.image}
+								name={transaction.account?.name || 'Account'}
+								className="w-3.5 h-3.5"
+							/>
 						</p>
 					</div>
 				</div>

@@ -205,7 +205,7 @@ export function BaseTransactionDialog({
 
 					<div className={cn('grid gap-3 items-end pt-1 transition-all', recurring ? 'grid-cols-2' : 'grid-cols-1')}>
 						<div className="flex flex-col gap-1.5">
-							<label className="text-[9px] font-bold text-grey-500 uppercase tracking-widest pl-1">Date & Time</label>
+							<label className="text-[9px] font-medium text-grey-500 tracking-widest pl-1">Date & Time</label>
 							<Controller
 								control={control}
 								name="date"
@@ -220,7 +220,7 @@ export function BaseTransactionDialog({
 
 						{recurring && (
 							<div className="flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-1">
-								<label className="text-[9px] font-bold text-grey-500 uppercase tracking-widest pl-1">Repeat Every</label>
+								<label className="text-[9px] font-medium text-grey-500 tracking-widest pl-1">Repeat Every</label>
 								<Controller
 									control={control}
 									name="frequency"

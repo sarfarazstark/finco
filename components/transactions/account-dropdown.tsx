@@ -6,6 +6,7 @@ import {
 	DropdownItem,
 } from '@/components/ui/dropdown';
 import { AccountSelectorProps } from '../layout/global-add-button';
+import { AccountAvatar } from '@/components/transactions/account-avatar';
 
 export function AccountDropdown({
 	accounts,
@@ -30,17 +31,11 @@ export function AccountDropdown({
 		<Dropdown value={value} onValueChange={onChange} className="w-full">
 			<DropdownTrigger className="h-11 bg-grey-50 border-grey-200 hover:bg-white w-full px-3">
 				<div className="flex items-center justify-between gap-4 w-full">
-					<div className="flex items-center gap-2 overflow-hidden">
-						<i
-							className={cn(
-								'ti ti-' + (selectedAccount.icon || 'wallet'),
-								'text-lg text-grey-400 shrink-0'
-							)}
-						/>
-						<span className="text-sm font-medium text-grey-900 truncate">
-							{selectedAccount.name || 'Select Account'}
-						</span>
-					</div>
+					<AccountAvatar
+						url={selectedAccount.icon}
+						name={selectedAccount.name || 'Account'}
+						className="w-5 h-5"
+					/>
 					<span
 						className={cn(
 							'text-xs font-semibold shrink-0',
@@ -58,17 +53,11 @@ export function AccountDropdown({
 					return (
 						<DropdownItem key={acc.id} value={acc.id}>
 							<div className="flex items-center justify-between gap-4 w-full">
-								<div className="flex items-center gap-2 overflow-hidden">
-									<i
-										className={cn(
-											'ti ti-' + acc.icon,
-											'text-lg text-grey-400 shrink-0'
-										)}
-									/>
-									<span className="truncate font-medium">
-										{acc.name}
-									</span>
-								</div>
+								<AccountAvatar
+									url={acc.icon}
+									name={acc.name}
+									className="w-5 h-5"
+								/>
 								<span
 									className={cn(
 										'text-xs font-semibold shrink-0',
