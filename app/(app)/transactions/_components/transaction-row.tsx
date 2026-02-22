@@ -49,13 +49,11 @@ export function TransactionRow({
 						<p className="font-preset-4-bold text-sm text-grey-900 leading-tight">
 							{transaction.name}
 						</p>
-						<p className="font-preset-5 text-xs text-grey-500 flex items-center gap-1.5 mt-0.5">
-							<AccountAvatar
-								url={transaction.account?.image}
-								name={transaction.account?.name || 'Account'}
-								className="w-3.5 h-3.5"
-							/>
-						</p>
+						<AccountAvatar
+							url={transaction.account?.image}
+							name={transaction.account?.name || 'Account'}
+							className="w-3.5 h-3.5"
+						/>
 					</div>
 				</div>
 			</td>
