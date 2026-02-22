@@ -19,6 +19,7 @@ export async function getTransactionsPageData(
 	const search = (searchParams.search as string) || '';
 	const sort = (searchParams.sort as string) || 'latest';
 	const category = (searchParams.category as string) || '';
+	const accountId = (searchParams.accountId as string) || '';
 	const currentPage = isNaN(page) || page < 1 ? 1 : page;
 
 	const [dbCategories, dbAccounts, { data: transactions, meta }] =
@@ -43,6 +44,9 @@ export async function getTransactionsPageData(
 						userId,
 						...(category && category !== 'All'
 							? { category: { name: category } }
+							: {}),
+						...(accountId && accountId !== 'All'
+							? { accountId }
 							: {}),
 						...(search
 							? {

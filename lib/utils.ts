@@ -48,3 +48,40 @@ export function formatBalance(amount: number, currencyCode: string = 'USD') {
 		colorClass,
 	};
 }
+
+export function formatTransactionDate(dateInput: Date | string | number) {
+	const date = new Date(dateInput);
+	const now = new Date();
+
+	const isToday =
+		date.getDate() === now.getDate() &&
+		date.getMonth() === now.getMonth() &&
+		date.getFullYear() === now.getFullYear();
+
+	const isThisYear = date.getFullYear() === now.getFullYear();
+
+	const timePart = date.toLocaleTimeString('en-US', {
+		hour: 'numeric',
+		minute: '2-digit',
+		hour12: true,
+	});
+
+	if (isToday) {
+		return timePart;
+	}
+
+	const datePart = date.toLocaleDateString('en-GB', {
+		day: 'numeric',
+		month: 'short',
+	});
+
+	if (isThisYear) {
+		return `${datePart}, ${timePart}`;
+	}
+
+	return date.toLocaleDateString('en-GB', {
+		day: 'numeric',
+		month: 'short',
+		year: 'numeric',
+	});
+}

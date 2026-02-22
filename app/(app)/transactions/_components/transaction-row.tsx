@@ -2,6 +2,7 @@ import { ResolvedImage } from '@/components/transactions/resolved-image';
 import { TransactionActions } from './transaction-actions';
 import { Category } from '@/components/transactions/category-dialog';
 import { AccountSelectorProps } from '@/components/layout/global-add-button';
+import { formatTransactionDate } from '@/lib/utils';
 
 import { Transaction } from '@prisma/client';
 
@@ -50,11 +51,7 @@ export function TransactionRow({
 			</td>
 			<td className="px-3 py-4">{categoryName}</td>
 			<td className="px-3 py-4">
-				{new Date(transaction.date).toLocaleDateString('en-GB', {
-					day: '2-digit',
-					month: 'short',
-					year: 'numeric',
-				})}
+				{formatTransactionDate(transaction.date)}
 			</td>
 			<td
 				className={`px-3 py-4 text-right font-preset-4-bold ${

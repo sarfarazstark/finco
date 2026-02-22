@@ -3,6 +3,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { Pagination } from '@/components/ui/pagination';
 import { TransactionFilters } from './_components/transaction-filters';
+import { AccountFilter } from './_components/account-filter';
 import { AnimatedTableWrapper } from './_components/animated-table-wrapper';
 import { getTransactionsPageData } from '@/lib/data/transactions';
 import { TransactionRow } from './_components/transaction-row';
@@ -37,6 +38,7 @@ export default async function TransactionsPage({
 		<section className="p-8 max-w-5xl mx-auto">
 			<header className="flex items-center justify-between mb-8">
 				<h1 className="text-3xl font-bold">Transactions</h1>
+				<AccountFilter accounts={accounts} currency={settings.currency} />
 			</header>
 
 			<div className="bg-white p-6 rounded-xl space-y-6">
