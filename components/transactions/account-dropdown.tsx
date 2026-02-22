@@ -25,7 +25,7 @@ export function AccountDropdown({
 			: [{ id: 'cash', name: 'Cash', icon: 'wallet', balance: 0 }];
 
 	const selectedAccount =
-		safeAccounts.find((a) => a.id === value) || safeAccounts[0];
+		safeAccounts.find(a => a.id === value) || safeAccounts[0];
 
 	return (
 		<Dropdown value={value} onValueChange={onChange} className="w-full">
@@ -48,7 +48,7 @@ export function AccountDropdown({
 				</div>
 			</DropdownTrigger>
 			<DropdownContent>
-				{safeAccounts.map((acc) => {
+				{safeAccounts.map(acc => {
 					const bal = formatBalance(acc.balance, currency);
 					return (
 						<DropdownItem key={acc.id} value={acc.id}>

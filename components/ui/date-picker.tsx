@@ -1,6 +1,8 @@
 'use client';
 
-import ReactDatePicker, { DatePickerProps as ReactDatePickerProps } from 'react-datepicker';
+import ReactDatePicker, {
+	DatePickerProps as ReactDatePickerProps,
+} from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { cn } from '@/lib/utils';
 import React from 'react';

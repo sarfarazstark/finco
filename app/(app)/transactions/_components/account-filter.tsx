@@ -25,13 +25,9 @@ export function AccountFilter({
 
 	const defaultAccountId = searchParams.get('accountId') || 'All';
 
-	const safeAccounts =
-		accounts && accounts.length > 0
-			? accounts
-			: [];
+	const safeAccounts = accounts && accounts.length > 0 ? accounts : [];
 
-	const selectedAccount =
-		safeAccounts.find((a) => a.id === defaultAccountId);
+	const selectedAccount = safeAccounts.find(a => a.id === defaultAccountId);
 
 	const updateFilter = (value: string) => {
 		const params = new URLSearchParams(searchParams.toString());
@@ -61,10 +57,18 @@ export function AccountFilter({
 							<span
 								className={cn(
 									'text-xs font-semibold shrink-0 ml-auto leading-none',
-									formatBalance(selectedAccount.balance, currency).colorClass
+									formatBalance(
+										selectedAccount.balance,
+										currency
+									).colorClass
 								)}
 							>
-								{formatBalance(selectedAccount.balance, currency).text}
+								{
+									formatBalance(
+										selectedAccount.balance,
+										currency
+									).text
+								}
 							</span>
 						</>
 					) : (
@@ -78,7 +82,7 @@ export function AccountFilter({
 				<DropdownItem value="All">
 					<span className="font-medium">All Accounts</span>
 				</DropdownItem>
-				{safeAccounts.map((acc) => {
+				{safeAccounts.map(acc => {
 					const bal = formatBalance(acc.balance, currency);
 					return (
 						<DropdownItem key={acc.id} value={acc.id}>

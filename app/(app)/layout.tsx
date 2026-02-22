@@ -50,46 +50,52 @@ export default async function AppLayout({
 	}
 
 	const dbCategories = await prisma.category.findMany({
-		include: { icon: true }
+		include: { icon: true },
 	});
 
 	const dbAccounts = await prisma.financialAccount.findMany({
 		where: { userId: session.user.id },
 		include: {
 			transactions: {
-				select: { amount: true }
-			}
-		}
+				select: { amount: true },
+			},
+		},
 	});
 
 	const accounts = dbAccounts.map(a => ({
 		id: a.id,
 		name: a.name,
 		icon: a.image || 'wallet',
-		balance: a.transactions.reduce((sum, t) => sum + t.amount, 0)
+		balance: a.transactions.reduce((sum, t) => sum + t.amount, 0),
 	}));
 
 	const categories = dbCategories.map(c => ({
 		id: c.id,
 		name: c.name,
 		icon: c.icon?.name || 'category',
-		color: c.icon ? `${c.icon.bg} ${c.icon.color}` : 'bg-grey-100 text-grey-600',
+		color: c.icon
+			? `${c.icon.bg} ${c.icon.color}`
+			: 'bg-grey-100 text-grey-600',
 	}));
 
 	const dbSettings = await prisma.setting.findUnique({
-		where: { userId: session.user.id }
+		where: { userId: session.user.id },
 	});
 
 	const settings = {
 		currency: dbSettings?.currency || 'USD',
-		theme: dbSettings?.theme || 'light'
+		theme: dbSettings?.theme || 'light',
 	};
 
 	return (
 		<main className="grid grid-cols-[auto_1fr] h-screen overflow-hidden">
 			<Sidebar links={links} />
 			<TransitionLayout>{children}</TransitionLayout>
-			<GlobalAddButton categories={categories} accounts={accounts} settings={settings} />
+			<GlobalAddButton
+				categories={categories}
+				accounts={accounts}
+				settings={settings}
+			/>
 			<Toaster position="bottom-right" />
 		</main>
 	);

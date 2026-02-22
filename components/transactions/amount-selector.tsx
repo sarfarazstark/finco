@@ -68,9 +68,12 @@ export const AmountSelector = forwardRef<HTMLDivElement, AmountSelectorProps>(
 						value={amount}
 						min="0"
 						step="0.01"
-						onChange={(e) => {
+						onChange={e => {
 							const val = e.target.value;
-							if (val === '' || (Number(val) >= 0 && !isNaN(Number(val)))) {
+							if (
+								val === '' ||
+								(Number(val) >= 0 && !isNaN(Number(val)))
+							) {
 								onAmountChange(val);
 							}
 						}}

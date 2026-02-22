@@ -11,8 +11,6 @@ export type Category = {
 	color: string;
 };
 
-
-
 export function CategorySelectorOverlay({
 	open,
 	onClose,
@@ -62,7 +60,9 @@ export function CategorySelectorOverlay({
 											cat.color
 										)}
 									>
-										<i className={`ti ti-${cat.icon} text-xl`} />
+										<i
+											className={`ti ti-${cat.icon} text-xl`}
+										/>
 									</div>
 									<span className="text-[11px] font-bold text-grey-600 text-center tracking-widest px-1">
 										{cat.name}

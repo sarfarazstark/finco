@@ -34,8 +34,12 @@ export function TransferDialog({
 		initialData ? Math.abs(initialData.amount).toString() : ''
 	);
 	const [name, setName] = useState(initialData?.name || '');
-	const [fromAccountId, setFromAccountId] = useState(initialData?.fromAccountId || '1');
-	const [toAccountId, setToAccountId] = useState(initialData?.toAccountId || '2');
+	const [fromAccountId, setFromAccountId] = useState(
+		initialData?.fromAccountId || '1'
+	);
+	const [toAccountId, setToAccountId] = useState(
+		initialData?.toAccountId || '2'
+	);
 	const [date, setDate] = useState<Date>(initialData?.date || new Date());
 	const [isPending, startTransition] = useTransition();
 
@@ -70,14 +74,16 @@ export function TransferDialog({
 		});
 	};
 
-
 	const currencySymbol = getCurrencySymbol(settings?.currency);
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent hideClose key={transactionId || 'new'} className="sm:max-w-85 p-5 pt-7">
+			<DialogContent
+				hideClose
+				key={transactionId || 'new'}
+				className="sm:max-w-85 p-5 pt-7"
+			>
 				<div className="flex flex-col gap-4">
-
 					<div className="flex items-center justify-center my-2 p-2 bg-grey-50 rounded-xl border border-grey-200">
 						<div className="flex items-center justify-center w-full max-w-[200px] relative">
 							<div className="absolute left-0 flex items-center justify-center pointer-events-none text-grey-400">
@@ -155,7 +161,9 @@ export function TransferDialog({
 							</label>
 							<DatePicker
 								selected={date}
-								onChange={(newDate: Date | null) => setDate(newDate || new Date())}
+								onChange={(newDate: Date | null) =>
+									setDate(newDate || new Date())
+								}
 							/>
 						</div>
 
@@ -173,9 +181,18 @@ export function TransferDialog({
 								variant="primary"
 								className="w-1/2"
 								onClick={handleSave}
-								disabled={isPending || !amount || !name || fromAccountId === toAccountId}
+								disabled={
+									isPending ||
+									!amount ||
+									!name ||
+									fromAccountId === toAccountId
+								}
 							>
-								{isPending ? 'Saving...' : (transactionId ? 'Update Transfer' : 'Transfer Funds')}
+								{isPending
+									? 'Saving...'
+									: transactionId
+										? 'Update Transfer'
+										: 'Transfer Funds'}
 							</Button>
 						</div>
 					</div>

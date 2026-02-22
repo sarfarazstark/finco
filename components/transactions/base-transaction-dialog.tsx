@@ -21,7 +21,9 @@ import { AmountSelector } from './amount-selector';
 import toast from 'react-hot-toast';
 
 const transactionSchema = z.object({
-	amount: z.union([z.string(), z.number()]).refine(val => Number(val) > 0, 'Amount must be greater than 0'),
+	amount: z
+		.union([z.string(), z.number()])
+		.refine(val => Number(val) > 0, 'Amount must be greater than 0'),
 	name: z.string().min(1, 'Name is required'),
 	accountId: z.string().min(1, 'Account is required'),
 	categoryId: z.string().min(1, 'Category is required'),
@@ -81,7 +83,8 @@ export function BaseTransactionDialog({
 	const { setValue, control, handleSubmit } = form;
 	const recurring = useWatch({ control, name: 'recurring' }) || false;
 	const selectedCategoryId = useWatch({ control, name: 'categoryId' }) || '';
-	const selectedCategory = categories.find(c => c.id === selectedCategoryId) || null;
+	const selectedCategory =
+		categories.find(c => c.id === selectedCategoryId) || null;
 	const amountValue = useWatch({ control, name: 'amount' }) || '';
 	const nameValue = useWatch({ control, name: 'name' }) || '';
 
@@ -97,21 +100,32 @@ export function BaseTransactionDialog({
 				recurring: data.recurring || false,
 			};
 
-			const loadingToast = toast.loading(transactionId ? 'Updating transaction...' : 'Saving transaction...');
+			const loadingToast = toast.loading(
+				transactionId
+					? 'Updating transaction...'
+					: 'Saving transaction...'
+			);
 
 			const res = transactionId
 				? await updateTransaction(transactionId, payload)
 				: await addTransaction(payload);
 
 			if (res.success) {
-				toast.success(transactionId ? 'Transaction updated successfully' : 'Transaction saved successfully', { id: loadingToast });
+				toast.success(
+					transactionId
+						? 'Transaction updated successfully'
+						: 'Transaction saved successfully',
+					{ id: loadingToast }
+				);
 				onOpenChange(false);
 				if (!transactionId) {
 					form.reset();
 				}
 			} else {
 				console.error(res.error);
-				toast.error(res.error || 'Failed to save transaction', { id: loadingToast });
+				toast.error(res.error || 'Failed to save transaction', {
+					id: loadingToast,
+				});
 			}
 		});
 	};
@@ -119,37 +133,71 @@ export function BaseTransactionDialog({
 	const currencySymbol = getCurrencySymbol(settings?.currency);
 	const isIncome = type === 'INCOME';
 	const isEdit = !!transactionId;
-	const title = isEdit ? (isIncome ? 'Edit Income' : 'Edit Expense') : (isIncome ? 'Add Income' : 'Add Expense');
-	const placeholder = isIncome ? 'Income Source (e.g., Salary)' : 'Merchant or Payee';
-	const saveText = isEdit ? 'Update Transaction' : (isIncome ? 'Save Income' : 'Save Expense');
+	const title = isEdit
+		? isIncome
+			? 'Edit Income'
+			: 'Edit Expense'
+		: isIncome
+			? 'Add Income'
+			: 'Add Expense';
+	const placeholder = isIncome
+		? 'Income Source (e.g., Salary)'
+		: 'Merchant or Payee';
+	const saveText = isEdit
+		? 'Update Transaction'
+		: isIncome
+			? 'Save Income'
+			: 'Save Expense';
 	const borderColor = isIncome ? 'border-green-200' : 'border-red-200';
 	const textColor = isIncome ? 'text-green-600' : 'text-red-500';
 
-	const canSave = Number(amountValue) > 0 && nameValue.trim().length > 0 && selectedCategoryId;
+	const canSave =
+		Number(amountValue) > 0 &&
+		nameValue.trim().length > 0 &&
+		selectedCategoryId;
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent key={transactionId || 'new'} hideClose className="sm:max-w-[400px] p-5">
+			<DialogContent
+				key={transactionId || 'new'}
+				hideClose
+				className="sm:max-w-[400px] p-5"
+			>
 				<DialogTitle className="sr-only">{title}</DialogTitle>
 
-				<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+				<form
+					onSubmit={handleSubmit(onSubmit)}
+					className="flex flex-col gap-4"
+				>
 					<div className="grid grid-cols-2 w-full h-11 bg-grey-100 p-1 rounded-lg">
 						<button
 							type="button"
-							onClick={() => setValue('recurring', false, { shouldValidate: true })}
+							onClick={() =>
+								setValue('recurring', false, {
+									shouldValidate: true,
+								})
+							}
 							className={cn(
 								'rounded-md text-sm font-medium transition-all duration-200',
-								!recurring ? 'bg-white text-grey-900 shadow-sm' : 'text-grey-500 hover:text-grey-700 hover:bg-grey-200/50'
+								!recurring
+									? 'bg-white text-grey-900 shadow-sm'
+									: 'text-grey-500 hover:text-grey-700 hover:bg-grey-200/50'
 							)}
 						>
 							One Time
 						</button>
 						<button
 							type="button"
-							onClick={() => setValue('recurring', true, { shouldValidate: true })}
+							onClick={() =>
+								setValue('recurring', true, {
+									shouldValidate: true,
+								})
+							}
 							className={cn(
 								'rounded-md text-sm font-medium transition-all duration-200',
-								recurring ? 'bg-white text-grey-900 shadow-sm' : 'text-grey-500 hover:text-grey-700 hover:bg-grey-200/50'
+								recurring
+									? 'bg-white text-grey-900 shadow-sm'
+									: 'text-grey-500 hover:text-grey-700 hover:bg-grey-200/50'
 							)}
 						>
 							Repetitive
@@ -203,16 +251,27 @@ export function BaseTransactionDialog({
 						/>
 					</div>
 
-					<div className={cn('grid gap-3 items-end pt-1 transition-all', recurring ? 'grid-cols-2' : 'grid-cols-1')}>
+					<div
+						className={cn(
+							'grid gap-3 items-end pt-1 transition-all',
+							recurring ? 'grid-cols-2' : 'grid-cols-1'
+						)}
+					>
 						<div className="flex flex-col gap-1.5">
-							<label className="text-[9px] font-medium text-grey-500 tracking-widest pl-1">Date & Time</label>
+							<label className="text-[9px] font-medium text-grey-500 tracking-widest pl-1">
+								Date & Time
+							</label>
 							<Controller
 								control={control}
 								name="date"
 								render={({ field }) => (
 									<DatePicker
 										selected={field.value}
-										onChange={(newDate: Date | null) => field.onChange(newDate || new Date())}
+										onChange={(newDate: Date | null) =>
+											field.onChange(
+												newDate || new Date()
+											)
+										}
 									/>
 								)}
 							/>
@@ -220,19 +279,30 @@ export function BaseTransactionDialog({
 
 						{recurring && (
 							<div className="flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-1">
-								<label className="text-[9px] font-medium text-grey-500 tracking-widest pl-1">Repeat Every</label>
+								<label className="text-[9px] font-medium text-grey-500 tracking-widest pl-1">
+									Repeat Every
+								</label>
 								<Controller
 									control={control}
 									name="frequency"
 									render={({ field }) => (
-										<Dropdown value={field.value || '30'} onValueChange={field.onChange}>
+										<Dropdown
+											value={field.value || '30'}
+											onValueChange={field.onChange}
+										>
 											<DropdownTrigger className="h-11 bg-grey-50 border-grey-200 hover:bg-white">
 												<DropdownValue placeholder="Select Frequency" />
 											</DropdownTrigger>
 											<DropdownContent>
-												<DropdownItem value="7">7 Days</DropdownItem>
-												<DropdownItem value="30">30 Days</DropdownItem>
-												<DropdownItem value="180">6 Months</DropdownItem>
+												<DropdownItem value="7">
+													7 Days
+												</DropdownItem>
+												<DropdownItem value="30">
+													30 Days
+												</DropdownItem>
+												<DropdownItem value="180">
+													6 Months
+												</DropdownItem>
 											</DropdownContent>
 										</Dropdown>
 									)}
@@ -242,7 +312,12 @@ export function BaseTransactionDialog({
 					</div>
 
 					<div className="flex items-center justify-center gap-2 mt-2">
-						<Button type="button" variant="tertiary" className="w-1/2" onClick={() => onOpenChange(false)}>
+						<Button
+							type="button"
+							variant="tertiary"
+							className="w-1/2"
+							onClick={() => onOpenChange(false)}
+						>
 							Cancel
 						</Button>
 						<Button
@@ -260,8 +335,10 @@ export function BaseTransactionDialog({
 					open={isCategoryOpen}
 					categories={categories}
 					onClose={() => setIsCategoryOpen(false)}
-					onSelect={(cat) => {
-						setValue('categoryId', cat.id, { shouldValidate: true });
+					onSelect={cat => {
+						setValue('categoryId', cat.id, {
+							shouldValidate: true,
+						});
 						setIsCategoryOpen(false);
 					}}
 				/>

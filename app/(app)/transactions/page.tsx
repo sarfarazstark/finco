@@ -20,25 +20,26 @@ export default async function TransactionsPage({
 			headers: await headers(),
 		})) ?? redirect('/auth/login');
 
-	const { categories, accounts, transactions, meta } = await getTransactionsPageData(
-		session.user.id,
-		params
-	);
+	const { categories, accounts, transactions, meta } =
+		await getTransactionsPageData(session.user.id, params);
 
 	const dbSettings = await prisma.setting.findUnique({
-		where: { userId: session.user.id }
+		where: { userId: session.user.id },
 	});
 
 	const settings = {
 		currency: dbSettings?.currency || 'INR',
-		theme: dbSettings?.theme || 'light'
+		theme: dbSettings?.theme || 'light',
 	};
 
 	return (
 		<section className="p-8 max-w-5xl mx-auto">
 			<header className="flex items-center justify-between mb-8">
 				<h1 className="text-3xl font-bold">Transactions</h1>
-				<AccountFilter accounts={accounts} currency={settings.currency} />
+				<AccountFilter
+					accounts={accounts}
+					currency={settings.currency}
+				/>
 			</header>
 
 			<div className="bg-white p-6 rounded-xl space-y-6">

@@ -10,15 +10,20 @@ interface AccountAvatarProps {
 	height?: number;
 }
 
-export function AccountAvatar({ url = '/assets/images/avatars/default.jpg', name, className, width, height }: AccountAvatarProps) {
-
+export function AccountAvatar({
+	url = '/assets/images/avatars/default.jpg',
+	name,
+	className,
+	width,
+	height,
+}: AccountAvatarProps) {
 	return (
 		<div className="flex items-center gap-2 overflow-hidden">
 			<Image
 				width={width || 20}
 				height={height || 20}
 				src={url}
-				alt={name || ""}
+				alt={name || ''}
 				className={cn('rounded-full object-cover shrink-0', className)}
 			/>
 			{name && (

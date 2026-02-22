@@ -60,13 +60,15 @@ export function TransactionActions({
 	const isTransfer = transaction.type === 'TRANSFER';
 	const inflow = transaction.amount > 0;
 
-	const transferInitialData = isTransfer ? {
-		amount: Math.abs(transaction.amount),
-		name: transaction.name,
-		fromAccountId: inflow ? '' : transaction.accountId,
-		toAccountId: inflow ? transaction.accountId : '',
-		date: new Date(transaction.date)
-	} : undefined;
+	const transferInitialData = isTransfer
+		? {
+				amount: Math.abs(transaction.amount),
+				name: transaction.name,
+				fromAccountId: inflow ? '' : transaction.accountId,
+				toAccountId: inflow ? transaction.accountId : '',
+				date: new Date(transaction.date),
+			}
+		: undefined;
 
 	return (
 		<>
@@ -140,13 +142,15 @@ export function TransactionActions({
 					accounts={accounts}
 					settings={settings}
 					transactionId={transaction.id}
-					initialData={transferInitialData as {
-						amount: number;
-						name: string;
-						fromAccountId: string;
-						toAccountId: string;
-						date: Date;
-					}}
+					initialData={
+						transferInitialData as {
+							amount: number;
+							name: string;
+							fromAccountId: string;
+							toAccountId: string;
+							date: Date;
+						}
+					}
 				/>
 			)}
 		</>

@@ -151,13 +151,13 @@ body {
 }
 
 .react-datepicker {
-  @apply bg-white border border-grey-200 shadow-xl rounded-xl;
-  background-color: var(--color-white) !important;
-  border-width: 1px !important;
-  border-color: var(--color-grey-200) !important;
-  border-radius: 0.75rem !important;
-  display: flex !important;
+	@apply bg-white border border-grey-200 shadow-xl rounded-xl;
+	background-color: var(--color-white) !important;
+	border-width: 1px !important;
+	border-color: var(--color-grey-200) !important;
+	border-radius: 0.75rem !important;
+	display: flex !important;
 }
 .react-datepicker__month-container {
-  float: none !important;
+	float: none !important;
 }
