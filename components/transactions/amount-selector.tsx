@@ -66,8 +66,15 @@ export const AmountSelector = forwardRef<HTMLDivElement, AmountSelectorProps>(
 						autoFocus
 						placeholder="0.00"
 						value={amount}
-						onChange={(e) => onAmountChange(e.target.value)}
-						className="text-3xl font-bold bg-transparent border-none focus:outline-none focus:ring-0 text-grey-900 w-full placeholder:text-grey-300 p-0 leading-none h-8 flex items-center"
+						min="0"
+						step="0.01"
+						onChange={(e) => {
+							const val = e.target.value;
+							if (val === '' || (Number(val) >= 0 && !isNaN(Number(val)))) {
+								onAmountChange(val);
+							}
+						}}
+						className="text-3xl font-bold bg-transparent border-none focus:outline-none focus:ring-0 text-grey-900 w-full placeholder:text-grey-300 p-0 leading-none h-8 flex items-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
 					/>
 				</div>
 			</div>

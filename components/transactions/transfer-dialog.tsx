@@ -75,7 +75,7 @@ export function TransferDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent key={transactionId || 'new'} className="sm:max-w-85 p-5 pt-7">
+			<DialogContent hideClose key={transactionId || 'new'} className="sm:max-w-85 p-5 pt-7">
 				<div className="flex flex-col gap-4">
 
 					{/* Amount */}
