@@ -6,20 +6,10 @@ import { useClickOutside } from '@/hooks/use-click-outside';
 import { motion, AnimatePresence } from 'motion/react';
 import { Category } from '@/components/transactions/category-dialog';
 import { AccountSelectorProps } from '@/components/layout/global-add-button';
-import { IncomeDialog } from '@/components/transactions/income-dialog';
-import { ExpenseDialog } from '@/components/transactions/expense-dialog';
+import { BaseTransactionDialog } from '@/components/transactions/base-transaction-dialog';
 import { TransferDialog } from '@/components/transactions/transfer-dialog';
 
-interface TransactionWithRelations {
-	id: string;
-	type: 'INCOME' | 'EXPENSE' | 'TRANSFER';
-	amount: number;
-	name: string;
-	date: Date;
-	accountId: string;
-	categoryId: string | null;
-	transferId: string | null;
-}
+import { TransactionWithRelations } from './transaction-row';
 
 export function TransactionActions({
 	transaction,
@@ -97,7 +87,7 @@ export function TransactionActions({
 							animate={{ opacity: 1, scale: 1, y: 0 }}
 							exit={{ opacity: 0, scale: 0.95, y: -10 }}
 							transition={{ duration: 0.15, ease: 'easeOut' }}
-							className="absolute right-0 top-full mt-1 z-50 w-36 bg-white border border-grey-200 rounded-lg shadow-custom overflow-hidden py-1"
+							className="absolute right-0 top-full mt-1 z-50 w-36 bg-white border border-grey-200 rounded-lg shadow-custom overflow-hidden"
 						>
 							<button
 								type="button"
@@ -124,26 +114,9 @@ export function TransactionActions({
 			</div>
 
 			{/* Render Dialogs */}
-			{activeDialog === 'INCOME' && (
-				<IncomeDialog
-					open={true}
-					onOpenChange={() => setActiveDialog(null)}
-					categories={categories}
-					accounts={accounts}
-					settings={settings}
-					transactionId={transaction.id}
-					initialData={{
-						amount: transaction.amount,
-						name: transaction.name,
-						accountId: transaction.accountId,
-						categoryId: transaction.categoryId,
-						date: new Date(transaction.date),
-					}}
-				/>
-			)}
-
-			{activeDialog === 'EXPENSE' && (
-				<ExpenseDialog
+			{(activeDialog === 'INCOME' || activeDialog === 'EXPENSE') && (
+				<BaseTransactionDialog
+					type={activeDialog}
 					open={true}
 					onOpenChange={() => setActiveDialog(null)}
 					categories={categories}

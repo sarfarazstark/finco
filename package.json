@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"@better-fetch/fetch": "^1.1.21",
+		"@hookform/resolvers": "^5.2.2",
 		"@prisma/adapter-pg": "^7.2.0",
 		"@prisma/client": "^7.2.0",
 		"@tabler/icons-react": "^3.36.0",
@@ -34,6 +35,7 @@
 		"react": "19.2.1",
 		"react-datepicker": "^9.1.0",
 		"react-dom": "19.2.1",
+		"react-hook-form": "^7.71.2",
 		"react-hot-toast": "^2.6.0",
 		"tailwind-merge": "^3.4.0",
 		"zod": "^4.2.1"

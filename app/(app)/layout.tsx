@@ -6,6 +6,7 @@ import { headers } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { Link } from '@/lib/shared';
 import { redirect } from 'next/navigation';
+import { Toaster } from 'react-hot-toast';
 
 const links: Link[] = [
 	{
@@ -89,6 +90,7 @@ export default async function AppLayout({
 			<Sidebar links={links} />
 			<TransitionLayout>{children}</TransitionLayout>
 			<GlobalAddButton categories={categories} accounts={accounts} settings={settings} />
+			<Toaster position="bottom-right" />
 		</main>
 	);
 }

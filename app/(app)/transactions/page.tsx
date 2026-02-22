@@ -5,8 +5,7 @@ import { Pagination } from '@/components/ui/pagination';
 import { TransactionFilters } from './_components/transaction-filters';
 import { AnimatedTableWrapper } from './_components/animated-table-wrapper';
 import { getTransactionsPageData } from '@/lib/data/transactions';
-import { ResolvedImage } from '@/components/transactions/resolved-image';
-import { TransactionActions } from './_components/transaction-actions';
+import { TransactionRow } from './_components/transaction-row';
 import { prisma } from '@/lib/prisma';
 
 export default async function TransactionsPage({
@@ -66,63 +65,15 @@ export default async function TransactionsPage({
 								</tr>
 							</thead>
 							<tbody>
-								{transactions.map(tx => {
-									const isPositive = tx.type === 'INCOME';
-									const sign = isPositive ? '+' : '-';
-
-									const categoryName =
-										tx.category?.name ?? 'General';
-
-									return (
-										<tr
-											key={tx.id}
-											className="text-left font-preset-5 text-grey-500 border-b border-grey-100/50 last:border-b-0"
-										>
-											<td className="px-3 py-4">
-												<div className="flex items-center gap-3">
-													<div className="w-10 h-10 rounded-full flex align-center justify-center overflow-hidden shrink-0 border border-grey-100">
-														<ResolvedImage
-															transaction={tx}
-														/>
-													</div>
-													<p className="font-preset-4-bold text-sm text-grey-900">
-														{tx.name}
-													</p>
-												</div>
-											</td>
-											<td className="px-3 py-4">
-												{categoryName}
-											</td>
-											<td className="px-3 py-4">
-												{new Date(
-													tx.date
-												).toLocaleDateString('en-GB', {
-													day: '2-digit',
-													month: 'short',
-													year: 'numeric',
-												})}
-											</td>
-											<td
-												className={`px-3 py-4 text-right font-preset-4-bold ${
-													isPositive
-														? 'text-green'
-														: 'text-grey-900'
-												}`}
-											>
-												{sign}₹
-												{Math.abs(tx.amount).toFixed(2)}
-											</td>
-											<td className="px-3 py-4 flex justify-end">
-												<TransactionActions
-													transaction={tx}
-													categories={categories}
-													accounts={accounts}
-													settings={settings}
-												/>
-											</td>
-										</tr>
-									);
-								})}
+								{transactions.map(tx => (
+									<TransactionRow
+										key={tx.id}
+										transaction={tx}
+										categories={categories}
+										accounts={accounts}
+										settings={settings}
+									/>
+								))}
 							</tbody>
 						</table>
 					</div>
