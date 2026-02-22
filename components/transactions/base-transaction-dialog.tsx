@@ -14,8 +14,9 @@ import { Button } from '../ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { CategorySelectorOverlay, Category } from './category-dialog';
 import { AccountDropdown } from './account-dropdown';
-import { addTransaction } from '@/app/actions/transactions';
+import { addTransaction, updateTransaction } from '@/app/actions/transactions';
 import { AccountSelectorProps } from '../layout/global-add-button';
+
 
 export function BaseTransactionDialog({
 	type,
@@ -24,6 +25,8 @@ export function BaseTransactionDialog({
 	categories,
 	accounts,
 	settings,
+	transactionId,
+	initialData,
 }: {
 	type: 'INCOME' | 'EXPENSE';
 	open: boolean;
@@ -31,25 +34,43 @@ export function BaseTransactionDialog({
 	categories: Category[];
 	accounts: AccountSelectorProps[];
 	settings?: { currency: string; theme: string };
+	transactionId?: string;
+	initialData?: {
+		amount: number;
+		name: string;
+		accountId: string;
+		categoryId?: string | null;
+		date: Date;
+		recurring?: boolean;
+	};
 }) {
-	const [amount, setAmount] = useState('');
-	const [name, setName] = useState('');
-	const [account, setAccount] = useState('cash');
-	const [date, setDate] = useState<Date>(new Date());
-	const [categoryId, setCategoryId] = useState<Category | null>(null);
+	const [amount, setAmount] = useState(
+		initialData ? Math.abs(initialData.amount).toString() : ''
+	);
+	const [name, setName] = useState(initialData?.name || '');
+	const [account, setAccount] = useState(initialData?.accountId || 'cash');
+	const [date, setDate] = useState<Date>(initialData?.date || new Date());
+	const [categoryId, setCategoryId] = useState<Category | null>(() => {
+		if (initialData?.categoryId && categories.length > 0) {
+			return categories.find(c => c.id === initialData.categoryId) || null;
+		}
+		return null;
+	});
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 	const [isPending, startTransition] = useTransition();
 
 	const [activeTab, setActiveTab] = useState<'one-time' | 'repetitive'>(
-		'one-time'
+		initialData?.recurring ? 'repetitive' : 'one-time'
 	);
 	const [frequency, setFrequency] = useState('30');
+
+
 
 	const handleSave = () => {
 		if (!amount || !name) return;
 
 		startTransition(async () => {
-			const res = await addTransaction({
+			const payload = {
 				type,
 				amount: parseFloat(amount),
 				name,
@@ -57,14 +78,20 @@ export function BaseTransactionDialog({
 				accountId: account,
 				categoryId: categoryId?.id || null,
 				recurring: activeTab === 'repetitive',
-			});
+			};
+
+			const res = transactionId
+				? await updateTransaction(transactionId, payload)
+				: await addTransaction(payload);
 
 			if (res.success) {
 				onOpenChange(false);
-				setAmount('');
-				setName('');
-				setCategoryId(null);
-				setDate(new Date());
+				if (!transactionId) {
+					setAmount('');
+					setName('');
+					setCategoryId(null);
+					setDate(new Date());
+				}
 			} else {
 				console.error(res.error);
 			}
@@ -74,17 +101,22 @@ export function BaseTransactionDialog({
 	const currencySymbol = getCurrencySymbol(settings?.currency);
 
 	const isIncome = type === 'INCOME';
-	const title = isIncome ? 'Add Income' : 'Add Expense';
+	const isEdit = !!transactionId;
+	const title = isEdit
+		? (isIncome ? 'Edit Income' : 'Edit Expense')
+		: (isIncome ? 'Add Income' : 'Add Expense');
 	const placeholder = isIncome
 		? 'Income Source (e.g., Salary)'
 		: 'Merchant or Payee';
-	const saveText = isIncome ? 'Save Income' : 'Save Expense';
+	const saveText = isPending
+		? 'Saving...'
+		: (isEdit ? 'Update Transaction' : (isIncome ? 'Save Income' : 'Save Expense'));
 	const borderColor = isIncome ? 'border-green-200' : 'border-red-200';
 	const textColor = isIncome ? 'text-green-600' : 'text-red-500';
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent hideClose className="sm:max-w-[400px] p-5">
+			<DialogContent key={transactionId || 'new'} hideClose className="sm:max-w-[400px] p-5">
 				<DialogTitle className="sr-only">{title}</DialogTitle>
 
 				<div className="flex flex-col gap-4">

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { getCurrencySymbol } from '@/lib/utils';
 import { DatePicker } from '@/components/ui/date-picker';
 import { AccountDropdown } from './account-dropdown';
-import { addTransaction } from '@/app/actions/transactions';
+import { addTransaction, updateTransaction } from '@/app/actions/transactions';
 import { AccountSelectorProps } from '../layout/global-add-button';
 
 export function TransferDialog({
@@ -14,17 +14,29 @@ export function TransferDialog({
 	onOpenChange,
 	accounts,
 	settings,
+	transactionId,
+	initialData,
 }: {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	accounts: AccountSelectorProps[];
 	settings?: { currency: string; theme: string };
+	transactionId?: string;
+	initialData?: {
+		amount: number;
+		name: string;
+		fromAccountId: string;
+		toAccountId: string;
+		date: Date;
+	};
 }) {
-	const [amount, setAmount] = useState('');
-	const [name, setName] = useState('');
-	const [fromAccountId, setFromAccountId] = useState('1');
-	const [toAccountId, setToAccountId] = useState('2');
-	const [date, setDate] = useState<Date>(new Date());
+	const [amount, setAmount] = useState(
+		initialData ? Math.abs(initialData.amount).toString() : ''
+	);
+	const [name, setName] = useState(initialData?.name || '');
+	const [fromAccountId, setFromAccountId] = useState(initialData?.fromAccountId || '1');
+	const [toAccountId, setToAccountId] = useState(initialData?.toAccountId || '2');
+	const [date, setDate] = useState<Date>(initialData?.date || new Date());
 	const [isPending, startTransition] = useTransition();
 
 	const handleSave = () => {
@@ -32,20 +44,26 @@ export function TransferDialog({
 		if (fromAccountId === toAccountId) return; // Can't transfer to same account
 
 		startTransition(async () => {
-			const res = await addTransaction({
-				type: 'TRANSFER',
+			const payload = {
+				type: 'TRANSFER' as const,
 				amount: parseFloat(amount),
 				name,
 				date,
 				accountId: fromAccountId,
 				toAccountId: toAccountId,
-			});
+			};
+
+			const res = transactionId
+				? await updateTransaction(transactionId, payload)
+				: await addTransaction(payload);
 
 			if (res.success) {
 				onOpenChange(false);
-				setAmount('');
-				setName('');
-				setDate(new Date());
+				if (!transactionId) {
+					setAmount('');
+					setName('');
+					setDate(new Date());
+				}
 			} else {
 				console.error(res.error);
 			}
@@ -57,7 +75,7 @@ export function TransferDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-85 p-5 pt-7">
+			<DialogContent key={transactionId || 'new'} className="sm:max-w-85 p-5 pt-7">
 				<div className="flex flex-col gap-4">
 
 					{/* Amount */}
@@ -159,7 +177,7 @@ export function TransferDialog({
 								onClick={handleSave}
 								disabled={isPending || !amount || !name || fromAccountId === toAccountId}
 							>
-								{isPending ? 'Transferring...' : 'Transfer Funds'}
+								{isPending ? 'Saving...' : (transactionId ? 'Update Transfer' : 'Transfer Funds')}
 							</Button>
 						</div>
 					</div>

@@ -21,37 +21,68 @@ export async function getTransactionsPageData(
 	const category = (searchParams.category as string) || '';
 	const currentPage = isNaN(page) || page < 1 ? 1 : page;
 
-	const [categories, { data: transactions, meta }] = await Promise.all([
-		prisma.category.findMany({
-			where: { userId },
-			select: { name: true },
-			orderBy: { name: 'asc' },
-		}),
-		paginate(
-			prisma.transaction,
-			{
-				where: {
-					userId,
-					...(category && category !== 'All'
-						? { category: { name: category } }
-						: {}),
-					...(search
-						? { name: { contains: search, mode: 'insensitive' } }
-						: {}),
-				},
+	const [dbCategories, dbAccounts, { data: transactions, meta }] =
+		await Promise.all([
+			prisma.category.findMany({
+				where: { userId },
+				include: { icon: true },
+				orderBy: { name: 'asc' },
+			}),
+			prisma.financialAccount.findMany({
+				where: { userId },
 				include: {
-					category: { include: { icon: true } },
-					account: true,
+					transactions: {
+						select: { amount: true },
+					},
 				},
-				orderBy: SORT_MAP[sort] ?? { date: 'desc' },
-			},
-			currentPage,
-			10
-		),
-	]);
+			}),
+			paginate(
+				prisma.transaction,
+				{
+					where: {
+						userId,
+						...(category && category !== 'All'
+							? { category: { name: category } }
+							: {}),
+						...(search
+							? {
+									name: {
+										contains: search,
+										mode: 'insensitive',
+									},
+								}
+							: {}),
+					},
+					include: {
+						category: { include: { icon: true } },
+						account: true,
+					},
+					orderBy: SORT_MAP[sort] ?? { date: 'desc' },
+				},
+				currentPage,
+				10
+			),
+		]);
+
+	const categories = dbCategories.map(c => ({
+		id: c.id,
+		name: c.name,
+		icon: c.icon?.name || 'category',
+		color: c.icon
+			? `${c.icon.bg} ${c.icon.color}`
+			: 'bg-grey-100 text-grey-600',
+	}));
+
+	const accounts = dbAccounts.map(a => ({
+		id: a.id,
+		name: a.name,
+		icon: a.image || 'wallet',
+		balance: a.transactions.reduce((sum, t) => sum + t.amount, 0),
+	}));
 
 	return {
 		categories,
+		accounts,
 		transactions: transactions as Prisma.TransactionGetPayload<{
 			include: {
 				category: { include: { icon: true } };

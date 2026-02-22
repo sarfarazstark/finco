@@ -6,6 +6,8 @@ import { TransactionFilters } from './_components/transaction-filters';
 import { AnimatedTableWrapper } from './_components/animated-table-wrapper';
 import { getTransactionsPageData } from '@/lib/data/transactions';
 import { ResolvedImage } from '@/components/transactions/resolved-image';
+import { TransactionActions } from './_components/transaction-actions';
+import { prisma } from '@/lib/prisma';
 
 export default async function TransactionsPage({
 	searchParams,
@@ -18,10 +20,19 @@ export default async function TransactionsPage({
 			headers: await headers(),
 		})) ?? redirect('/auth/login');
 
-	const { categories, transactions, meta } = await getTransactionsPageData(
+	const { categories, accounts, transactions, meta } = await getTransactionsPageData(
 		session.user.id,
 		params
 	);
+
+	const dbSettings = await prisma.setting.findUnique({
+		where: { userId: session.user.id }
+	});
+
+	const settings = {
+		currency: dbSettings?.currency || 'INR',
+		theme: dbSettings?.theme || 'light'
+	};
 
 	return (
 		<section className="p-8 max-w-5xl mx-auto">
@@ -48,6 +59,9 @@ export default async function TransactionsPage({
 									</th>
 									<th className="px-3 py-2 font-normal text-right">
 										Amount
+									</th>
+									<th className="px-3 py-2 font-normal text-center w-12">
+										<span className="sr-only">Actions</span>
 									</th>
 								</tr>
 							</thead>
@@ -97,6 +111,14 @@ export default async function TransactionsPage({
 											>
 												{sign}₹
 												{Math.abs(tx.amount).toFixed(2)}
+											</td>
+											<td className="px-3 py-4 flex justify-end">
+												<TransactionActions
+													transaction={tx}
+													categories={categories}
+													accounts={accounts}
+													settings={settings}
+												/>
 											</td>
 										</tr>
 									);

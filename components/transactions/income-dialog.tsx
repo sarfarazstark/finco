@@ -10,12 +10,23 @@ export function IncomeDialog({
 	categories,
 	accounts,
 	settings,
+	transactionId,
+	initialData,
 }: {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	categories: Category[];
 	accounts: AccountSelectorProps[];
 	settings?: { currency: string; theme: string };
+	transactionId?: string;
+	initialData?: {
+		amount: number;
+		name: string;
+		accountId: string;
+		categoryId?: string | null;
+		date: Date;
+		recurring?: boolean;
+	};
 }) {
 	return (
 		<BaseTransactionDialog
@@ -25,6 +36,8 @@ export function IncomeDialog({
 			categories={categories}
 			accounts={accounts}
 			settings={settings}
+			transactionId={transactionId}
+			initialData={initialData}
 		/>
 	);
 }
