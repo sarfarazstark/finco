@@ -1,15 +1,16 @@
 'use client';
 
-import { useState, useTransition, useRef } from 'react';
+import { useState, useTransition } from 'react';
 import { deleteTransaction } from '@/app/actions/transactions';
-import { useClickOutside } from '@/hooks/use-click-outside';
-import { motion, AnimatePresence } from 'motion/react';
+import { ActionDropdown, ActionItem } from '@/components/ui/action-dropdown';
 import { Category } from '@/components/transactions/category-dialog';
 import { AccountSelectorProps } from '@/components/layout/global-add-button';
 import { BaseTransactionDialog } from '@/components/transactions/base-transaction-dialog';
 import { TransferDialog } from '@/components/transactions/transfer-dialog';
 
 import { TransactionWithRelations } from '@/components/transactions/resolved-image';
+
+import { ConfirmDialog } from '@/components/ui/confirm';
 
 export function TransactionActions({
 	transaction,
@@ -21,33 +22,24 @@ export function TransactionActions({
 	categories: Category[];
 	accounts: AccountSelectorProps[];
 	settings: { currency: string; theme: string };
-}) {
-	const [isOpen, setIsOpen] = useState(false);
+	}) {
 	const [activeDialog, setActiveDialog] = useState<
 		'INCOME' | 'EXPENSE' | 'TRANSFER' | null
 	>(null);
+	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 	const [isPending, startTransition] = useTransition();
-	const menuRef = useRef<HTMLDivElement>(null);
-
-	useClickOutside(menuRef, () => setIsOpen(false));
 
 	const handleDelete = async () => {
-		setIsOpen(false);
-		if (
-			!window.confirm('Are you sure you want to delete this transaction?')
-		) {
-			return;
-		}
 		startTransition(async () => {
 			const res = await deleteTransaction(transaction.id);
 			if (res?.error) {
 				alert(res.error);
 			}
+			setShowDeleteConfirm(false);
 		});
 	};
 
 	const handleEdit = () => {
-		setIsOpen(false);
 		setActiveDialog(transaction.type);
 	};
 
@@ -70,52 +62,37 @@ export function TransactionActions({
 			}
 		: undefined;
 
+	const actions: ActionItem[] = [
+		{
+			label: 'Edit',
+			icon: 'pencil',
+			onClick: handleEdit,
+		},
+		{
+			label: isPending ? 'Deleting...' : 'Delete',
+			icon: 'trash',
+			onClick: () => setShowDeleteConfirm(true),
+			disabled: isPending,
+			className:
+				'text-red-500 hover:bg-red-50 focus:bg-red-50',
+		},
+	];
+
 	return (
 		<>
-			<div className="relative inline-block" ref={menuRef}>
-				<button
-					type="button"
-					onClick={() => setIsOpen(!isOpen)}
-					className="w-8 h-8 rounded-full flex items-center justify-center text-grey-500 hover:text-grey-900 hover:bg-grey-100 transition-colors focus:outline-none"
-				>
-					<i className="ti ti-dots-vertical text-lg" />
-				</button>
+			<ActionDropdown actions={actions} />
 
-				<AnimatePresence>
-					{isOpen && (
-						<motion.div
-							key="transaction-actions-menu"
-							initial={{ opacity: 0, scale: 0.95, y: -10 }}
-							animate={{ opacity: 1, scale: 1, y: 0 }}
-							exit={{ opacity: 0, scale: 0.95, y: -10 }}
-							transition={{ duration: 0.15, ease: 'easeOut' }}
-							className="absolute right-0 top-full mt-1 z-50 w-36 bg-white border border-grey-200 rounded-lg shadow-custom overflow-hidden"
-						>
-							<button
-								type="button"
-								onClick={handleEdit}
-								className="w-full text-left px-4 py-2 text-sm text-grey-700 hover:bg-grey-50 hover:text-grey-900 flex items-center gap-2 transition-colors"
-							>
-								<i className="ti ti-pencil text-lg" />
-								<span>Edit</span>
-							</button>
-							<button
-								type="button"
-								onClick={handleDelete}
-								disabled={isPending}
-								className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 focus:bg-red-50 flex items-center gap-2 transition-colors"
-							>
-								<i className="ti ti-trash text-lg" />
-								<span>
-									{isPending ? 'Deleting...' : 'Delete'}
-								</span>
-							</button>
-						</motion.div>
-					)}
-				</AnimatePresence>
-			</div>
+			<ConfirmDialog
+				isOpen={showDeleteConfirm}
+				onOpenChange={setShowDeleteConfirm}
+				title="Delete Transaction"
+				description="Are you sure you want to delete this transaction? This action cannot be undone."
+				confirmText="Delete Transaction"
+				onConfirm={handleDelete}
+				variant="destroy"
+				isPending={isPending}
+			/>
 
-			{/* Render Dialogs */}
 			{(activeDialog === 'INCOME' || activeDialog === 'EXPENSE') && (
 				<BaseTransactionDialog
 					type={activeDialog}

@@ -1,6 +1,6 @@
 import DonutChart from '@/components/charts/pie';
 import type { ChartData } from '@/components/charts/pie';
-import { IconChevronRight, IconDots } from '@tabler/icons-react';
+import { IconChevronRight } from '@tabler/icons-react';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
@@ -9,8 +9,9 @@ import { getSetting } from '@/hooks/use-setting';
 import { formatCurrency, formatTransactionDate } from '@/lib/utils';
 import { ResolvedImage } from '@/components/transactions/resolved-image';
 import Link from 'next/link';
+import { BudgetActions } from './_components/budget-actions';
 
-export default async function Home() {
+export default async function Budget() {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
@@ -81,7 +82,6 @@ export default async function Home() {
 
 	const settings = await getSetting(session.user.id);
 
-
 	return (
 		<div className="p-8 max-w-5xl mx-auto">
 			<header className="flex items-center justify-between mb-8">
@@ -126,9 +126,10 @@ export default async function Home() {
 										{budget.name}
 									</h2>
 								</div>
-								<button className="text-grey-500 hover:text-[#202226] transition-colors">
-									<IconDots />
-								</button>
+								<BudgetActions
+									budgetId={budget.id}
+									budgetName={budget.name}
+								/>
 							</div>
 
 							<div className="mb-6">
