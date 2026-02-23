@@ -162,6 +162,6 @@ body {
 	float: none !important;
 }
 
-.recharts-pie *, .recharts-surface {
+.recharts-pie *, .recharts-surface, .recharts-layer {
 	outline: none !important;
 }
