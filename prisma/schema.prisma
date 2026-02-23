@@ -1,219 +1,249 @@
-
 datasource db {
-  provider = "postgresql"
+    provider = "postgresql"
 }
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
-/* ============================
-   CORE ENUMS
-============================ */
+/**
+ * ============================
+ * CORE ENUMS
+ * ============================
+ */
 
 enum TransactionType {
-  INCOME
-  EXPENSE
-  TRANSFER
+    INCOME
+    EXPENSE
+    TRANSFER
 }
 
-/* ============================
-   USER & AUTH (UNCHANGED)
-============================ */
+enum BudgetType {
+    WEEKLY
+    MONTHLY
+	QUARTERLY
+    YEARLY
+}
+
+/**
+ * ============================
+ * USER & AUTH (UNCHANGED)
+ * ============================
+ */
 
 model User {
-  id            String   @id
-  name          String
-  email         String   @unique
-  emailVerified Boolean  @default(false)
-  image         String?
+    id            String  @id
+    name          String
+    email         String  @unique
+    emailVerified Boolean @default(false)
+    image         String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  sessions Session[]
-  accounts Account[]
+    sessions Session[]
+    accounts Account[]
 
-  financialAccounts FinancialAccount[]
-  categories        Category[]
-  transactions      Transaction[]
-  budgets           Budget[]
-  pots              Pot[]
-  setting           Setting?
+    financialAccounts FinancialAccount[]
+    categories        Category[]
+    transactions      Transaction[]
+    budgets           Budget[]
+    pots              Pot[]
+    setting           Setting?
 
-  @@map("user")
+    @@map("user")
 }
 
-/* ============================
-   FINANCIAL ACCOUNT
-============================ */
+/**
+ * ============================
+ * FINANCIAL ACCOUNT
+ * ============================
+ */
 
 model FinancialAccount {
-  id       String @id @default(cuid())
-  userId   String
+    id     String @id @default(cuid())
+    userId String
 
-  name     String   /// "Cash", "HDFC Bank", "PhonePe", "Crypto Wallet"
-  image    String   /// icon / logo chosen by user
-  currency String   @default("INR")
+    name     String
+    image    String
+    currency String @default("INR")
 
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions Transaction[]
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    transactions Transaction[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  @@index([userId])
+    @@index([userId])
 }
 
 model Theme {
-  id   String @id @default(cuid())
-  name String
-  hex  String
+    id   String @id @default(cuid())
+    name String
+    hex  String
 
-  budgets Budget[]
-  pots    Pot[]
+    budgets Budget[]
+    pots    Pot[]
 
-  @@unique([name])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([name])
 }
 
 model Icon {
-  id    String @id @default(cuid())
-  name  String @unique /// e.g. 'building-bank', 'pizza'
-  color String /// e.g. 'text-indigo-600'
-  bg    String /// e.g. 'bg-indigo-50'
+    id    String @id @default(cuid())
+    name  String @unique
+    color String
+    bg    String
 
-  categories Category[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    categories Category[]
 }
 
 model Category {
-  id     String @id @default(cuid())
-  userId String
+    id     String @id @default(cuid())
+    userId String
 
-  name   String
-  iconId String
-  icon   Icon   @relation(fields: [iconId], references: [id])
+    name   String
+    iconId String
+    icon   Icon   @relation(fields: [iconId], references: [id])
 
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions Transaction[]
-  budgets      Budget[]
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    transactions Transaction[]
+    budgets      Budget[]
 
-  @@unique([userId, name])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([userId, name])
 }
 
 model Transaction {
-  id         String @id @default(cuid())
-  userId     String
-  accountId  String
-  categoryId String?
-  transferId String?
+    id         String  @id @default(cuid())
+    userId     String
+    accountId  String
+    categoryId String?
+    transferId String?
 
-  name       String
-  amount     Float    /// +income, -expense
-  type       TransactionType
-  date       DateTime
-  recurring  Boolean  @default(false)
+    name      String
+    amount    Float
+    type      TransactionType
+    date      DateTime
+    recurring Boolean         @default(false)
 
-  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  category Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+    user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+    account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+    category Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  @@index([userId])
-  @@index([accountId])
-  @@index([categoryId])
-  @@index([date])
+    @@index([userId])
+    @@index([accountId])
+    @@index([categoryId])
+    @@index([date])
 }
 
 model Budget {
-  id         String @id @default(cuid())
-  userId     String
-  categoryId String
-  maximum    Float
-  themeId    String
+    id         String @id @default(cuid())
+    userId     String
+    categoryId String
+    maximum    Float
+    themeId    String
+	type       BudgetType @default(MONTHLY)
 
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  theme    Theme    @relation(fields: [themeId], references: [id], onDelete: Cascade)
+    user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    theme    Theme    @relation(fields: [themeId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, categoryId])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([userId, categoryId])
 }
 
 model Pot {
-  id      String @id @default(cuid())
-  userId  String
+    id     String @id @default(cuid())
+    userId String
 
-  name    String
-  target  Float
-  themeId String
+    name    String
+    target  Float
+    themeId String
 
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  theme Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
+    user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+    theme Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, name])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([userId, name])
 }
 
 model Setting {
-  id       String @id @default(cuid())
-  userId   String @unique
-  currency String @default("USD")
-  theme    String @default("light")
+    id       String @id @default(cuid())
+    userId   String @unique
+    currency String @default("USD")
+    theme    String @default("light")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
-/* ============================
-   AUTH MODELS
-============================ */
+/**
+ * ============================
+ * AUTH MODELS
+ * ============================
+ */
 
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id        String   @id
+    expiresAt DateTime
+    token     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    ipAddress String?
+    userAgent String?
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
-  @@index([userId])
-  @@map("session")
+    @@unique([token])
+    @@index([userId])
+    @@map("session")
 }
 
 model Account {
-  id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+    id                    String    @id
+    accountId             String
+    providerId            String
+    userId                String
+    user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    accessToken           String?
+    refreshToken          String?
+    idToken               String?
+    accessTokenExpiresAt  DateTime?
+    refreshTokenExpiresAt DateTime?
+    scope                 String?
+    password              String?
+    createdAt             DateTime  @default(now())
+    updatedAt             DateTime  @updatedAt
 
-  @@index([userId])
-  @@map("account")
+    @@index([userId])
+    @@map("account")
 }
 
 model Verification {
-  id         String   @id
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+    id         String   @id
+    identifier String
+    value      String
+    expiresAt  DateTime
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 
-  @@index([identifier])
-  @@map("verification")
+    @@index([identifier])
+    @@map("verification")
 }

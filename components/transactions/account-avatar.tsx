@@ -11,7 +11,7 @@ interface AccountAvatarProps {
 }
 
 export function AccountAvatar({
-	url = '/assets/images/avatars/default.jpg',
+	url = '',
 	name,
 	className,
 	width,
@@ -22,7 +22,7 @@ export function AccountAvatar({
 			<Image
 				width={width || 20}
 				height={height || 20}
-				src={url}
+				src={url || '/assets/images/avatars/default.jpg'}
 				alt={name || ''}
 				className={cn('rounded-full object-cover shrink-0', className)}
 			/>

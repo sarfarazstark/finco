@@ -8,13 +8,6 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 
 export default async function Home() {
-	const dynamicBudgetData: ChartData[] = [
-		{ name: 'Teal Segment', value: 8, color: '#328281' },
-		{ name: 'Blue Segment', value: 55, color: '#88cddd' },
-		{ name: 'Beige Segment', value: 17, color: '#f3ceab' },
-		{ name: 'Gray Segment', value: 20, color: '#60626f' },
-	];
-
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
@@ -48,11 +41,14 @@ export default async function Home() {
 		},
 	});
 
-	const formmattedCategories = await Promise.all(
+	const formattedCategories = await Promise.all(
 		categories.map(async (category) => {
 			const spentResult = await prisma.transaction.aggregate({
 				where: {
 					categoryId: category.id,
+					createdAt: {
+						gte: new Date(new Date().setDate(new Date().getDate() - 7)),
+					},
 				},
 				_sum: {
 					amount: true,
@@ -66,13 +62,14 @@ export default async function Home() {
 		})
 	);
 
-	const chartData = formmattedCategories.map((category) => ({
+	const chartData: ChartData[] = formattedCategories.map((category) => ({
 		name: category.name,
-		value: category.spent,
+		value: Math.abs(category.spent),
+		limit: category.budgets[0]?.maximum || 0,
 		color: category.budgets[0]?.theme?.hex || '#cccccc'
 	}));
 
-	console.log(chartData);
+
 	return (
 		<div className="p-8 max-w-5xl mx-auto">
 			<header className="flex items-center justify-between mb-8">
@@ -81,11 +78,7 @@ export default async function Home() {
 
 			<section className="flex gap-4">
 				<div className="bg-white p-6 flex-3 flex flex-col gap-4 items-center rounded-xl h-fit">
-					<DonutChart
-						data={dynamicBudgetData}
-						currentAmount={338}
-						limitAmount={975}
-					/>
+					<DonutChart data={chartData} />
 					<div className="flex items-start flex-col w-full gap-4">
 						<h2 className="font-preset-3 font-semibold">
 							Spending Summary
