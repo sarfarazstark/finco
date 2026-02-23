@@ -46,7 +46,7 @@ export function CategorySelectorOverlay({
 					</div>
 
 					<div className="flex-1 overflow-y-auto p-4 pt-6">
-						<div className="grid grid-cols-3 gap-x-3 gap-y-5">
+						<div className="grid grid-cols-4 gap-x-3 gap-y-5">
 							{categories.map(cat => (
 								<button
 									key={cat.id}
@@ -56,15 +56,15 @@ export function CategorySelectorOverlay({
 								>
 									<div
 										className={cn(
-											'w-12 h-12 rounded-[14px] flex items-center justify-center transition-transform duration-300 group-hover:scale-105 group-active:scale-95 bg-white',
+											'w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-105 group-active:scale-95',
 											cat.color
 										)}
 									>
 										<i
-											className={`ti ti-${cat.icon} text-xl`}
+											className={`ti ti-${cat.icon} text-white text-xl`}
 										/>
 									</div>
-									<span className="text-[11px] font-bold text-grey-600 text-center tracking-widest px-1">
+									<span className="text-[10px] text-grey-600 text-center tracking-widest px-1">
 										{cat.name}
 									</span>
 								</button>

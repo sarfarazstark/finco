@@ -106,7 +106,7 @@ export function TransactionFilters({ categories }: { categories: string[] }) {
 						</DropdownTrigger>
 						<DropdownContent>
 							<DropdownItem value="All">
-								All Transactions
+								All
 							</DropdownItem>
 							{categories.map(cat => (
 								<DropdownItem key={cat} value={cat}>

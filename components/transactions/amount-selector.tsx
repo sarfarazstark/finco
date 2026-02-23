@@ -37,14 +37,14 @@ export const AmountSelector = forwardRef<HTMLDivElement, AmountSelectorProps>(
 					type="button"
 					onClick={onCategoryClick}
 					className={cn(
-						'w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-sm transition-all hover:scale-105 group bg-white',
+						'w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-sm transition-all hover:scale-105 group bg-white',
 						categoryId ? categoryId.color : 'text-grey-500'
 					)}
 					title="Select Category"
 				>
 					<i
 						className={cn(
-							'text-2xl',
+							'text-xl text-white',
 							categoryId
 								? `ti ti-${categoryId.icon}`
 								: 'ti ti-category'

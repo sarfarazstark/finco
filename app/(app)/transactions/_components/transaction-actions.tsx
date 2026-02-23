@@ -9,7 +9,7 @@ import { AccountSelectorProps } from '@/components/layout/global-add-button';
 import { BaseTransactionDialog } from '@/components/transactions/base-transaction-dialog';
 import { TransferDialog } from '@/components/transactions/transfer-dialog';
 
-import { TransactionWithRelations } from './transaction-row';
+import { TransactionWithRelations } from '@/components/transactions/resolved-image';
 
 export function TransactionActions({
 	transaction,

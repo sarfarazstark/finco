@@ -1,135 +1,228 @@
-# Frontend Mentor - Personal finance app
+<p align="center">
+  <img src="./public/assets/images/logo-large.svg" alt="Finco Logo" width="200" />
+</p>
 
-![Design preview for the Personal finance app coding challenge](./preview.jpg)
+<h1 align="center">Finco — Personal Finance Dashboard</h1>
 
-## Welcome! 👋
+<p align="center">
+  A full-stack personal finance application built with <strong>Next.js 16</strong>, <strong>Prisma</strong>, and <strong>PostgreSQL</strong>. <br />
+  Designed as a portfolio-grade project with production-level architecture, data modeling, and UI/UX.
+</p>
 
-Thanks for purchasing this premium Frontend Mentor coding challenge.
+<p align="center">
+  <img src="./preview.jpg" alt="Finco Preview" width="720" />
+</p>
 
-[Frontend Mentor](https://www.frontendmentor.io) challenges help you improve your coding skills by building realistic projects. These premium challenges are perfect portfolio pieces, so please feel free to use what you create in your portfolio to show others.
+---
 
-**To do this challenge, you need a very strong understanding of HTML, CSS, and JavaScript.**
+## ✨ Highlights
 
-## The challenge
+| Area              | Detail                                                                                                              |
+|-------------------|----------------------------------------------------------------------------------------------------------------------|
+| **Auth**          | Session-based authentication via [Better Auth](https://better-auth.com) with Prisma adapter & Zod v4 password policies |
+| **Data Layer**    | 12 Prisma models, relational schema with cascading deletes, composite unique constraints, and indexed foreign keys    |
+| **Transactions**  | Full CRUD with server actions, double-entry transfer bookkeeping, debounced search, 6-way sorting, and pagination     |
+| **Budget**        | Custom SVG donut chart with split-sector overspent detection (dashed pattern) and per-category spend aggregation       |
+| **UI/UX**         | 9 hand-crafted UI components, Framer Motion animations (sidebar, FAB, page transitions), and custom design tokens     |
+| **Validation**    | Zod v4 schemas with cross-field refinements (transfer ≠ same account, category required for income/expense)           |
 
-Your challenge is to build out this personal finance app and get it looking as close to the design as possible.
+---
 
-You can use any tools you like to help you complete the challenge. So if you've got something you'd like to practice, feel free to give it a go.
+## 🛠 Tech Stack
 
-We provide the data in a local `data.json` file, so use that to populate the content on first load. If you want to take it up a notch, feel free to build this as a full-stack application!
+| Layer        | Technology                                        |
+|--------------|---------------------------------------------------|
+| Framework    | Next.js 16 (App Router, RSC, Server Actions)      |
+| Language     | TypeScript 5                                      |
+| Database     | PostgreSQL via Prisma ORM 7                        |
+| Auth         | Better Auth (session-based, email + password)      |
+| Styling      | Tailwind CSS 4 + custom design tokens              |
+| Animations   | Framer Motion (`motion/react`)                     |
+| Validation   | Zod v4 with cross-field refinements                |
+| Icons        | Tabler Icons (React + Webfont)                     |
+| Forms        | react-hook-form + custom `useZodForm` hook         |
+| Charts       | Recharts 3 with custom SVG sector renderers        |
+| URL State    | nuqs for type-safe search params                   |
+| Notifications| react-hot-toast                                    |
+| Testing      | Vitest + Testing Library                           |
+| Runtime      | Bun                                                |
 
-Your users should be able to:
+---
 
-- See all of the personal finance app data at-a-glance on the overview page
-- View all transactions on the transactions page with pagination for every ten transactions
-- Search, sort, and filter transactions
-- Create, read, update, delete (CRUD) budgets and saving pots
-- View the latest three transactions for each budget category created
-- View progress towards each pot
-- Add money to and withdraw money from pots
-- View recurring bills and the status of each for the current month
-- Search and sort recurring bills
-- Receive validation messages if required form fields aren't completed
-- Navigate the whole app and perform all actions using only their keyboard
-- View the optimal layout for the interface depending on their device's screen size
-- See hover and focus states for all interactive elements on the page
-- **Bonus**: Save details to a database (build the project as a full-stack app)
-- **Bonus**: Create an account and log in (add user authentication to the full-stack app)
+## 📐 Architecture
 
-Want some support on the challenge? [Join our community](https://www.frontendmentor.io/community) and ask questions in the **#help** channel.
+```
+finco/
+├── app/
+│   ├── (app)/                    # Authenticated layout group
+│   │   ├── layout.tsx            # Server-side session guard + sidebar + FAB
+│   │   ├── transactions/         # Transaction page + filters
+│   │   ├── budget/               # Budget page with donut chart
+│   │   ├── pots/                 # Savings pots (planned)
+│   │   └── recurring-bills/      # Recurring bills (planned)
+│   ├── auth/                     # Login & signup
+│   │   ├── login/
+│   │   └── signup/
+│   └── actions/                  # Server actions (CRUD)
+├── components/
+│   ├── ui/                       # 9 custom primitives (button, dialog, dropdown, input, etc.)
+│   ├── layout/                   # Sidebar, GlobalAddButton, TransitionLayout
+│   ├── charts/                   # Custom donut chart with SVG patterns
+│   └── transactions/             # Transaction dialogs, category picker, amount selector
+├── hooks/                        # useZodForm, useClickOutside, useIsRoute, useMediaQuery, useSetting
+├── lib/
+│   ├── auth.ts                   # Better Auth configuration
+│   ├── prisma.ts                 # Prisma client singleton
+│   ├── schema.ts                 # Zod validation schemas
+│   ├── pagination.ts             # Generic Laravel-style paginate() helper
+│   ├── utils.ts                  # formatCurrency, formatBalance, formatTransactionDate, cn
+│   └── data/                     # Server-side data fetching functions
+└── prisma/
+    ├── schema.prisma             # 12 models, 2 enums
+    └── seed.ts                   # Demo data seeder
+```
 
-### Expected behaviour
+---
 
-**⚠️ IMPORTANT ⚠️: The data in some designs will differ from what's in the `data.json` file. We recommend using the desktop designs to reference how the data should look, as these all include the correct data and copy. The tablet and mobile layouts are there for layout reference.**
+## 🔥 Feature Deep-Dives
 
-- Overview
-    - This page should display all the information at-a-glance and allow for easy navigation.
-    - We recommend building this page last, as it will require logic from the other pages (e.g., recurring bills) in order to display the data correctly.
-- Transactions
-    - Output the transactions from the `data.json` file, paginating results for every ten transactions.
-    - The search should allow for name search, but feel free to add other functionality like searching for transaction amounts if you want to test yourself.
-    - The sorting options include: Latest (most recent), Oldest, A to Z, Z to A, Highest (transaction amount), Lowest.
-    - The filter is by transaction category, which are: Entertainment, Bills, Groceries, Dining Out, Transportation, Personal Care, Education, Lifestyle, Shopping, General. Filtering by category should only show transactions from the selected category.
-- Budgets
-    - Don't worry if you can't create a donut pie chart exactly like in the design. Do your best to get close, but feel free to go in your own direction.
-    - The "Spent" amount should calculate the money spent within the category for the current month (August 2024 in the app).
-    - The "Latest Spending" component should display the three last transactions for that category regardless of the month.
-    - Clicking "See All" on a budget should navigate to the Transactions page with the filter set to the relevant category. For example, clicking "See All" on Entertainment should only show transactions with the Entertainment category.
-    - Adding a new budget should automatically pull in the three latest transactions from the created budget category and calculate the amount spent so far for August 2024.
-    - Deleting a budget should remove it from the Budgets page and the Overview.
-- Pots
-    - Adding money to a pot should deduct the given amount from the current balance (seen on the Overview page).
-    - Withdrawing money from a pot should add that amount to the current balance.
-    - Deleting a pot should return all the money from the pot to the current balance.
-- Recurring Bills
-    - List out all the recurring transactions and ensure only one item is shown per vendor.
-    - Show the recurring transactions that have already been paid for August 2024.
-    - Show the payments due to be paid soon based on their monthly payment date. Calculate this from recurring transactions yet to be paid for August 2024, but due within five days of the latest overall transaction in the app (Emma Richardson - 19 August 2024).
-    - The search should search based on name.
-    - The sorting options include: Latest (earliest in the month), Oldest, A to Z, Z to A, Highest (transaction amount), Lowest.
+### 🔐 Authentication
 
-## Where to find everything
+- **Better Auth** with Prisma adapter for session-based auth against PostgreSQL
+- Secure password policy enforced at the schema level via Zod v4:
+  - Minimum 8 characters, uppercase, lowercase, digit, and special character required
+- Login and signup flows with animated page transitions (Framer Motion)
+- Session guard at layout level — unauthenticated users are redirected server-side
 
-Your task is to build out the project to the design file provided. We provide both Sketch and Figma versions of the design, so you can choose which tool you prefer to use. You can download the design file on the platform. **Please be sure not to share them with anyone else.** The design download comes with a `README.md` file as well to help you get set up.
+### 💳 Transactions
 
-All the required assets for this project are in the `/assets` folder. The images are already exported for the correct screen size and optimized. Some are reusable at multiple screen sizes. So if you don't see an image in a specific folder, it will typically be in another folder for that page.
+This is the most complex feature, demonstrating advanced querying and UI patterns:
 
-We also include variable and static font files for the required fonts for this project. You can choose to either link to Google Fonts or use the local font files to host the fonts yourself. Note that we've removed the static font files for the font weights that aren't needed for this project.
+- **Full CRUD** via Next.js Server Actions with session authorization guards
+- **Double-Entry Transfer Bookkeeping** — Transfers create two linked records (outflow + inflow) with a shared `transferId` UUID, ensuring transaction integrity. Edits atomically delete and recreate both sides within a `$transaction` block
+- **Debounced Search** — Client-side debounce (300ms) with `useTransition` for non-blocking URL updates and smooth scroll restoration
+- **6-Way Sorting** — Latest, Oldest, A→Z, Z→A, Highest Amount, Lowest Amount — mapped to Prisma `orderBy` clauses via a type-safe `SORT_MAP`
+- **Category & Account Filtering** — URL-driven filters using `URLSearchParams`, composable with search and sort
+- **Cursor-Free Pagination** — A generic `paginate<T>()` helper inspired by Laravel Eloquent, returning `data`, `total`, `lastPage`, `prev`, `next` metadata alongside results
+- **Transaction Dialogs** — Separate Income, Expense, and Transfer dialogs loaded via `next/dynamic` for code splitting. The base dialog includes a category picker grid, account dropdown, date picker, and currency-aware amount input
 
-The design system in the design file will give you more information about the various colors, fonts, and styles used in this project. Our fonts always come from [Google Fonts](https://fonts.google.com/).
+### 📊 Budget
 
-## Building your project
+- **Custom Donut Chart** built with Recharts 3 and raw SVG:
+  - Outer ring: Spending by category with interactive hover states (sector expansion + glow ring)
+  - Inner ring: Budget limits at 70% opacity for visual comparison
+  - **Overspent Detection**: When spending exceeds the limit, the sector splits at the exact angle — the portion within budget stays in the category's theme color, while the excess is filled with a 130° tilted dashed red line SVG pattern
+- **Per-Category Spend Aggregation** — Server-side `prisma.transaction.aggregate()` calculating real spend per budget window
+- **Spending Summary List** — Dynamic rendering with color-coded indicators and currency-aware formatting
+- **Deep Links** — "See All" links per budget category navigate to `/transactions?category=<encoded>` with proper URL encoding
 
-Feel free to use any workflow that you feel comfortable with. Below is a suggested process, but do not feel like you need to follow these steps:
+### 🧩 UI Component System
 
-1. Separate the `starter-code` from the rest of this project and rename it to something meaningful for you. Initialize the codebase as a public repository on [GitHub](https://github.com/). Creating a repo will make it easier to share your code with the community if you need help. If you're not sure how to do this, [have a read-through of this Try Git resource](https://try.github.io/). **⚠️ IMPORTANT ⚠️: There are already a couple of `.gitignore` files in this project. Please do not remove them or change the content of the files. If you create a brand new project, please use the `.gitignore` files provided in your new codebase. This is to avoid the accidental upload of the design files to GitHub. With these premium challenges, please be sure not to share the design files in your GitHub repo. Thanks!**
-2. Configure your repository to publish your code to a web address. This will also be useful if you need some help during a challenge as you can share the URL for your project with your repo URL. There are a number of ways to do this, and we provide some recommendations below.
-3. Look through the designs to start planning out how you'll tackle the project. This step is crucial to help you think ahead for CSS classes to create reusable styles.
-4. Before adding any styles, structure your content with HTML. Writing your HTML first can help focus your attention on creating well-structured content.
-5. Write out the base styles for your project, including general content styles, such as `font-family` and `font-size`.
-6. Start adding styles to the top of the page and work down. Only move on to the next section once you're happy you've completed the area you're working on.
+All UI primitives are built from scratch — **no component library dependency**:
 
-## Deploying your project
+| Component     | Complexity                                                                    |
+|---------------|-------------------------------------------------------------------------------|
+| `Dialog`      | Portal-based modal with backdrop blur, enter/exit animations, and scroll lock  |
+| `Dropdown`    | Context-based select with keyboard navigation and animated content panel       |
+| `Button`      | Polymorphic with variant support (primary, secondary, destructive, ghost)      |
+| `Input`       | Labeled input with error state, password toggle, and helper text               |
+| `Pagination`  | URL-driven page controls with ellipsis logic                                   |
+| `DatePicker`  | Wrapper around `react-datepicker` with custom themed calendar styles            |
+| `NavLink`     | Active-route detection with icon + label and animated indicator                 |
+| `Switch`      | Animated toggle with accessible keyboard support                               |
+| `Tabs`        | Context-based tabbed interface with active indicator                            |
 
-As mentioned above, there are many ways to host your project for free. Our recommend hosts are:
+### 🎨 Design & Animations
 
-- [GitHub Pages](https://pages.github.com/)
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
+- **Animated Sidebar** — Spring-based expand/collapse (256px ↔ 64px) with `AnimatePresence` for logo crossfade and user profile dropdown
+- **Global FAB** — Floating action button with staggered spring animations revealing Income, Expense, and Transfer options
+- **Page Transitions** — Smooth content transitions via `TransitionLayout` wrapper
+- **Custom Design Tokens** — 14 theme colors, 6 spacing values, 6 typography presets, and custom shadows defined in `globals.css`
+- **Custom Scrollbar** — Themed scrollbar styling that matches the application aesthetic
 
-You can host your site using one of these solutions or any of our other trusted providers. [Read more about our recommended and trusted hosts](https://medium.com/frontend-mentor/frontend-mentor-trusted-hosting-providers-bf000dfebe).
+---
 
-## Create a custom `README.md`
+## 📋 Roadmap
 
-We strongly recommend overwriting this `README.md` with a custom one. We've provided a template inside the [`README-template.md`](./README-template.md) file in this starter code.
+### ✅ Completed
 
-The template provides a guide for what to add. A custom `README` will help you explain your project and reflect on your learnings. Please feel free to edit our template as much as you like.
+- [x] **Authentication** — Login, Signup, Session management, Logout
+- [x] **Transactions Page** — Full CRUD, Search, Sort (6 modes), Category filter, Pagination
+- [x] **Transaction Types** — Income, Expense, Transfer (with double-entry bookkeeping)
+- [x] **Transaction Editing** — Edit any transaction with pre-filled dialog
+- [x] **Budget Page** — Donut chart, spend aggregation, spending summary, latest spending per category
+- [x] **Budget Overspent Detection** — SVG pattern-based visual indicator for over-budget categories
+- [x] **Custom UI Components** — Dialog, Dropdown, Button, Input, Pagination, DatePicker, NavLink, Switch, Tabs
+- [x] **Sidebar** — Animated expand/collapse with profile dropdown
+- [x] **Global Add Button** — FAB with staggered animation for quick transaction creation
+- [x] **Database Seeding** — Full demo dataset with 200+ icons, categories, accounts, transactions, budgets, and themes
+- [x] **Currency Formatting** — User-configurable currency with `Intl.NumberFormat`
 
-Once you've added your information to the template, delete this file and rename the `README-template.md` file to `README.md`. That will make it show up as your repository's README file.
+### 🚧 In Progress
 
-## Submitting your solution
+- [ ] **Budget CRUD** — Create, edit, and delete budgets from the UI
+- [ ] **Budget Type Support** — Weekly, Monthly, Quarterly, Yearly budget periods (schema ready)
 
-Submit your solution on the platform for the rest of the community to see. Follow our ["Complete guide to submitting solutions"](https://medium.com/frontend-mentor/a-complete-guide-to-submitting-solutions-on-frontend-mentor-ac6384162248) for tips on how to do this.
+### 📌 Planned
 
-Remember, if you're looking for feedback on your solution, be sure to ask questions when submitting it. The more specific and detailed you are with your questions, the higher the chance you'll get valuable feedback from the community.
+- [ ] **Dashboard (Overview)** — At-a-glance summary of all financial data
+- [ ] **Pots** — Savings pots with add/withdraw money and progress tracking
+- [ ] **Recurring Bills** — Recurring transaction detection, due-soon alerts, and search/sort
+- [ ] **Settings Page** — Currency selection, theme toggle, and account management
+- [ ] **Email Verification** — Confirm email address on signup
+- [ ] **Forgot Password** — Password reset via email
+- [ ] **Mobile Responsive** — Full responsive layout for tablet and mobile
 
-**⚠️ IMPORTANT ⚠️: With these premium challenges, please be sure not to upload the design files to GitHub when you're submitting to the platform and sharing it around. If you've created a brand new project, the easiest way to do that is to copy across the `.gitignore` provided in this starter project.**
+---
 
-## Sharing your solution
+## 🚀 Getting Started
 
-There are multiple places you can share your solution:
+### Prerequisites
 
-1. Share your solution page in the **#finished-projects** channel of our [community](https://www.frontendmentor.io/community).
-2. Tweet [@frontendmentor](https://twitter.com/frontendmentor) and mention **@frontendmentor**, including the repo and live URLs in the tweet. We'd love to take a look at what you've built and help share it around.
-3. Share your solution on other social channels like LinkedIn.
-4. Blog about your experience building your project. Writing about your workflow, technical choices, and talking through your code is a brilliant way to reinforce what you've learned. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
+- [Bun](https://bun.sh/) (recommended) or Node.js 18+
+- PostgreSQL database
 
-We provide templates to help you share your solution once you've submitted it on the platform. Please do edit them and include specific questions when you're looking for feedback.
+### Installation
 
-The more specific you are with your questions the more likely it is that another member of the community will give you feedback.
+```bash
+# Clone the repository
+git clone https://github.com/sarfarazstark/finco.git
+cd finco
 
-## Got feedback for us?
+# Install dependencies
+bun install
 
-We love receiving feedback! We're always looking to improve our challenges and our platform. So if you have anything you'd like to mention, please email hi[at]frontendmentor[dot]io.
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your DATABASE_URL
 
-**Have fun building!** 🚀
+# Generate Prisma client and run migrations
+bunx prisma migrate dev --name init
+
+# Seed the database with demo data
+bunx prisma db seed
+
+# Start development server
+bun dev
+```
+
+The app will be available at `http://localhost:3000`.
+
+### Environment Variables
+
+| Variable       | Description                    |
+|----------------|--------------------------------|
+| `DATABASE_URL` | PostgreSQL connection string   |
+| `BETTER_AUTH_SECRET` | Secret for session signing |
+
+---
+
+## 📄 License
+
+This project is built as a portfolio piece based on a [Frontend Mentor](https://www.frontendmentor.io) premium challenge. The design files are not included in this repository per Frontend Mentor's guidelines.
+
+---
+
+<p align="center">
+  Built by <a href="https://github.com/sarfarazstark">Sarfaraz</a>
+</p>

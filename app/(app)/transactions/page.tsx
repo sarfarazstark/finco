@@ -7,7 +7,7 @@ import { AccountFilter } from './_components/account-filter';
 import { AnimatedTableWrapper } from './_components/animated-table-wrapper';
 import { getTransactionsPageData } from '@/lib/data/transactions';
 import { TransactionRow } from './_components/transaction-row';
-import { prisma } from '@/lib/prisma';
+import { getSetting } from '@/hooks/use-setting';
 
 export default async function TransactionsPage({
 	searchParams,
@@ -23,14 +23,7 @@ export default async function TransactionsPage({
 	const { categories, accounts, transactions, meta } =
 		await getTransactionsPageData(session.user.id, params);
 
-	const dbSettings = await prisma.setting.findUnique({
-		where: { userId: session.user.id },
-	});
-
-	const settings = {
-		currency: dbSettings?.currency || 'INR',
-		theme: dbSettings?.theme || 'light',
-	};
+	const settings = await getSetting(session.user.id);
 
 	return (
 		<section className="p-8 max-w-5xl mx-auto">

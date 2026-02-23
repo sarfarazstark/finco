@@ -85,3 +85,13 @@ export function formatTransactionDate(dateInput: Date | string | number) {
 		year: 'numeric',
 	});
 }
+
+export const formatCurrency = (
+	amount: number,
+	currencyCode: string = 'USD'
+) => {
+	return new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: currencyCode,
+	}).format(amount);
+};
