@@ -78,3 +78,11 @@ export const settingsSchema = z.object({
 	currency: z.string().min(1, 'Currency is required').max(10),
 	theme: z.string().min(1, 'Theme is required').max(20),
 });
+
+
+export const budgetSchema = z.object({
+	categoryId: z.string().min(1, 'Category is required'),
+	themeId: z.string().min(1, 'Theme is required'),
+	maximum: z.number().min(1, 'Maximum amount must be greater than 0'),
+	type: z.enum(['WEEKLY', 'MONTHLY', 'QUARTERLY', 'YEARLY']),
+});
