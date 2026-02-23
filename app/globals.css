@@ -161,3 +161,7 @@ body {
 .react-datepicker__month-container {
 	float: none !important;
 }
+
+.recharts-pie *, .recharts-surface {
+	outline: none !important;
+}
