@@ -8,6 +8,7 @@ import { Link } from '@/lib/shared';
 import { redirect } from 'next/navigation';
 import { Toaster } from 'react-hot-toast';
 import { generateRecurringTransactions } from '@/lib/generate-recurring';
+import { getSetting } from '@/hooks/use-setting';
 
 const links: Link[] = [
 	{
@@ -81,13 +82,11 @@ export default async function AppLayout({
 			: 'bg-grey-100 text-grey-600',
 	}));
 
-	const settings = await prisma.setting.findUnique({
-		where: { userId: session.user.id },
-	});
+	const settings = await getSetting(session.user.id);
 
 	return (
 		<main className="grid grid-cols-[auto_1fr] h-screen overflow-hidden">
-			<Sidebar links={links} />
+			<Sidebar links={links} currentCurrency={settings?.currency} />
 			<TransitionLayout>{children}</TransitionLayout>
 			<GlobalAddButton
 				categories={categories}

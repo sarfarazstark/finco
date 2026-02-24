@@ -7,20 +7,34 @@ import {
 	IconLayoutSidebarLeftExpandFilled,
 	IconLogout,
 } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { cn } from '@/lib/utils';
 import { Link } from '@/lib/shared';
 import NavLink from '../ui/nav-link';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { authClient } from '@/lib/auth-client';
+import { updateCurrency } from '@/actions/settings';
+import {
+	Dropdown,
+	DropdownContent,
+	DropdownItem,
+	DropdownTrigger,
+	DropdownValue,
+} from '../ui/dropdown';
 
 const sidebarVariants = {
 	open: { width: 256 },
 	closed: { width: 64 },
 };
 
-export default function Sidebar({ links }: { links: Link[] }) {
+export default function Sidebar({
+	links,
+	currentCurrency = 'USD',
+}: {
+	links: Link[];
+	currentCurrency?: string;
+}) {
 	const [isOpen, setIsOpen] = useState(true);
 	const router = useRouter();
 
@@ -108,6 +122,7 @@ export default function Sidebar({ links }: { links: Link[] }) {
 					user={user}
 					isOpen={isOpen}
 					onLogout={handleLogout}
+					currentCurrency={currentCurrency}
 				/>
 			</div>
 		</motion.aside>
@@ -118,12 +133,26 @@ function ProfileDropdown({
 	user,
 	isOpen,
 	onLogout,
+	currentCurrency,
 }: {
 	user: typeof authClient.$Infer.Session.user | undefined;
 	isOpen: boolean;
 	onLogout: () => void;
+	currentCurrency: string;
 }) {
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [isPending, startTransition] = useTransition();
+
+	const handleCurrencyChange = (newCurrency: string) => {
+		startTransition(async () => {
+			const res = await updateCurrency(newCurrency);
+			if (res.success) {
+				toast.success(`Currency updated to ${newCurrency}`);
+			} else {
+				toast.error('Failed to update currency');
+			}
+		});
+	};
 
 	return (
 		<div className="relative">
@@ -146,11 +175,11 @@ function ProfileDropdown({
 							exit={{ opacity: 0, y: 10, scale: 0.95 }}
 							transition={{ duration: 0.15, ease: 'easeOut' }}
 							className={cn(
-								'absolute bottom-full mb-2 z-50 bg-white shadow-xl rounded-xl border border-grey-100 overflow-hidden min-w-[200px]',
+								'absolute bottom-full mb-2 z-50 bg-white shadow-xl rounded-xl border border-grey-100 min-w-[200px]',
 								!isOpen ? 'left-2' : 'left-4 right-4'
 							)}
 						>
-							<div className="p-3 border-b border-grey-100/50 bg-grey-50">
+							<div className="p-3 border-b border-grey-100/50 bg-grey-50 rounded-t-xl">
 								<p className="font-preset-4-bold text-grey-900 truncate">
 									{user?.name || 'User'}
 								</p>
@@ -158,6 +187,53 @@ function ProfileDropdown({
 									{user?.email}
 								</p>
 							</div>
+
+							<div className="p-1 border-b border-grey-100/50">
+								<div className="flex items-center justify-between px-2 py-1.5 gap-4">
+									<label className="text-sm font-medium text-grey-500 shrink-0">
+										Currency
+									</label>
+									<Dropdown
+										value={currentCurrency}
+										onValueChange={handleCurrencyChange}
+									>
+										<DropdownTrigger
+											className={cn(
+												'w-28 py-1.5 px-2.5',
+												isPending &&
+													'opacity-50 cursor-not-allowed'
+											)}
+											disabled={isPending}
+										>
+											<DropdownValue />
+										</DropdownTrigger>
+										<DropdownContent>
+											<DropdownItem value="USD">
+												USD ($)
+											</DropdownItem>
+											<DropdownItem value="EUR">
+												EUR (€)
+											</DropdownItem>
+											<DropdownItem value="GBP">
+												GBP (£)
+											</DropdownItem>
+											<DropdownItem value="INR">
+												INR (₹)
+											</DropdownItem>
+											<DropdownItem value="JPY">
+												JPY (¥)
+											</DropdownItem>
+											<DropdownItem value="AUD">
+												AUD (A$)
+											</DropdownItem>
+											<DropdownItem value="CAD">
+												CAD (C$)
+											</DropdownItem>
+										</DropdownContent>
+									</Dropdown>
+								</div>
+							</div>
+
 							<div className="p-1">
 								<button
 									onClick={() => {
