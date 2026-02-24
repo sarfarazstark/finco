@@ -74,7 +74,7 @@ export default async function AppLayout({
 		name: c.name,
 		icon: c.icon?.name || 'category',
 		color: c.icon
-			? `${c.icon.bg} ${c.icon.color}`
+			? `${c.icon.color} text-white`
 			: 'bg-grey-100 text-grey-600',
 	}));
 

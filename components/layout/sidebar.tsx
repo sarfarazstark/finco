@@ -73,7 +73,7 @@ export default function Sidebar({ links }: { links: Link[] }) {
 								width={112}
 								height={32}
 								priority
-								className="w-28"
+								className="w-auto"
 							/>
 						</motion.div>
 					)}

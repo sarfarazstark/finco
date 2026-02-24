@@ -61,7 +61,7 @@ export function TransferDialog({
 				? await updateTransaction(transactionId, payload)
 				: await addTransaction(payload);
 
-			if (res.success) {
+			if ('success' in res && res.success) {
 				onOpenChange(false);
 				if (!transactionId) {
 					setAmount('');
@@ -69,7 +69,9 @@ export function TransferDialog({
 					setDate(new Date());
 				}
 			} else {
-				console.error(res.error);
+				const errMsg =
+					'error' in res ? res.error : 'Failed to save transaction';
+				console.error(errMsg);
 			}
 		});
 	};

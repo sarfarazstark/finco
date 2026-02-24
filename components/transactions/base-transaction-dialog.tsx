@@ -110,7 +110,7 @@ export function BaseTransactionDialog({
 				? await updateTransaction(transactionId, payload)
 				: await addTransaction(payload);
 
-			if (res.success) {
+			if ('success' in res && res.success) {
 				toast.success(
 					transactionId
 						? 'Transaction updated successfully'
@@ -122,8 +122,10 @@ export function BaseTransactionDialog({
 					form.reset();
 				}
 			} else {
-				console.error(res.error);
-				toast.error(res.error || 'Failed to save transaction', {
+				const errMsg =
+					'error' in res ? res.error : 'Failed to save transaction';
+				console.error(errMsg);
+				toast.error(errMsg as string, {
 					id: loadingToast,
 				});
 			}

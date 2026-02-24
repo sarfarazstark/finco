@@ -16,7 +16,7 @@ export function Input({
 	...props
 }: {
 	type: React.HTMLInputTypeAttribute;
-	id: string;
+	id?: string;
 	name: string;
 	placeholder?: string;
 	label?: string;
@@ -55,7 +55,7 @@ export function Input({
 					placeholder={placeholder}
 					autoComplete={autoComplete}
 					className={cn(
-						'w-full px-4 py-2 border border-grey-500 focus-visible:outline-none focus-visible:border-grey-900 rounded-md pr-10',
+						'w-full px-4 py-2 border border-grey-500/30 focus-visible:outline-none focus-visible:border-grey-900 rounded-md',
 						error && 'border-red',
 						className
 					)}

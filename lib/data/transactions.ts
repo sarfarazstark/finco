@@ -72,9 +72,7 @@ export async function getTransactionsPageData(
 		id: c.id,
 		name: c.name,
 		icon: c.icon?.name || 'category',
-		color: c.icon
-			? `${c.icon.bg} ${c.icon.color}`
-			: 'bg-grey-100 text-grey-600',
+		color: c.icon ? c.icon.color : 'bg-grey-100 text-grey-600',
 	}));
 
 	const accounts = dbAccounts.map(a => ({

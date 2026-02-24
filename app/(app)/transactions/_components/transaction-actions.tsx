@@ -32,7 +32,7 @@ export function TransactionActions({
 	const handleDelete = async () => {
 		startTransition(async () => {
 			const res = await deleteTransaction(transaction.id);
-			if (res?.error) {
+			if (res && 'error' in res && res.error) {
 				alert(res.error);
 			}
 			setShowDeleteConfirm(false);

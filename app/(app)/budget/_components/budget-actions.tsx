@@ -3,15 +3,23 @@
 import { ActionDropdown, ActionItem } from '@/components/ui/action-dropdown';
 import { ConfirmDialog } from '@/components/ui/confirm';
 import { useState, useTransition } from 'react';
+import { BudgetDialog, CategoryWithIcon } from './budget-dialog';
+import { Theme } from '@prisma/client';
 
 interface BudgetActionsProps {
-	budgetId: string;
-	budgetName: string;
+	category: CategoryWithIcon;
+	categories: CategoryWithIcon[];
+	themes: Theme[];
 }
 
-export function BudgetActions({ budgetId, budgetName }: BudgetActionsProps) {
+export function BudgetActions({
+	category,
+	categories,
+	themes,
+}: BudgetActionsProps) {
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 	const [isPending, startTransition] = useTransition();
+	const [open, setOpen] = useState(false);
 
 	const handleDelete = () => {
 		startTransition(async () => {
@@ -24,9 +32,7 @@ export function BudgetActions({ budgetId, budgetName }: BudgetActionsProps) {
 			label: 'Edit',
 			icon: 'pencil',
 			disabled: isPending,
-			onClick: () => {
-				alert(`Edit budget: ${budgetName} (${budgetId})`);
-			},
+			onClick: () => setOpen(true),
 		},
 		{
 			label: 'Delete',
@@ -44,10 +50,19 @@ export function BudgetActions({ budgetId, budgetName }: BudgetActionsProps) {
 				isOpen={isDeleteDialogOpen}
 				onOpenChange={setIsDeleteDialogOpen}
 				title="Delete Budget"
-				description={`Are you sure you want to delete "${budgetName}"?`}
+				description={`Are you sure you want to delete "${category.name}"?`}
 				onConfirm={handleDelete}
 				variant="destroy"
 				isPending={isPending}
+			/>
+
+			<BudgetDialog
+				open={open}
+				setOpen={setOpen}
+				type="edit"
+				category={category}
+				categories={categories}
+				themes={themes}
 			/>
 		</>
 	);
