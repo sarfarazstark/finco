@@ -19,10 +19,7 @@ export function AccountDropdown({
 	onChange: (value: string) => void;
 	currency?: string;
 }) {
-	const safeAccounts =
-		accounts && accounts.length > 0
-			? accounts
-			: [{ id: 'cash', name: 'Cash', icon: 'wallet', balance: 0 }];
+	const safeAccounts = accounts ?? [];
 
 	const selectedAccount =
 		safeAccounts.find(a => a.id === value) || safeAccounts[0];

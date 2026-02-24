@@ -73,7 +73,7 @@ export function BaseTransactionDialog({
 		defaultValues: {
 			amount: initialData ? Math.abs(initialData.amount).toString() : '',
 			name: initialData?.name || '',
-			accountId: initialData?.accountId || 'cash',
+			accountId: initialData?.accountId || accounts[0]?.id || '',
 			categoryId: defaultCategoryId,
 			date: initialData?.date || new Date(),
 			recurring: initialData?.recurring || false,
