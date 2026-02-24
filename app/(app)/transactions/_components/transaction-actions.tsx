@@ -9,6 +9,7 @@ import { BaseTransactionDialog } from '@/components/transactions/base-transactio
 import { TransferDialog } from '@/components/transactions/transfer-dialog';
 
 import { TransactionWithRelations } from '@/components/transactions/resolved-image';
+import { Setting } from '@prisma/client';
 
 import { ConfirmDialog } from '@/components/ui/confirm';
 
@@ -21,8 +22,8 @@ export function TransactionActions({
 	transaction: TransactionWithRelations;
 	categories: Category[];
 	accounts: AccountSelectorProps[];
-	settings: { currency: string; theme: string };
-	}) {
+	settings: Setting;
+}) {
 	const [activeDialog, setActiveDialog] = useState<
 		'INCOME' | 'EXPENSE' | 'TRANSFER' | null
 	>(null);
@@ -73,8 +74,7 @@ export function TransactionActions({
 			icon: 'trash',
 			onClick: () => setShowDeleteConfirm(true),
 			disabled: isPending,
-			className:
-				'text-red-500 hover:bg-red-50 focus:bg-red-50',
+			className: 'text-red-500 hover:bg-red-50 focus:bg-red-50',
 		},
 	];
 

@@ -170,6 +170,7 @@ model Pot {
 
     name    String
     target  Float
+    total   Float  @default(0)
     themeId String
 
     user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -4,6 +4,7 @@ import { Category } from '@/components/transactions/category-dialog';
 import { AccountSelectorProps } from '@/components/layout/global-add-button';
 import { formatTransactionDate } from '@/lib/utils';
 import { AccountAvatar } from '@/components/transactions/account-avatar';
+import { Setting } from '@prisma/client';
 
 export function TransactionRow({
 	transaction,
@@ -14,7 +15,7 @@ export function TransactionRow({
 	transaction: TransactionWithRelations;
 	categories: Category[];
 	accounts: AccountSelectorProps[];
-	settings: { currency: string; theme: string };
+	settings: Setting;
 }) {
 	const isPositive = transaction.type === 'INCOME';
 	const sign = isPositive ? '+' : '-';
@@ -42,8 +43,9 @@ export function TransactionRow({
 				{formatTransactionDate(transaction.date)}
 			</td>
 			<td
-				className={`px-3 py-4 text-right font-preset-4-bold ${isPositive ? 'text-green' : 'text-grey-900'
-					}`}
+				className={`px-3 py-4 text-right font-preset-4-bold ${
+					isPositive ? 'text-green' : 'text-grey-900'
+				}`}
 			>
 				{sign}₹{Math.abs(transaction.amount).toFixed(2)}
 			</td>

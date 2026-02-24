@@ -24,9 +24,13 @@ export const createPot = async (data: z.infer<typeof potSchema>) => {
 	try {
 		const user = await getServerUser();
 		if (!user) return { error: 'Unauthorized' };
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { id: _id, ...potData } = data;
+
 		const pot = await prisma.pot.create({
 			data: {
-				...data,
+				...potData,
 				userId: user.id,
 			},
 		});
@@ -41,12 +45,14 @@ export const updatePot = async (data: z.infer<typeof potSchema>) => {
 	try {
 		const user = await getServerUser();
 		if (!user) return { error: 'Unauthorized' };
+
+		if (!data.id) return { error: 'Pot ID is required' };
+
+		const { id, ...potData } = data;
+
 		const pot = await prisma.pot.update({
-			where: { id: data.id },
-			data: {
-				...data,
-				userId: user.id,
-			},
+			where: { id },
+			data: potData,
 		});
 		revalidateTransactions();
 		return { data: pot };
@@ -66,5 +72,69 @@ export const deletePot = async ({ id }: { id: string }) => {
 		return { data: pot };
 	} catch (error) {
 		return handleError(error, 'Failed to delete pot');
+	}
+};
+
+/**
+ * Añade dinero a un pot. No puede exceder el target.
+ */
+export const addToPot = async ({
+	potId,
+	amount,
+}: {
+	potId: string;
+	amount: number;
+}) => {
+	try {
+		const user = await getServerUser();
+		if (!user) return { error: 'Unauthorized' };
+
+		const pot = await prisma.pot.findUnique({ where: { id: potId } });
+		if (!pot) return { error: 'Pot not found' };
+		if (pot.userId !== user.id) return { error: 'Unauthorized' };
+
+		const newTotal = Math.min(pot.total + amount, pot.target);
+
+		const updated = await prisma.pot.update({
+			where: { id: potId },
+			data: { total: newTotal },
+		});
+
+		revalidateTransactions();
+		return { data: updated };
+	} catch (error) {
+		return handleError(error, 'Failed to add to pot');
+	}
+};
+
+/**
+ * Retira dinero de un pot. No puede bajar de 0.
+ */
+export const withdrawFromPot = async ({
+	potId,
+	amount,
+}: {
+	potId: string;
+	amount: number;
+}) => {
+	try {
+		const user = await getServerUser();
+		if (!user) return { error: 'Unauthorized' };
+
+		const pot = await prisma.pot.findUnique({ where: { id: potId } });
+		if (!pot) return { error: 'Pot not found' };
+		if (pot.userId !== user.id) return { error: 'Unauthorized' };
+
+		const newTotal = Math.max(pot.total - amount, 0);
+
+		const updated = await prisma.pot.update({
+			where: { id: potId },
+			data: { total: newTotal },
+		});
+
+		revalidateTransactions();
+		return { data: updated };
+	} catch (error) {
+		return handleError(error, 'Failed to withdraw from pot');
 	}
 };
