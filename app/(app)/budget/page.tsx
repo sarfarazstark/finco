@@ -128,23 +128,35 @@ export default async function Budget() {
 				<AddNewBudget categories={dbCategories} themes={themes} />
 			</header>
 
-			<section className="flex gap-4">
-				<BudgetList
-					chartData={chartData}
-					currency={settings.currency}
-				/>
-				<div className="flex-5 flex flex-col gap-4">
-					{formattedCategories.map(budget => (
-						<BudgetCard
-							key={budget.id}
-							budget={budget}
-							currency={settings.currency}
-							categories={dbCategories}
-							themes={themes}
-						/>
-					))}
+			{formattedCategories.length > 0 ? (
+				<section className="flex gap-4">
+					<BudgetList
+						chartData={chartData}
+						currency={settings.currency}
+					/>
+					<div className="flex-5 flex flex-col gap-4">
+						{formattedCategories.map(budget => (
+							<BudgetCard
+								key={budget.id}
+								budget={budget}
+								currency={settings.currency}
+								categories={dbCategories}
+								themes={themes}
+							/>
+						))}
+					</div>
+				</section>
+			) : (
+				<div className="text-center py-16">
+					<p className="font-preset-3 text-grey-500 mb-2">
+						No budgets yet
+					</p>
+					<p className="font-preset-5 text-grey-400">
+						Create a budget to start tracking your spending by
+						category.
+					</p>
 				</div>
-			</section>
+			)}
 		</div>
 	);
 }

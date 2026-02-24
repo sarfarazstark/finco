@@ -22,6 +22,7 @@
 | **Auth**         | Session-based via Better Auth with Prisma adapter & Zod v4 validation  |
 | **Transactions** | Full CRUD, double-entry transfers, debounced search, 6-way sort, pagination |
 | **Budget**       | Custom SVG donut chart, period-aware tracking (W/M/Q/Y), overspent detection |
+| **Pots**         | Savings goals with progress tracking, add/withdraw money, target caps  |
 | **UI**           | 9 hand-crafted components, Framer Motion animations, custom design tokens |
 
 ---
@@ -64,6 +65,12 @@
 - **Budget CRUD** — Create/Edit with React Hook Form, zod validation, theme & period selectors
 - Per-category spend aggregation and deep links to filtered transactions
 
+### 🏦 Pots (Savings Goals)
+- **Virtual Sub-Account** — Each pot tracks a `total` saved amount toward a `target`
+- **Add / Withdraw** — Real-time progress preview before confirming
+- **Cap at Target** — Adding money is capped at the target; withdrawals floored at zero
+- **Pot CRUD** — Create/Edit/Delete with theme selector and form validation
+
 ### 🧩 UI Components (Built from Scratch)
 
 | Component    | Description                                                     |
@@ -100,10 +107,11 @@
 - [x] Animated Sidebar & Global FAB
 - [x] Database Seeding (200+ demo records)
 - [x] Currency Formatting (`Intl.NumberFormat`)
+- [x] Pots (savings goals, add/withdraw, progress tracking)
+- [x] Empty States (Transactions, Budget, Pots)
 
 ### 📌 Planned
 - [ ] Dashboard — At-a-glance financial summary
-- [ ] Pots — Savings goals with progress tracking
 - [ ] Recurring Bills — Detection, due-soon alerts
 - [ ] Settings — Currency & theme preferences
 - [ ] Email Verification using Resend

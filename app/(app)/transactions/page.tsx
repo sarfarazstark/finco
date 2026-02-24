@@ -61,24 +61,43 @@ export default async function TransactionsPage({
 								</tr>
 							</thead>
 							<tbody>
-								{transactions.map(tx => (
-									<TransactionRow
-										key={tx.id}
-										transaction={tx}
-										categories={categories}
-										accounts={accounts}
-										settings={settings}
-									/>
-								))}
+								{transactions.length > 0 ? (
+									transactions.map(tx => (
+										<TransactionRow
+											key={tx.id}
+											transaction={tx}
+											categories={categories}
+											accounts={accounts}
+											settings={settings}
+										/>
+									))
+								) : (
+									<tr>
+										<td
+											colSpan={5}
+											className="text-center py-16"
+										>
+											<p className="font-preset-3 text-grey-500 mb-2">
+												No transactions found
+											</p>
+											<p className="font-preset-5 text-grey-400">
+												Add your first transaction using
+												the + button.
+											</p>
+										</td>
+									</tr>
+								)}
 							</tbody>
 						</table>
 					</div>
 				</AnimatedTableWrapper>
 
-				<Pagination
-					totalPages={meta.lastPage}
-					currentPage={meta.currentPage}
-				/>
+				{transactions.length > 0 && (
+					<Pagination
+						totalPages={meta.lastPage}
+						currentPage={meta.currentPage}
+					/>
+				)}
 			</div>
 		</section>
 	);
