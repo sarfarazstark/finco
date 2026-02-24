@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { formatCurrency } from '@/lib/utils';
 import type { Pot, Theme } from '@prisma/client';
-import { IconReceipt2 } from '@tabler/icons-react';
+import { IconPigFilled } from '@tabler/icons-react';
 
 export function OverviewPotsWidget({
 	pots,
@@ -15,7 +15,7 @@ export function OverviewPotsWidget({
 
 	return (
 		<div className="bg-white rounded-xl p-8">
-			<div className="flex items-center justify-between mb-5">
+			<div className="flex items-center justify-between mb-6">
 				<h2 className="font-preset-2 text-grey-900">Pots</h2>
 				<Link
 					href="/pots"
@@ -26,9 +26,9 @@ export function OverviewPotsWidget({
 				</Link>
 			</div>
 
-			<div className="flex flex-col sm:flex-row gap-5 items-stretch">
+			<div className="flex flex-col sm:flex-row gap-6 items-stretch">
 				<div className="bg-beige-100 rounded-xl p-6 flex items-center gap-4 sm:w-62 shrink-0">
-					<IconReceipt2 className="w-10 h-10 text-green" />
+					<IconPigFilled className="w-10 h-10 text-green" />
 					<div>
 						<p className="font-preset-4 text-grey-500 mb-2">
 							Total Saved
@@ -49,7 +49,7 @@ export function OverviewPotsWidget({
 							<p className="font-preset-5 text-grey-500 mb-1">
 								{pot.name}
 							</p>
-							<p className="font-preset-4-bold text-grey-900">
+							<p className="font-preset-4 font-semibold text-grey-900">
 								{formatCurrency(pot.total, currency)}
 							</p>
 						</div>

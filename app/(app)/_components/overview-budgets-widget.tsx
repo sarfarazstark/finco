@@ -91,7 +91,7 @@ export function OverviewBudgetsWidget({
 							<p className="font-preset-5 text-grey-500">
 								{budget.name}
 							</p>
-							<p className="font-preset-4-bold text-grey-900">
+							<p className="font-preset-4 font-semibold text-grey-900">
 								{formatCurrency(budget.limit, currency)}
 							</p>
 						</div>

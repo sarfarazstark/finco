@@ -8,10 +8,18 @@ import { OverviewPotsWidget } from './_components/overview-pots-widget';
 import { OverviewBudgetsWidget } from './_components/overview-budgets-widget';
 import { OverviewTransactionsWidget } from './_components/overview-transactions-widget';
 import { OverviewRecurringBillsWidget } from './_components/overview-recurring-bills-widget';
+import { DateRangeFilter } from './_components/date-range-filter';
 import { isInCurrentPeriod, checkDueSoon } from '@/lib/recurring';
 import type { BillStatus } from './recurring-bills/_components/bill-row';
+import { subDays } from 'date-fns';
 
-export default async function Overview() {
+export default async function Overview({
+	searchParams,
+}: {
+	searchParams: Promise<{ range?: string }>;
+}) {
+	const { range = 'all' } = await searchParams;
+
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
@@ -19,7 +27,6 @@ export default async function Overview() {
 	if (!session) return redirect('/auth/login');
 	const userId = session.user.id;
 
-	// Fetch all necessary data in parallel
 	const [transactions, pots, budgets, settings] = await Promise.all([
 		prisma.transaction.findMany({
 			where: { userId },
@@ -38,20 +45,33 @@ export default async function Overview() {
 		getSetting(userId),
 	]);
 
-	// 1. Calculate Summary Cards
-	const balance = transactions.reduce((sum, tx) => sum + tx.amount, 0);
-	const income = transactions
+	const filteredTransactions = transactions.filter(tx => {
+		if (range === 'all') return true;
+		const txDate = new Date(tx.date);
+		if (range === 'week') {
+			return txDate >= subDays(new Date(), 7);
+		}
+		if (range === 'month') {
+			return txDate >= subDays(new Date(), 30);
+		}
+		return true;
+	});
+
+	const balance = filteredTransactions.reduce(
+		(sum, tx) => sum + tx.amount,
+		0
+	);
+	const income = filteredTransactions
 		.filter(
 			tx =>
 				tx.type === 'INCOME' ||
 				(tx.amount >= 0 && tx.type !== 'EXPENSE')
 		)
 		.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
-	const expenses = transactions
+	const expenses = filteredTransactions
 		.filter(tx => tx.type === 'EXPENSE' || tx.amount < 0)
 		.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
 
-	// 2. Process Recurring Bills
 	const allRecurring = transactions.filter(tx => tx.recurring);
 	const latestByKey = new Map<string, (typeof allRecurring)[0]>();
 
@@ -86,8 +106,9 @@ export default async function Overview() {
 
 	return (
 		<div className="p-8 max-w-6xl mx-auto flex flex-col gap-6">
-			<header className="flex items-center justify-between">
+			<header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 				<h1 className="text-3xl font-bold text-grey-900">Overview</h1>
+				<DateRangeFilter />
 			</header>
 
 			<OverviewSummaryCards
@@ -104,7 +125,7 @@ export default async function Overview() {
 						currency={settings.currency}
 					/>
 					<OverviewTransactionsWidget
-						transactions={transactions}
+						transactions={filteredTransactions}
 						currency={settings.currency}
 					/>
 				</div>

@@ -46,28 +46,25 @@ export function OverviewRecurringBillsWidget({
 			</div>
 
 			<div className="flex flex-col gap-3">
-				{/* Paid Bills */}
-				<div className="bg-beige-100 rounded-lg p-5 flex items-center justify-between border-l-4 border-green">
+				<div className="bg-beige-100 p-5 flex items-center justify-between border-l-4 border-green">
 					<p className="font-preset-4 text-grey-500">Paid Bills</p>
-					<p className="font-preset-4-bold text-grey-900">
+					<p className="font-preset-4 font-semibold text-grey-900">
 						{formatCurrency(paidAmount, currency)}
 					</p>
 				</div>
 
-				{/* Total Upcoming */}
-				<div className="bg-beige-100 rounded-lg p-5 flex items-center justify-between border-l-4 border-yellow-500">
+				<div className="bg-beige-100 p-5 flex items-center justify-between border-l-4 border-yellow-500">
 					<p className="font-preset-4 text-grey-500">
 						Total Upcoming
 					</p>
-					<p className="font-preset-4-bold text-grey-900">
+					<p className="font-preset-4 font-semibold text-grey-900">
 						{formatCurrency(upcomingAmount, currency)}
 					</p>
 				</div>
 
-				{/* Due Soon */}
-				<div className="bg-beige-100 rounded-lg p-5 flex items-center justify-between border-l-4 border-cyan-500">
+				<div className="bg-beige-100 p-5 flex items-center justify-between border-l-4 border-cyan-500">
 					<p className="font-preset-4 text-grey-500">Due Soon</p>
-					<p className="font-preset-4-bold text-grey-900">
+					<p className="font-preset-4 font-semibold text-grey-900">
 						{formatCurrency(dueSoonAmount, currency)}
 					</p>
 				</div>

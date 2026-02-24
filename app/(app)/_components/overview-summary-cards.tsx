@@ -17,21 +17,21 @@ export function OverviewSummaryCards({
 				<p className="font-preset-4 text-grey-100 mb-3 relative z-10">
 					Current Balance
 				</p>
-				<p className="font-preset-1 relative z-10">
+				<p className="font-preset-1 font-semibold relative z-10">
 					{formatCurrency(balance, currency)}
 				</p>
 			</div>
 
 			<div className="bg-white rounded-xl p-6">
 				<p className="font-preset-4 text-grey-500 mb-3">Income</p>
-				<p className="font-preset-1 text-grey-900">
+				<p className="font-preset-1 font-semibold text-grey-900">
 					{formatCurrency(income, currency)}
 				</p>
 			</div>
 
 			<div className="bg-white rounded-xl p-6">
 				<p className="font-preset-4 text-grey-500 mb-3">Expenses</p>
-				<p className="font-preset-1 text-grey-900">
+				<p className="font-preset-1 font-semibold text-grey-900">
 					{formatCurrency(expenses, currency)}
 				</p>
 			</div>

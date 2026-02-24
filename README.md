@@ -24,6 +24,7 @@
 | **Budget**       | Custom SVG donut chart, period-aware tracking (W/M/Q/Y), overspent detection |
 | **Pots**         | Savings goals with progress tracking, add/withdraw money, target caps  |
 | **Recurring**    | Auto-generated transactions on login, paid/upcoming/due-soon tracking  |
+| **Dashboard**    | At-a-glance financial summary, date-range filtering, and smart widgets |
 | **UI**           | 9 hand-crafted components, Framer Motion animations, custom design tokens |
 
 ---
@@ -118,9 +119,9 @@
 - [x] Pots (savings goals, add/withdraw, progress tracking)
 - [x] Empty States (Transactions, Budget, Pots)
 - [x] Recurring Bills (auto-generation, summary, searchable bill list)
+- [x] Dashboard — At-a-glance financial summary with date-range filter
 
 ### 📌 Planned
-- [ ] Dashboard — At-a-glance financial summary
 - [ ] Settings — Currency & theme preferences
 - [ ] Email Verification using Resend
 - [ ] Password Reset feature

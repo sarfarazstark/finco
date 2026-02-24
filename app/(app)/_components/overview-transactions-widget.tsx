@@ -38,21 +38,17 @@ export function OverviewTransactionsWidget({
 							className={`flex items-center justify-between py-5 ${i !== recentTxs.length - 1 ? 'border-b border-grey-100/50' : 'pt-5 pb-1'}`}
 						>
 							<div className="flex items-center gap-4">
-								<Image
-									src={tx.account?.image || ''}
-									alt="Account avatar"
-									className="w-10 h-10 rounded-full object-cover shrink-0"
-									width={40}
-									height={40}
-								/>
-								<p className="font-preset-4-bold text-grey-900">
+								<i
+									className={`ti ti-${tx.category?.icon.name} text-2xl text-white p-2 rounded-full ${tx.category?.icon.color}`}
+								></i>
+								<p className="font-preset-4 font-semibold text-grey-900">
 									{tx.name}
 								</p>
 							</div>
 
 							<div className="text-right">
 								<p
-									className={`font-preset-4-bold mb-1 ${isPositive ? 'text-green' : 'text-grey-900'}`}
+									className={`font-preset-4 font-semibold mb-1 ${isPositive ? 'text-green' : 'text-grey-900'}`}
 								>
 									{sign}
 									{formatCurrency(

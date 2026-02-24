@@ -66,16 +66,20 @@ function RingSegment({
 
 function SpendSector(props: PieSectorShapeProps) {
 	const {
-		cx = 0, cy = 0,
-		innerRadius = 0, outerRadius = 0,
-		startAngle = 0, endAngle = 0,
+		cx = 0,
+		cy = 0,
+		innerRadius = 0,
+		outerRadius = 0,
+		startAngle = 0,
+		endAngle = 0,
 		isActive = false,
 		value = 0,
 		payload,
 	} = props;
 
-	const color: string = payload?.color ?? '#000';
-	const limit: number = payload?.limit ?? 0;
+	// Safely access properties depending on how Recharts nests the payload
+	const color: string = payload?.payload?.color ?? payload?.color ?? '#000';
+	const limit: number = payload?.payload?.limit ?? payload?.limit ?? 0;
 	const extra = isActive ? 6 : 0;
 
 	if (value > limit) {
@@ -84,16 +88,26 @@ function SpendSector(props: PieSectorShapeProps) {
 		return (
 			<g>
 				<RingSegment
-					cx={cx} cy={cy}
-					innerRadius={innerRadius} outerRadius={outerRadius}
-					startAngle={startAngle} endAngle={splitAngle}
-					fill={color} isActive={isActive} extraRadius={extra}
+					cx={cx}
+					cy={cy}
+					innerRadius={innerRadius}
+					outerRadius={outerRadius}
+					startAngle={startAngle}
+					endAngle={splitAngle}
+					fill={color}
+					isActive={isActive}
+					extraRadius={extra}
 				/>
 				<RingSegment
-					cx={cx} cy={cy}
-					innerRadius={innerRadius} outerRadius={outerRadius}
-					startAngle={splitAngle} endAngle={endAngle}
-					fill={`url(#${OVERSPENT_PATTERN_ID})`} isActive={isActive} extraRadius={extra}
+					cx={cx}
+					cy={cy}
+					innerRadius={innerRadius}
+					outerRadius={outerRadius}
+					startAngle={splitAngle}
+					endAngle={endAngle}
+					fill={`url(#${OVERSPENT_PATTERN_ID})`}
+					isActive={isActive}
+					extraRadius={extra}
 				/>
 			</g>
 		);
@@ -101,10 +115,15 @@ function SpendSector(props: PieSectorShapeProps) {
 
 	return (
 		<RingSegment
-			cx={cx} cy={cy}
-			innerRadius={innerRadius} outerRadius={outerRadius}
-			startAngle={startAngle} endAngle={endAngle}
-			fill={color} isActive={isActive} extraRadius={extra}
+			cx={cx}
+			cy={cy}
+			innerRadius={innerRadius}
+			outerRadius={outerRadius}
+			startAngle={startAngle}
+			endAngle={endAngle}
+			fill={color}
+			isActive={isActive}
+			extraRadius={extra}
 		/>
 	);
 }
@@ -119,10 +138,13 @@ function LimitSector(props: PieSectorShapeProps) {
 
 	return (
 		<Sector
-			cx={cx} cy={cy}
-			innerRadius={innerRadius} outerRadius={outerRadius}
-			startAngle={startAngle} endAngle={endAngle}
-			fill={payload?.color ?? '#000'}
+			cx={cx}
+			cy={cy}
+			innerRadius={innerRadius}
+			outerRadius={outerRadius}
+			startAngle={startAngle}
+			endAngle={endAngle}
+			fill={payload?.payload?.color ?? payload?.color ?? '#000'}
 			opacity={0.7}
 		/>
 	);
@@ -182,7 +204,7 @@ export function DonutChart({ data, className, currency }: DonutChartProps) {
 				<span
 					className={cn(
 						'font-preset-2 font-bold tracking-tighter tabular-nums',
-						isOverBudget ? 'text-red-500' : 'text-grey-900',
+						isOverBudget ? 'text-red-500' : 'text-grey-900'
 					)}
 				>
 					{formatCurrency(totals.spent, currency)}
@@ -197,12 +219,18 @@ export function DonutChart({ data, className, currency }: DonutChartProps) {
 						<pattern
 							id={OVERSPENT_PATTERN_ID}
 							patternUnits="userSpaceOnUse"
-							width="8" height="8"
+							width="8"
+							height="8"
 							patternTransform="rotate(130)"
 						>
 							<line
-								x1="0" y1="0" x2="8" y2="0"
-								stroke="#c94736" opacity={0.5} strokeWidth="2"
+								x1="0"
+								y1="0"
+								x2="8"
+								y2="0"
+								stroke="#c94736"
+								opacity={0.5}
+								strokeWidth="2"
 							/>
 						</pattern>
 					</defs>
@@ -210,11 +238,14 @@ export function DonutChart({ data, className, currency }: DonutChartProps) {
 					<Pie
 						data={data}
 						shape={spendShape}
-						cx="50%" cy="50%"
-						innerRadius={80} outerRadius={110}
+						cx="50%"
+						cy="50%"
+						innerRadius={105}
+						outerRadius={135}
 						dataKey="value"
 						stroke="none"
-						startAngle={90} endAngle={-270}
+						startAngle={90}
+						endAngle={-270}
 						animationBegin={0}
 						animationDuration={1200}
 						animationEasing="ease-out"
@@ -225,11 +256,14 @@ export function DonutChart({ data, className, currency }: DonutChartProps) {
 					<Pie
 						data={data}
 						shape={limitShape}
-						cx="50%" cy="50%"
-						innerRadius={60} outerRadius={80}
+						cx="50%"
+						cy="50%"
+						innerRadius={85}
+						outerRadius={105}
 						dataKey="limit"
 						stroke="none"
-						startAngle={90} endAngle={-270}
+						startAngle={90}
+						endAngle={-270}
 						isAnimationActive={false}
 					/>
 
