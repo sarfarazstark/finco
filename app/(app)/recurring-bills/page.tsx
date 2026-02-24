@@ -88,7 +88,6 @@ export default async function RecurringBillsPage() {
 		0
 	);
 
-	// Serializar statusMap para pasarlo al cliente
 	const statusRecord: Record<string, BillStatus> = {};
 	for (const [id, status] of statusMap) {
 		statusRecord[id] = status;
@@ -121,12 +120,6 @@ export default async function RecurringBillsPage() {
 	);
 }
 
-/**
- * Comprobar si una fecha cae dentro del periodo actual
- * Weekly: misma semana calendario (lunes a domingo)
- * Monthly: mismo mes y año
- * Yearly: mismo año
- */
 function isInCurrentPeriod(
 	txDate: Date,
 	frequency: number | null,
@@ -135,10 +128,9 @@ function isInCurrentPeriod(
 	if (!frequency) return false;
 
 	if (frequency <= 7) {
-		// Semanal: comprobar si está dentro de esta semana (lunes-domingo)
 		const startOfWeek = new Date(now);
 		const day = startOfWeek.getDay();
-		const diff = day === 0 ? 6 : day - 1; // Ajustar — lunes = 0
+		const diff = day === 0 ? 6 : day - 1;
 		startOfWeek.setDate(startOfWeek.getDate() - diff);
 		startOfWeek.setHours(0, 0, 0, 0);
 
@@ -149,7 +141,6 @@ function isInCurrentPeriod(
 	}
 
 	if (frequency <= 30) {
-		// Mensual: mismo mes y año
 		return (
 			txDate.getMonth() === now.getMonth() &&
 			txDate.getFullYear() === now.getFullYear()
@@ -157,7 +148,6 @@ function isInCurrentPeriod(
 	}
 
 	if (frequency <= 90) {
-		// Trimestral: mismo trimestre y año
 		const txQuarter = Math.floor(txDate.getMonth() / 3);
 		const nowQuarter = Math.floor(now.getMonth() / 3);
 		return (
@@ -166,13 +156,9 @@ function isInCurrentPeriod(
 		);
 	}
 
-	// Anual: mismo año
 	return txDate.getFullYear() === now.getFullYear();
 }
 
-/**
- * Comprobar si el periodo está por terminar y aún no hay transacción
- */
 function checkDueSoon(
 	lastDate: Date,
 	frequency: number | null,
@@ -183,10 +169,8 @@ function checkDueSoon(
 	const daysSinceLast =
 		(now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24);
 
-	// Si ya pasó el periodo completo, es "due soon" (vencido)
 	if (daysSinceLast >= frequency) return true;
 
-	// Si faltan 5 días o menos para que venza el periodo
 	const daysRemaining = frequency - daysSinceLast;
 	return daysRemaining <= 5;
 }
