@@ -26,6 +26,7 @@ export async function revalidateTransactions() {
 	revalidatePath('/');
 	revalidatePath('/transactions');
 	revalidatePath('/budget');
+	revalidatePath('/pots');
 }
 
 /**

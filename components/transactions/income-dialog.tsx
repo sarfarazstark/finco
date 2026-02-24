@@ -3,6 +3,7 @@
 import { Category } from './category-dialog';
 import { AccountSelectorProps } from '../layout/global-add-button';
 import { BaseTransactionDialog } from './base-transaction-dialog';
+import { Setting } from '@prisma/client';
 
 export function IncomeDialog({
 	open,
@@ -17,7 +18,7 @@ export function IncomeDialog({
 	onOpenChange: (open: boolean) => void;
 	categories: Category[];
 	accounts: AccountSelectorProps[];
-	settings?: { currency: string; theme: string };
+	settings: Setting;
 	transactionId?: string;
 	initialData?: {
 		amount: number;

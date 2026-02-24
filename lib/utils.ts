@@ -20,7 +20,7 @@ export function validate<T>(schema: ZodType<T>, form: FormData) {
 	return { data: result.data as T, errors: null };
 }
 
-export function getCurrencySymbol(currencyCode: string = 'USD') {
+export function getCurrencySymbol(currencyCode: string = 'INR') {
 	return (
 		new Intl.NumberFormat('en-US', {
 			style: 'currency',
@@ -31,7 +31,7 @@ export function getCurrencySymbol(currencyCode: string = 'USD') {
 	);
 }
 
-export function formatBalance(amount: number, currencyCode: string = 'USD') {
+export function formatBalance(amount: number, currencyCode: string = 'INR') {
 	const isNegative = amount < 0;
 	const colorClass = isNegative
 		? 'text-red-500'
@@ -86,10 +86,7 @@ export function formatTransactionDate(dateInput: Date | string | number) {
 	});
 }
 
-export const formatCurrency = (
-	amount: number,
-	currencyCode: string = 'USD'
-) => {
+export const formatCurrency = (amount: number, currencyCode: string = 'INR') => {
 	return new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency: currencyCode,

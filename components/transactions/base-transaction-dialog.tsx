@@ -19,6 +19,7 @@ import { addTransaction, updateTransaction } from '@/app/actions/transactions';
 import { AccountSelectorProps } from '../layout/global-add-button';
 import { AmountSelector } from './amount-selector';
 import toast from 'react-hot-toast';
+import { Setting } from '@prisma/client';
 
 const transactionSchema = z.object({
 	amount: z
@@ -49,7 +50,7 @@ export function BaseTransactionDialog({
 	onOpenChange: (open: boolean) => void;
 	categories: Category[];
 	accounts: AccountSelectorProps[];
-	settings?: { currency: string; theme: string };
+	settings: Setting;
 	transactionId?: string;
 	initialData?: {
 		amount: number;

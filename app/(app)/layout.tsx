@@ -78,14 +78,9 @@ export default async function AppLayout({
 			: 'bg-grey-100 text-grey-600',
 	}));
 
-	const dbSettings = await prisma.setting.findUnique({
+	const settings = await prisma.setting.findUnique({
 		where: { userId: session.user.id },
 	});
-
-	const settings = {
-		currency: dbSettings?.currency || 'USD',
-		theme: dbSettings?.theme || 'light',
-	};
 
 	return (
 		<main className="grid grid-cols-[auto_1fr] h-screen overflow-hidden">
@@ -94,7 +89,7 @@ export default async function AppLayout({
 			<GlobalAddButton
 				categories={categories}
 				accounts={accounts}
-				settings={settings}
+				settings={settings!}
 			/>
 			<Toaster position="bottom-right" />
 		</main>

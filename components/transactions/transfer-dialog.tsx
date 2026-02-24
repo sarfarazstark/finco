@@ -8,6 +8,7 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { AccountDropdown } from './account-dropdown';
 import { addTransaction, updateTransaction } from '@/app/actions/transactions';
 import { AccountSelectorProps } from '../layout/global-add-button';
+import { Setting } from '@prisma/client';
 
 export function TransferDialog({
 	open,
@@ -20,7 +21,7 @@ export function TransferDialog({
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	accounts: AccountSelectorProps[];
-	settings?: { currency: string; theme: string };
+	settings: Setting;
 	transactionId?: string;
 	initialData?: {
 		amount: number;
