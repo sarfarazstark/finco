@@ -52,9 +52,6 @@ export default async function TransactionsPage({
 									<th className="px-3 py-2 font-normal">
 										Transaction Date
 									</th>
-									<th className="px-3 py-2 font-normal">
-										Period
-									</th>
 									<th className="px-3 py-2 font-normal text-right">
 										Amount
 									</th>

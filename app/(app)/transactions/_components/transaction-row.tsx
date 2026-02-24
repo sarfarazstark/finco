@@ -5,6 +5,7 @@ import { AccountSelectorProps } from '@/components/layout/global-add-button';
 import { formatTransactionDate } from '@/lib/utils';
 import { AccountAvatar } from '@/components/transactions/account-avatar';
 import { Setting } from '@prisma/client';
+import { IconCalendarRepeat } from '@tabler/icons-react';
 
 function getFrequencyLabel(frequency: number | null): string {
 	if (!frequency) return '–';
@@ -48,12 +49,19 @@ export function TransactionRow({
 			</td>
 			<td className="px-3 py-4">{categoryName}</td>
 			<td className="px-3 py-4">
-				{formatTransactionDate(transaction.date)}
-			</td>
-			<td className="px-3 py-4 font-preset-5 text-grey-500">
-				{transaction.recurring
-					? getFrequencyLabel(transaction.frequency)
-					: '–'}
+				<span className="flex items-center gap-2">
+					{formatTransactionDate(transaction.date)}{' '}
+					{transaction.recurring && (
+						<IconCalendarRepeat
+							size={16}
+							className={
+								transaction.type === 'INCOME'
+									? 'text-green'
+									: 'text-red/60'
+							}
+						/>
+					)}
+				</span>
 			</td>
 			<td
 				className={`px-3 py-4 text-right font-preset-4-bold ${
