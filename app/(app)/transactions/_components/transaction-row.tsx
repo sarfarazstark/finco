@@ -6,6 +6,14 @@ import { formatTransactionDate } from '@/lib/utils';
 import { AccountAvatar } from '@/components/transactions/account-avatar';
 import { Setting } from '@prisma/client';
 
+function getFrequencyLabel(frequency: number | null): string {
+	if (!frequency) return '–';
+	if (frequency <= 7) return 'Weekly';
+	if (frequency <= 30) return 'Monthly';
+	if (frequency <= 90) return 'Quarterly';
+	return 'Yearly';
+}
+
 export function TransactionRow({
 	transaction,
 	categories,
@@ -41,6 +49,11 @@ export function TransactionRow({
 			<td className="px-3 py-4">{categoryName}</td>
 			<td className="px-3 py-4">
 				{formatTransactionDate(transaction.date)}
+			</td>
+			<td className="px-3 py-4 font-preset-5 text-grey-500">
+				{transaction.recurring
+					? getFrequencyLabel(transaction.frequency)
+					: '–'}
 			</td>
 			<td
 				className={`px-3 py-4 text-right font-preset-4-bold ${

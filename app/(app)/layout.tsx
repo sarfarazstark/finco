@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma';
 import { Link } from '@/lib/shared';
 import { redirect } from 'next/navigation';
 import { Toaster } from 'react-hot-toast';
+import { generateRecurringTransactions } from '@/lib/generate-recurring';
 
 const links: Link[] = [
 	{
@@ -48,6 +49,8 @@ export default async function AppLayout({
 	if (!session) {
 		return redirect('/auth/login');
 	}
+
+	await generateRecurringTransactions(session.user.id);
 
 	const dbCategories = await prisma.category.findMany({
 		include: { icon: true },

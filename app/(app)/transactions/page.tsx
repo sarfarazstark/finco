@@ -52,6 +52,9 @@ export default async function TransactionsPage({
 									<th className="px-3 py-2 font-normal">
 										Transaction Date
 									</th>
+									<th className="px-3 py-2 font-normal">
+										Period
+									</th>
 									<th className="px-3 py-2 font-normal text-right">
 										Amount
 									</th>
@@ -74,7 +77,7 @@ export default async function TransactionsPage({
 								) : (
 									<tr>
 										<td
-											colSpan={5}
+											colSpan={6}
 											className="text-center py-16"
 										>
 											<p className="font-preset-3 text-grey-500 mb-2">

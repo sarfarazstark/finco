@@ -67,6 +67,9 @@ export async function addTransaction(data: TransactionPayload) {
 				type: validData.type,
 				date: new Date(validData.date),
 				recurring: validData.recurring || false,
+				frequency: validData.recurring
+					? validData.frequency || 30
+					: null,
 			},
 		});
 

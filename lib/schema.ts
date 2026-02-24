@@ -30,6 +30,7 @@ export const transactionSchema = z
 		categoryId: z.string().nullable().optional(),
 		toAccountId: z.string().nullable().optional(),
 		recurring: z.boolean().optional(),
+		frequency: z.number().int().positive().optional(),
 	})
 	.refine(
 		data => {

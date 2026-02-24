@@ -23,6 +23,7 @@
 | **Transactions** | Full CRUD, double-entry transfers, debounced search, 6-way sort, pagination |
 | **Budget**       | Custom SVG donut chart, period-aware tracking (W/M/Q/Y), overspent detection |
 | **Pots**         | Savings goals with progress tracking, add/withdraw money, target caps  |
+| **Recurring**    | Auto-generated transactions on login, paid/upcoming/due-soon tracking  |
 | **UI**           | 9 hand-crafted components, Framer Motion animations, custom design tokens |
 
 ---
@@ -71,6 +72,13 @@
 - **Cap at Target** — Adding money is capped at the target; withdrawals floored at zero
 - **Pot CRUD** — Create/Edit/Delete with theme selector and form validation
 
+### 🔄 Recurring Bills
+- **Auto-Generation** — On-login check creates due transactions automatically (Option A)
+- **RecurringBill Model** — Dedicated template with frequency (Weekly/Monthly/Yearly) and due day
+- **Status Tracking** — Green dot (paid), Red dot (due soon/overdue), upcoming indicators
+- **Searchable & Sortable** — Bill list with search bar and 6-way sort
+- **Summary Sidebar** — Total bills, paid count/amount, upcoming, due soon
+
 ### 🧩 UI Components (Built from Scratch)
 
 | Component    | Description                                                     |
@@ -109,10 +117,10 @@
 - [x] Currency Formatting (`Intl.NumberFormat`)
 - [x] Pots (savings goals, add/withdraw, progress tracking)
 - [x] Empty States (Transactions, Budget, Pots)
+- [x] Recurring Bills (auto-generation, summary, searchable bill list)
 
 ### 📌 Planned
 - [ ] Dashboard — At-a-glance financial summary
-- [ ] Recurring Bills — Detection, due-soon alerts
 - [ ] Settings — Currency & theme preferences
 - [ ] Email Verification using Resend
 - [ ] Password Reset feature

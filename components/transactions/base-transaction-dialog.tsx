@@ -99,6 +99,9 @@ export function BaseTransactionDialog({
 				accountId: data.accountId,
 				categoryId: data.categoryId,
 				recurring: data.recurring || false,
+				frequency: data.recurring
+					? Number(data.frequency || 30)
+					: undefined,
 			};
 
 			const loadingToast = toast.loading(

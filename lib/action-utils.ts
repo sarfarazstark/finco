@@ -27,6 +27,7 @@ export async function revalidateTransactions() {
 	revalidatePath('/transactions');
 	revalidatePath('/budget');
 	revalidatePath('/pots');
+	revalidatePath('/recurring-bills');
 }
 
 /**

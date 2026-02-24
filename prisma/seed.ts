@@ -404,6 +404,7 @@ async function main() {
 			date: '2024-08-11T18:45:38Z',
 			amount: -10.0,
 			recurring: true,
+			frequency: 30,
 		},
 		{
 			name: 'Ella Phillips',
@@ -453,6 +454,7 @@ async function main() {
 			date: '2024-08-04T11:15:22Z',
 			amount: -50.0,
 			recurring: true,
+			frequency: 30,
 		},
 		{
 			name: 'Serenity Spa & Wellness',
@@ -460,6 +462,7 @@ async function main() {
 			date: '2024-08-03T14:00:37Z',
 			amount: -30.0,
 			recurring: true,
+			frequency: 30,
 		},
 		{
 			name: 'Spark Electric Solutions',
@@ -467,6 +470,7 @@ async function main() {
 			date: '2024-08-02T09:25:11Z',
 			amount: -100.0,
 			recurring: true,
+			frequency: 30,
 		},
 		{
 			name: 'Rina Sato',
@@ -488,6 +492,7 @@ async function main() {
 			date: '2024-07-30T13:20:14Z',
 			amount: -100.0,
 			recurring: true,
+			frequency: 30,
 		},
 		{
 			name: 'EcoFuel Energy',
@@ -495,6 +500,7 @@ async function main() {
 			date: '2024-07-29T11:55:29Z',
 			amount: -35.0,
 			recurring: true,
+			frequency: 30,
 		},
 		{
 			name: 'Yuna Kim',
@@ -537,6 +543,7 @@ async function main() {
 			date: '2024-07-23T09:35:14Z',
 			amount: -49.99,
 			recurring: true,
+			frequency: 30,
 		},
 		{
 			name: 'Nimbus Data Storage',
@@ -544,6 +551,7 @@ async function main() {
 			date: '2024-07-21T10:05:42Z',
 			amount: -9.99,
 			recurring: true,
+			frequency: 30,
 		},
 		{
 			name: 'Emma Richardson',
@@ -656,6 +664,7 @@ async function main() {
 			date: '2024-07-05T11:15:22Z',
 			amount: -50.0,
 			recurring: true,
+			frequency: 30,
 		},
 		{
 			name: 'Serenity Spa & Wellness',
@@ -663,6 +672,7 @@ async function main() {
 			date: '2024-07-03T14:00:37Z',
 			amount: -30.0,
 			recurring: true,
+			frequency: 30,
 		},
 		{
 			name: 'Spark Electric Solutions',
@@ -670,6 +680,7 @@ async function main() {
 			date: '2024-07-02T09:25:51Z',
 			amount: -100.0,
 			recurring: true,
+			frequency: 30,
 		},
 		{
 			name: 'Swift Ride Share',
@@ -694,6 +705,7 @@ async function main() {
 					: TransactionType.EXPENSE,
 			date: new Date(t.date),
 			recurring: t.recurring,
+			frequency: t.recurring ? (t.frequency ?? null) : null,
 		})),
 	});
 

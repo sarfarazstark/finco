@@ -25,6 +25,7 @@ enum BudgetType {
     YEARLY
 }
 
+
 /**
  * ============================
  * USER & AUTH (UNCHANGED)
@@ -49,6 +50,7 @@ model User {
     transactions      Transaction[]
     budgets           Budget[]
     pots              Pot[]
+
     setting           Setting?
 
     @@map("user")
@@ -132,6 +134,7 @@ model Transaction {
     type      TransactionType
     date      DateTime
     recurring Boolean         @default(false)
+    frequency Int?
 
     user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
     account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
