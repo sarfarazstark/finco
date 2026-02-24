@@ -25,7 +25,7 @@ export default async function PotsPage() {
 	const themes = await prisma.theme.findMany();
 
 	return (
-		<div className="p-8 max-w-5xl mx-auto">
+		<div className="p-8 max-w-6xl mx-auto">
 			<header className="flex items-center justify-between mb-8">
 				<h1 className="text-3xl font-bold">Pots</h1>
 				<AddNewPot themes={themes} />

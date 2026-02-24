@@ -94,7 +94,7 @@ export default async function RecurringBillsPage() {
 	}
 
 	return (
-		<div className="p-8 max-w-5xl mx-auto">
+		<div className="p-8 max-w-6xl mx-auto">
 			<header className="mb-8">
 				<h1 className="text-3xl font-bold">Recurring Bills</h1>
 			</header>

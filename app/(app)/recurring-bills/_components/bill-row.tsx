@@ -5,6 +5,7 @@ import type {
 	Icon,
 	FinancialAccount,
 } from '@prisma/client';
+import { IconCircleCheckFilled, IconCircleXFilled } from '@tabler/icons-react';
 
 export type BillStatus = 'paid' | 'due-soon' | 'upcoming';
 
@@ -64,10 +65,10 @@ export function BillRow({
 						{dueDateLabel}
 					</span>
 					{status === 'paid' && (
-						<span className="w-2 h-2 rounded-full bg-green shrink-0" />
+						<IconCircleCheckFilled className="w-4 h-4 shrink-0 text-green" />
 					)}
 					{status === 'due-soon' && (
-						<span className="w-2 h-2 rounded-full bg-red shrink-0" />
+						<IconCircleXFilled className="w-4 h-4 shrink-0 text-red" />
 					)}
 				</div>
 			</td>

@@ -26,7 +26,7 @@ export default async function TransactionsPage({
 	const settings = await getSetting(session.user.id);
 
 	return (
-		<section className="p-8 max-w-5xl mx-auto">
+		<section className="p-8 max-w-6xl mx-auto">
 			<header className="flex items-center justify-between mb-8">
 				<h1 className="text-3xl font-bold">Transactions</h1>
 				<AccountFilter
