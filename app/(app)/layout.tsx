@@ -6,7 +6,6 @@ import { headers } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { Link } from '@/lib/shared';
 import { redirect } from 'next/navigation';
-import { Toaster } from 'react-hot-toast';
 import { generateRecurringTransactions } from '@/lib/generate-recurring';
 import { getSetting } from '@/hooks/use-setting';
 
@@ -102,7 +101,6 @@ export default async function AppLayout({
 				settings={settings!}
 				dbIcons={dbIcons}
 			/>
-			<Toaster position="bottom-right" />
 		</main>
 	);
 }

@@ -16,7 +16,7 @@ export default function Login() {
 	const { errors, parse } = useZodForm(login_schema);
 	const router = useRouter();
 
-	const handleSubmit = async (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.SubmitEvent) => {
 		e.preventDefault();
 		const formData = new FormData(e.target as HTMLFormElement);
 		const data = parse(formData);
@@ -26,7 +26,6 @@ export default function Login() {
 			const { error } = await authClient.signIn.email({
 				email: data.email,
 				password: data.password,
-				callbackURL: '/',
 			});
 
 			if (error) {

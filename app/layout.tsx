@@ -23,7 +23,7 @@ export default function RootLayout({
 			<body className="overflow-hidden m-0 p-0">
 				<NuqsAdapter>
 					<Toaster
-						position="bottom-right"
+						position="top-right"
 						toastOptions={{
 							duration: 3000,
 							style: { fontSize: '14px' },
