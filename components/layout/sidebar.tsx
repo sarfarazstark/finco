@@ -147,9 +147,9 @@ function ProfileDropdown({
 		startTransition(async () => {
 			const res = await updateCurrency(newCurrency);
 			if (res.success) {
-				toast.success(`Currency updated to ${newCurrency}`);
+				toast.success(`We've updated your currency to ${newCurrency}!`);
 			} else {
-				toast.error('Failed to update currency');
+				toast.error('We couldn\'t update your currency right now. Please try again later.');
 			}
 		});
 	};

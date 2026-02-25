@@ -119,8 +119,8 @@ export function BaseTransactionDialog({
 			if ('success' in res && res.success) {
 				toast.success(
 					transactionId
-						? 'Transaction updated successfully'
-						: 'Transaction saved successfully',
+						? 'Transaction updated!'
+						: 'All set! Your transaction has been saved.',
 					{ id: loadingToast }
 				);
 				onOpenChange(false);
@@ -129,7 +129,7 @@ export function BaseTransactionDialog({
 				}
 			} else {
 				const errMsg =
-					'error' in res ? res.error : 'Failed to save transaction';
+					'error' in res ? res.error : 'Oops, we couldn\'t save that transaction. Please try again.';
 				console.error(errMsg);
 				toast.error(errMsg as string, {
 					id: loadingToast,

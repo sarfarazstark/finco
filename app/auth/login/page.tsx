@@ -41,16 +41,16 @@ export default function Login() {
 					return;
 				}
 
-				toast.error(error.message || 'Login failed');
+				toast.error('Incorrect email or password. Please try again.');
 				setLoading(false);
 				return;
 			}
 
-			toast.success('Login successful');
+			toast.success('Welcome back!');
 			router.push('/');
 			setLoading(false);
 		} catch {
-			toast.error('An unexpected error occurred');
+			toast.error('Something went wrong on our end. Please try again.');
 			setLoading(false);
 		}
 	};

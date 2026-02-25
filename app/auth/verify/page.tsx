@@ -36,15 +36,15 @@ function VerifyForm() {
 			});
 
 			if (error) {
-				toast.error(error.message || 'Verification failed');
+				toast.error('That code doesn\'t look right. Please double-check and try again.');
 				setLoading(false);
 				return;
 			}
 
-			toast.success('Email verified successfully! You can now log in.');
+			toast.success('Email verified! You can now log in to your account.');
 			router.push('/auth/login');
 		} catch {
-			toast.error('An unexpected error occurred');
+			toast.error('Something went wrong on our end. Please try again.');
 			setLoading(false);
 		}
 	};
@@ -56,12 +56,12 @@ function VerifyForm() {
 				type: 'email-verification',
 			});
 			if (error) {
-				toast.error(error.message || 'Failed to resend code');
+				toast.error('We couldn\'t resend the code right now. Please try again in a moment.');
 			} else {
-				toast.success('Verification code resent to your email');
+				toast.success('A new verification code has been sent to your email.');
 			}
 		} catch {
-			toast.error('Failed to resend code');
+			toast.error('We couldn\'t resend the code right now. Please try again in a moment.');
 		}
 	};
 

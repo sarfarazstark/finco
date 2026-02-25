@@ -49,11 +49,11 @@ export function CreateCategoryDialog({
 			const result = await createCategory(values);
 
 			if (result.success) {
-				toast.success('Category created');
+				toast.success('New category added successfully!');
 				form.reset();
 				onOpenChange(false);
 			} else {
-				toast.error(result.error || 'Failed to create category');
+				toast.error(result.error || 'We couldn\'t save that category. Give it another try?');
 			}
 		});
 	}

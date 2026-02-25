@@ -42,7 +42,7 @@ export function CreateAccountDialog() {
 		if (!file) return;
 
 		if (file.size > MAX_FILE_SIZE) {
-			toast.error('Image must be less than 2MB');
+			toast.error('That image is too big! Please keep it under 2MB.');
 			return;
 		}
 
@@ -61,11 +61,11 @@ export function CreateAccountDialog() {
 			});
 
 			if (result.success) {
-				toast.success('Account created');
+				toast.success('Your new account is ready to go!');
 				form.reset();
 				setPreview(null);
 			} else {
-				toast.error(result.error || 'Failed to create account');
+				toast.error(result.error || 'We had trouble creating your account. Please try again.');
 			}
 		});
 	}

@@ -28,15 +28,14 @@ export default function ForgotPassword() {
 			});
 
 			if (error) {
-				toast.error(error.message || 'Failed to send reset link');
+				toast.error(error.message || 'Something went wrong. Please try again.');
 				setLoading(false);
 				return;
 			}
 
 			setSubmitted(true);
-			toast.success('Password reset link sent!');
 		} catch {
-			toast.error('An unexpected error occurred');
+			toast.error('An unexpected error occurred. Please try again.');
 			setLoading(false);
 		}
 	};

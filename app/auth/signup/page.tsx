@@ -30,14 +30,14 @@ export default function SignUp() {
 			});
 
 			if (error) {
-				toast.error(error.message || 'Sign up failed');
+				toast.error('We couldn\'t create your account. Please check your details and try again.');
 				return;
 			}
 
-			toast.success('Sign up successful! Please check your email.');
+			toast.success('Almost there! Please check your email to verify your account.');
 			router.push(`/auth/verify?email=${encodeURIComponent(data.email)}`);
 		} catch {
-			toast.error('An unexpected error occurred');
+			toast.error('Something went wrong on our end. Please try again later.');
 		}
 	};
 

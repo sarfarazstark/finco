@@ -31,15 +31,15 @@ function ResetPasswordForm() {
 			});
 
 			if (error) {
-				toast.error(error.message || 'Failed to reset password');
+				toast.error('This reset link is invalid or has expired. Please request a new one.');
 				setLoading(false);
 				return;
 			}
 
-			toast.success('Password reset successfully!');
+			toast.success('Your password has been successfully updated! You can now log in.');
 			router.push('/auth/login');
 		} catch {
-			toast.error('An unexpected error occurred');
+			toast.error('Something went wrong on our end. Please try again.');
 			setLoading(false);
 		}
 	};
