@@ -77,18 +77,20 @@ export default async function AccountsPage({
 						<div className="w-full overflow-x-auto">
 							<table className="table-auto w-full text-sm">
 								<thead>
-									<tr className="text-left font-medium border-b border-grey-100 text-grey-500">
-										<th className="px-5 py-4 pb-5">
-											Transaction
+									<tr className="text-left font-preset-5 border-b border-grey-100 text-grey-500">
+										<th className="px-3 py-2 font-normal">
+											Receipt / Sender
 										</th>
-										<th className="px-5 py-4 pb-5">
+										<th className="px-3 py-2 font-normal">
 											Category
 										</th>
-										<th className="px-5 py-4 pb-5">Date</th>
-										<th className="px-5 py-4 pb-5 text-right">
+										<th className="px-3 py-2 font-normal">
+											Transaction Date
+										</th>
+										<th className="px-3 py-2 font-normal text-right">
 											Amount
 										</th>
-										<th className="px-5 py-4 pb-5 text-center w-12">
+										<th className="px-3 py-2 font-normal text-center w-12">
 											<span className="sr-only">
 												Actions
 											</span>
