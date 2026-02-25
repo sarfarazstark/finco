@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="./preview.jpg" alt="Finco Preview" width="720" />
+  <img src="./public/assets/images/preview.png" alt="Finco Preview" width="720" />
 </p>
 
 ---
