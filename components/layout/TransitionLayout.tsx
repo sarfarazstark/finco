@@ -46,7 +46,7 @@ export default function TransitionLayout({
 				exit="exit"
 				variants={variants}
 				transition={{ duration: 0.35, ease: 'easeInOut' }}
-				className="h-full overflow-y-auto overflow-x-hidden"
+				className="h-full min-h-0 min-w-0 overflow-y-auto overflow-x-hidden"
 			>
 				<FrozenRouter>{children}</FrozenRouter>
 			</motion.div>

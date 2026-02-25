@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body>
+			<body className="overflow-hidden m-0 p-0">
 				<NuqsAdapter>
 					<Toaster
 						position="bottom-right"
