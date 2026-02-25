@@ -3,7 +3,7 @@
 import { Category } from './category-dialog';
 import { AccountSelectorProps } from '../layout/global-add-button';
 import { BaseTransactionDialog } from './base-transaction-dialog';
-import { Setting } from '@prisma/client';
+import { Setting, Icon } from '@prisma/client';
 
 export function IncomeDialog({
 	open,
@@ -11,6 +11,7 @@ export function IncomeDialog({
 	categories,
 	accounts,
 	settings,
+	dbIcons,
 	transactionId,
 	initialData,
 }: {
@@ -19,6 +20,7 @@ export function IncomeDialog({
 	categories: Category[];
 	accounts: AccountSelectorProps[];
 	settings: Setting;
+	dbIcons: Icon[];
 	transactionId?: string;
 	initialData?: {
 		amount: number;
@@ -37,6 +39,7 @@ export function IncomeDialog({
 			categories={categories}
 			accounts={accounts}
 			settings={settings}
+			dbIcons={dbIcons}
 			transactionId={transactionId}
 			initialData={initialData}
 		/>

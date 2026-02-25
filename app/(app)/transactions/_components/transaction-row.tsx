@@ -7,13 +7,7 @@ import { AccountAvatar } from '@/components/transactions/account-avatar';
 import { Setting } from '@prisma/client';
 import { IconCalendarRepeat } from '@tabler/icons-react';
 
-function getFrequencyLabel(frequency: number | null): string {
-	if (!frequency) return '–';
-	if (frequency <= 7) return 'Weekly';
-	if (frequency <= 30) return 'Monthly';
-	if (frequency <= 90) return 'Quarterly';
-	return 'Yearly';
-}
+
 
 export function TransactionRow({
 	transaction,
@@ -31,8 +25,8 @@ export function TransactionRow({
 	const categoryName = transaction.category?.name ?? 'General';
 
 	return (
-		<tr className="text-left font-preset-5 text-grey-500 border-b border-grey-100/50 last:border-b-0">
-			<td className="px-3 py-4">
+		<tr className="text-left font-preset-5 text-grey-500 border-b border-grey-100/50 last:border-b-0 transition-colors hover:bg-grey-50/30">
+			<td className="px-5 py-5">
 				<div className="flex items-center gap-4">
 					<ResolvedImage transaction={transaction} />
 					<div className="flex flex-col">
@@ -47,8 +41,8 @@ export function TransactionRow({
 					</div>
 				</div>
 			</td>
-			<td className="px-3 py-4">{categoryName}</td>
-			<td className="px-3 py-4">
+			<td className="px-5 py-5">{categoryName}</td>
+			<td className="px-5 py-5">
 				<span className="flex items-center gap-2">
 					{formatTransactionDate(transaction.date)}{' '}
 					{transaction.recurring && (
@@ -64,13 +58,13 @@ export function TransactionRow({
 				</span>
 			</td>
 			<td
-				className={`px-3 py-4 text-right font-preset-4-bold ${
+				className={`px-5 py-5 text-right font-preset-4-bold ${
 					isPositive ? 'text-green' : 'text-grey-900'
 				}`}
 			>
 				{sign}₹{Math.abs(transaction.amount).toFixed(2)}
 			</td>
-			<td className="px-3 py-4 flex justify-end">
+			<td className="px-5 py-5 flex justify-end">
 				<TransactionActions
 					transaction={transaction}
 					categories={categories}

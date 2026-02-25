@@ -11,6 +11,11 @@ export function useClickOutside<T extends HTMLElement = HTMLElement>(
 				return;
 			}
 
+			const target = event.target as HTMLElement;
+			if (target?.closest?.('[role="dialog"]')) {
+				return;
+			}
+
 			handler(event);
 		};
 

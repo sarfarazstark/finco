@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
 import dynamic from 'next/dynamic';
 import { Category } from '../transactions/category-dialog';
-import { Setting } from '@prisma/client';
+import { Setting, Icon } from '@prisma/client';
 
 const IncomeDialog = dynamic(
 	() => import('../transactions/income-dialog').then(mod => mod.IncomeDialog),
@@ -60,10 +60,12 @@ export default function GlobalAddButton({
 	categories,
 	accounts,
 	settings,
+	dbIcons,
 }: {
 	categories: Category[];
 	accounts: AccountSelectorProps[];
 	settings: Setting;
+	dbIcons: Icon[];
 }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [activeDialog, setActiveDialog] = useState<
@@ -185,6 +187,7 @@ export default function GlobalAddButton({
 				categories={categories}
 				accounts={accounts}
 				settings={settings}
+				dbIcons={dbIcons}
 				onOpenChange={open => !open && setActiveDialog(null)}
 			/>
 			<ExpenseDialog
@@ -192,6 +195,7 @@ export default function GlobalAddButton({
 				categories={categories}
 				accounts={accounts}
 				settings={settings}
+				dbIcons={dbIcons}
 				onOpenChange={open => !open && setActiveDialog(null)}
 			/>
 			<TransferDialog

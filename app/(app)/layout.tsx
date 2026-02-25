@@ -36,6 +36,11 @@ const links: Link[] = [
 		href: '/recurring-bills',
 		icon: 'recurringBills',
 	},
+	{
+		label: 'Accounts',
+		href: '/accounts',
+		icon: 'accounts',
+	},
 ];
 
 export default async function AppLayout({
@@ -53,18 +58,21 @@ export default async function AppLayout({
 
 	await generateRecurringTransactions(session.user.id);
 
-	const dbCategories = await prisma.category.findMany({
-		include: { icon: true },
-	});
-
-	const dbAccounts = await prisma.financialAccount.findMany({
-		where: { userId: session.user.id },
-		include: {
-			transactions: {
-				select: { amount: true },
+	const [dbCategories, dbAccounts, dbIcons] = await Promise.all([
+		prisma.category.findMany({
+			include: { icon: true },
+		}),
+		prisma.financialAccount.findMany({
+			where: { userId: session.user.id },
+			include: {
+				transactions: {
+					select: { amount: true },
+				},
 			},
-		},
-	});
+		}),
+		prisma.icon.findMany(),
+	]);
+
 
 	const accounts = dbAccounts.map(a => ({
 		id: a.id,
@@ -92,6 +100,7 @@ export default async function AppLayout({
 				categories={categories}
 				accounts={accounts}
 				settings={settings!}
+				dbIcons={dbIcons}
 			/>
 			<Toaster position="bottom-right" />
 		</main>

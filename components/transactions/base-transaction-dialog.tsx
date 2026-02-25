@@ -19,7 +19,7 @@ import { addTransaction, updateTransaction } from '@/app/actions/transactions';
 import { AccountSelectorProps } from '../layout/global-add-button';
 import { AmountSelector } from './amount-selector';
 import toast from 'react-hot-toast';
-import { Setting } from '@prisma/client';
+import { Icon, Setting } from '@prisma/client';
 
 const transactionSchema = z.object({
 	amount: z
@@ -42,6 +42,7 @@ export function BaseTransactionDialog({
 	categories,
 	accounts,
 	settings,
+	dbIcons,
 	transactionId,
 	initialData,
 }: {
@@ -51,6 +52,7 @@ export function BaseTransactionDialog({
 	categories: Category[];
 	accounts: AccountSelectorProps[];
 	settings: Setting;
+	dbIcons?: Icon[];
 	transactionId?: string;
 	initialData?: {
 		amount: number;
@@ -340,6 +342,7 @@ export function BaseTransactionDialog({
 				<CategorySelectorOverlay
 					open={isCategoryOpen}
 					categories={categories}
+					dbIcons={dbIcons || []}
 					onClose={() => setIsCategoryOpen(false)}
 					onSelect={cat => {
 						setValue('categoryId', cat.id, {

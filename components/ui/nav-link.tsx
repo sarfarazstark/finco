@@ -12,6 +12,7 @@ import {
 	IconChartPie4Filled,
 	IconPigFilled,
 	IconReceiptFilled,
+	IconBuildingBank,
 } from '@tabler/icons-react';
 
 const mapIcon = {
@@ -20,6 +21,7 @@ const mapIcon = {
 	budget: IconChartPie4Filled,
 	pots: IconPigFilled,
 	recurringBills: IconReceiptFilled,
+	accounts: IconBuildingBank,
 };
 
 export default function NavLink({

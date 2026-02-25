@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Category } from './category-dialog';
 import { forwardRef } from 'react';
+import { IconCircleDashedPlus } from '@tabler/icons-react';
 
 export interface AmountSelectorProps {
 	amount: number | string;
@@ -42,14 +43,18 @@ export const AmountSelector = forwardRef<HTMLDivElement, AmountSelectorProps>(
 					)}
 					title="Select Category"
 				>
-					<i
-						className={cn(
-							'text-xl text-white',
-							categoryId
-								? `ti ti-${categoryId.icon}`
-								: 'ti ti-category'
-						)}
-					/>
+					{categoryId ? (
+						<i
+							className={cn(
+								'text-xl text-white',
+								categoryId
+									? `ti ti-${categoryId.icon}`
+									: 'ti ti-category'
+							)}
+						/>
+					) : (
+						<IconCircleDashedPlus className="text-xl text-gray-500" />
+					)}
 				</button>
 
 				<div className="flex-1 flex items-center gap-1">
