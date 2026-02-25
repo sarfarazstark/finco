@@ -29,6 +29,18 @@ export default function Login() {
 			});
 
 			if (error) {
+				if (
+					error.code === 'EMAIL_NOT_VERIFIED' ||
+					error.message?.toLowerCase().includes('verif')
+				) {
+					toast.error('Please verify your email to login.');
+					router.push(
+						`/auth/verify?email=${encodeURIComponent(data.email)}`
+					);
+					setLoading(false);
+					return;
+				}
+
 				toast.error(error.message || 'Login failed');
 				setLoading(false);
 				return;
@@ -70,9 +82,19 @@ export default function Login() {
 						autoComplete="off"
 						error={errors.password}
 					/>
-					<Button type="submit">
-						{loading ? 'Logging in...' : 'Login'}
-					</Button>
+					<div className="flex flex-col gap-2">
+						<Button type="submit">
+							{loading ? 'Logging in...' : 'Login'}
+						</Button>
+						<div className="text-center mt-2">
+							<Link
+								href="/auth/forgot-password"
+								className="text-grey-500 text-sm hover:text-grey-900 underline underline-offset-4"
+							>
+								Forgot your password?
+							</Link>
+						</div>
+					</div>
 				</form>
 				<div className="text-center text-grey-500">
 					Need to create an account?{' '}

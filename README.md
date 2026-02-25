@@ -20,7 +20,7 @@
 | Area             | Detail                                                                 |
 |------------------|------------------------------------------------------------------------|
 | **Security**     | Arcjet Edge bot protection and API token-bucket rate limiting          |
-| **Auth**         | Session-based via Better Auth with Prisma adapter & Zod v4 validation  |
+| **Auth**         | Session-based via Better Auth with OTP checks & Magic Link Resets      |
 | **Transactions** | Full CRUD, double-entry transfers, debounced search, 6-way sort, pagination |
 | **Accounts**     | Horizontal card list, sparkline trend chart, daily histogram, date filters |
 | **Budget**       | Custom SVG donut chart, period-aware tracking (W/M/Q/Y), overspent detection |
@@ -54,6 +54,8 @@
 ### 🔐 Authentication & Security
 - Better Auth with Prisma adapter for session-based auth
 - Zod v4 password policies (8+ chars, mixed case, digits, symbols)
+- **OTP Verification**: Mandatory 6-digit email confirmation upon signup
+- **Password Resets**: Secure magic-link flows powered by Brevo transactional emails
 - Server-side session guard with redirect
 - **Arcjet Protection**: Edge-level bot shielding and token-bucket API rate limiting
 
@@ -133,10 +135,10 @@
 - [x] Dashboard — At-a-glance financial summary with date-range filter
 - [x] Accounts — Sparkline charts, histogram, horizontal card list, date filtering
 - [x] Security — Arcjet bot protection and server action rate limiting
+- [x] Email Verification — Mandatory 6-digit OTP codes via Brevo
+- [x] Password Reset — Secure Magic Links via Brevo
 
 ### 📌 Planned
-- [ ] Email Verification using Brevo
-- [ ] Password Reset feature
 - [ ] Mobile Responsive
 
 ---
@@ -168,6 +170,8 @@ App available at `http://localhost:3000`.
 | `DATABASE_URL`       | PostgreSQL connection string |
 | `BETTER_AUTH_SECRET` | Secret for session signing   |
 | `ARCJET_KEY`         | API key for Arcjet security  |
+| `BREVO_API_KEY`      | API key for transactional email|
+| `EMAIL_FROM`         | Verified sender email address|
 
 ---
 

@@ -34,8 +34,8 @@ export default function SignUp() {
 				return;
 			}
 
-			toast.success('Sign up successful');
-			router.push('/?success=signup');
+			toast.success('Sign up successful! Please check your email.');
+			router.push(`/auth/verify?email=${encodeURIComponent(data.email)}`);
 		} catch {
 			toast.error('An unexpected error occurred');
 		}
