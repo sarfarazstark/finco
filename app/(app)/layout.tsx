@@ -1,5 +1,4 @@
 import Sidebar from '@/components/layout/sidebar';
-import TransitionLayout from '@/components/layout/TransitionLayout';
 import GlobalAddButton from '@/components/layout/global-add-button';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
@@ -94,7 +93,9 @@ export default async function AppLayout({
 	return (
 		<main className="grid grid-cols-[auto_1fr] h-screen overflow-hidden">
 			<Sidebar links={links} currentCurrency={settings?.currency} />
-			<TransitionLayout>{children}</TransitionLayout>
+			<div className="h-full min-h-0 min-w-0 overflow-y-auto overflow-x-hidden">
+				{children}
+			</div>
 			<GlobalAddButton
 				categories={categories}
 				accounts={accounts}
