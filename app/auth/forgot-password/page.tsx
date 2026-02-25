@@ -21,13 +21,13 @@ export default function ForgotPassword() {
 
 		try {
 			setLoading(true);
-			// @ts-expect-error - emailOTPClient plugin overrides forgetPassword core type
-			const { error } = await authClient.forgetPassword({
+			const { error } = await authClient.requestPasswordReset({
 				email,
 				redirectTo: '/auth/reset-password',
 			});
 
 			if (error) {
+				console.error('[FORGOT_PASSWORD_ERROR]', error);
 				toast.error(error.message || 'Something went wrong. Please try again.');
 				setLoading(false);
 				return;

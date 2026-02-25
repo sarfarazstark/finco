@@ -39,4 +39,13 @@ export const auth = betterAuth({
 			sendVerificationOnSignUp: true,
 		}),
 	],
+	emailVerification: {
+		sendVerificationEmail: async ({ user, url }) => {
+			await sendEmail({
+				to: user.email,
+				subject: 'Verify your Finco email address',
+				htmlContent: `<a href="${url}">Verify Email</a>`,
+			});
+		},
+	},
 });
