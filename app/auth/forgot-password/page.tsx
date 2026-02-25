@@ -10,7 +10,6 @@ import { authClient } from '@/lib/auth-client';
 export default function ForgotPassword() {
 	const [loading, setLoading] = useState(false);
 	const [email, setEmail] = useState('');
-	const [submitted, setSubmitted] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -27,13 +26,14 @@ export default function ForgotPassword() {
 			});
 
 			if (error) {
-				console.error('[FORGOT_PASSWORD_ERROR]', error);
 				toast.error(error.message || 'Something went wrong. Please try again.');
 				setLoading(false);
 				return;
 			}
 
-			setSubmitted(true);
+			toast.success("If an account exists, we've sent a link to reset your password.");
+			setEmail('');
+			setLoading(false);
 		} catch {
 			toast.error('An unexpected error occurred. Please try again.');
 			setLoading(false);
@@ -54,32 +54,24 @@ export default function ForgotPassword() {
 						Reset Password
 					</h3>
 					<p className="text-grey-500 text-sm">
-						{submitted
-							? "If an account exists, we've sent a link to reset your password."
-							: "Enter your email address and we'll send you a link to reset your password."}
+						Enter your email address and we&apos;ll send you a link to reset your password.
 					</p>
 				</div>
 
-				{!submitted ? (
-					<form onSubmit={handleSubmit} className="flex flex-col gap-5">
-						<Input
-							label="Email Address"
-							type="email"
-							id="email"
-							name="email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							autoComplete="email"
-						/>
-						<Button type="submit">
-							{loading ? 'Sending...' : 'Send Reset Link'}
-						</Button>
-					</form>
-				) : (
-					<Button className="mt-4" onClick={() => setSubmitted(false)} variant="secondary">
-						Try another email
+				<form onSubmit={handleSubmit} className="flex flex-col gap-5">
+					<Input
+						label="Email Address"
+						type="email"
+						id="email"
+						name="email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						autoComplete="email"
+					/>
+					<Button type="submit" disabled={loading}>
+						{loading ? 'Sending...' : 'Send Reset Link'}
 					</Button>
-				)}
+				</form>
 
 				<div className="text-center mt-2">
 					<Link

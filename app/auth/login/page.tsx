@@ -13,6 +13,7 @@ import { authClient } from '@/lib/auth-client';
 
 export default function Login() {
 	const [loading, setLoading] = useState(false);
+	const [isRedirecting, setIsRedirecting] = useState(false);
 	const { errors, parse } = useZodForm(login_schema);
 	const router = useRouter();
 
@@ -47,13 +48,35 @@ export default function Login() {
 			}
 
 			toast.success('Welcome back!');
+			setIsRedirecting(true);
 			router.push('/');
-			setLoading(false);
 		} catch {
 			toast.error('Something went wrong on our end. Please try again.');
 			setLoading(false);
 		}
 	};
+
+	if (isRedirecting) {
+		return (
+			<div className="h-full flex items-center justify-center">
+				<motion.div
+					initial={{ opacity: 0, scale: 0.96 }}
+					animate={{ opacity: 1, scale: 1 }}
+					className="min-w-md bg-white p-8 rounded-lg flex flex-col items-center gap-6 shadow-custom max-w-sm text-center mx-4"
+				>
+					<div className="w-10 h-10 border-[3px] border-grey-100 border-t-green rounded-full animate-spin" />
+					<div>
+						<h3 className="font-bold text-grey-900 font-preset-2 mb-2">
+							Redirecting
+						</h3>
+						<p className="text-grey-500 font-preset-4">
+							Please wait while we prepare your dashboard...
+						</p>
+					</div>
+				</motion.div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="h-full flex items-center justify-center">
@@ -62,7 +85,7 @@ export default function Login() {
 				animate={{ opacity: 1, scale: 1 }}
 				exit={{ opacity: 0, scale: 0.98 }}
 				transition={{ duration: 0.25, ease: 'easeOut' }}
-				className="min-w-md bg-white p-8 rounded-lg flex flex-col gap-5"
+				className="min-w-md bg-white p-8 rounded-lg flex flex-col gap-5 shadow-custom"
 			>
 				<h3 className="font-bold text-grey-900 font-preset-1">Login</h3>
 				<form onSubmit={handleSubmit} className="flex flex-col gap-5">

@@ -3,6 +3,11 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { emailOTP } from 'better-auth/plugins';
 import { prisma } from './prisma';
 import { sendEmail } from './email';
+import {
+	getOTPTemplate,
+	getResetPasswordTemplate,
+	getVerificationEmailTemplate,
+} from './email-templates';
 
 export const auth = betterAuth({
 	database: prismaAdapter(prisma, {
@@ -15,11 +20,7 @@ export const auth = betterAuth({
 			await sendEmail({
 				to: data.user.email,
 				subject: 'Reset your Finco password',
-				htmlContent: `
-					<h1>Reset Password</h1>
-					<p>Click the link below to reset your password. This link is valid for a limited time.</p>
-					<a href="${data.url}">Reset Password</a>
-				`,
+				htmlContent: getResetPasswordTemplate(data.url),
 			});
 		},
 	},
@@ -29,11 +30,7 @@ export const auth = betterAuth({
 				await sendEmail({
 					to: email,
 					subject: 'Verify your Finco email address',
-					htmlContent: `
-						<h1>Email Verification</h1>
-						<p>Your verification code is: <strong>${otp}</strong></p>
-						<p>Enter this code on the verification page to confirm your email.</p>
-					`,
+					htmlContent: getOTPTemplate(otp),
 				});
 			},
 			sendVerificationOnSignUp: true,
@@ -44,7 +41,7 @@ export const auth = betterAuth({
 			await sendEmail({
 				to: user.email,
 				subject: 'Verify your Finco email address',
-				htmlContent: `<a href="${url}">Verify Email</a>`,
+				htmlContent: getVerificationEmailTemplate(url),
 			});
 		},
 	},

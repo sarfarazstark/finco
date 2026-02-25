@@ -14,12 +14,18 @@ function ResetPasswordForm() {
 	const token = searchParams.get('token') || '';
 
 	const [password, setPassword] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
 	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = async (e: React.SubmitEvent) => {
 		e.preventDefault();
 		if (password.length < 8) {
 			toast.error('Password must be at least 8 characters');
+			return;
+		}
+
+		if (password !== confirmPassword) {
+			toast.error('Passwords do not match');
 			return;
 		}
 
@@ -47,10 +53,11 @@ function ResetPasswordForm() {
 	if (!token) {
 		return (
 			<div className="h-full flex items-center justify-center">
-				<div className="bg-white p-8 rounded-lg">
-					<p className="text-red-500 font-medium">Invalid or missing reset token. Please request a new link.</p>
-					<Button className="mt-4 w-full" onClick={() => router.push('/auth/forgot-password')}>
-						Go back
+				<div className="bg-white p-8 rounded-lg mx-4 max-w-sm text-center">
+					<p className="text-red font-bold mb-4">Invalid or missing reset token.</p>
+					<p className="text-grey-500 text-sm mb-6 text-pretty">The link you followed may be invalid or expired. Please request a new password reset link.</p>
+					<Button className="w-full" onClick={() => router.push('/auth/forgot-password')}>
+						Go back to Reset Password
 					</Button>
 				</div>
 			</div>
@@ -64,7 +71,7 @@ function ResetPasswordForm() {
 				animate={{ opacity: 1, scale: 1 }}
 				exit={{ opacity: 0, scale: 0.98 }}
 				transition={{ duration: 0.25, ease: 'easeOut' }}
-				className="min-w-[400px] max-w-md w-full bg-white p-8 rounded-lg flex flex-col gap-5mx-4"
+				className="min-w-[400px] max-w-md w-full bg-white p-8 rounded-lg flex flex-col gap-5 mx-4"
 			>
 				<div>
 					<h3 className="font-bold text-grey-900 font-preset-1 mb-2">
@@ -75,15 +82,26 @@ function ResetPasswordForm() {
 					</p>
 				</div>
 				<form onSubmit={handleSubmit} className="flex flex-col gap-5">
-					<Input
-						label="New Password"
-						type="password"
-						id="password"
-						name="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						autoComplete="new-password"
-					/>
+					<div className="flex flex-col gap-5">
+						<Input
+							label="New Password"
+							type="password"
+							id="password"
+							name="password"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							autoComplete="new-password"
+						/>
+						<Input
+							label="Confirm Password"
+							type="password"
+							id="confirmPassword"
+							name="confirmPassword"
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
+							autoComplete="new-password"
+						/>
+					</div>
 					<Button type="submit">
 						{loading ? 'Resetting...' : 'Reset Password'}
 					</Button>
