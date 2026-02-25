@@ -7,7 +7,7 @@ import { IconArrowUpRight, IconArrowDownLeft } from '@tabler/icons-react';
 
 type Filter = 'incoming' | 'outgoing';
 
-export function IncomeExpenseChart({ data }: { data: DailyTransaction[] }) {
+export function IncomeExpenseChart({ data, className }: { data: DailyTransaction[], className?: string }) {
 	const [filter, setFilter] = useState<Filter>('incoming');
 
 	if (data.length === 0) return null;
@@ -26,7 +26,7 @@ export function IncomeExpenseChart({ data }: { data: DailyTransaction[] }) {
 	const sign = filter === 'incoming' ? '+' : '-';
 
 	return (
-		<div className="bg-white rounded-2xl border border-grey-100 p-6 h-full flex flex-col">
+		<div className={cn("bg-white rounded-2xl border border-grey-100 p-6 h-full flex flex-col", className)}>
 			<div className="flex items-center justify-between mb-4">
 				<p className="text-sm font-bold text-grey-900">Histogram</p>
 				<div className="flex items-center gap-1.5">

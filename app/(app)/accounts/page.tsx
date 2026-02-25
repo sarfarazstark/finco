@@ -5,7 +5,7 @@ import { getAccountsPageData } from '@/lib/data/accounts';
 import { getTransactionsPageData } from '@/lib/data/transactions';
 import { getSetting } from '@/hooks/use-setting';
 
-import { AccountCardList } from './_components/account-card-list';
+import { AccountDropdownFilter } from './_components/account-dropdown-filter';
 import { CreateAccountDialog } from './_components/create-account-dialog';
 import { BalanceLineChart } from './_components/balance-line-chart';
 import { IncomeExpenseChart } from './_components/income-expense-chart';
@@ -13,6 +13,7 @@ import { DateFilterToolbar } from './_components/date-filter-toolbar';
 import { AnimatedTableWrapper } from '../transactions/_components/animated-table-wrapper';
 import { TransactionRow } from '../transactions/_components/transaction-row';
 import { Pagination } from '@/components/ui/pagination';
+import { IconGhostOff } from '@tabler/icons-react';
 
 export default async function AccountsPage({
 	searchParams,
@@ -53,7 +54,14 @@ export default async function AccountsPage({
 	return (
 		<section className="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
 			<header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-				<h1 className="text-3xl font-bold text-grey-900">Accounts</h1>
+				<div className="flex items-center gap-4">
+					<h1 className="text-3xl font-bold text-grey-900">Accounts</h1>
+					<AccountDropdownFilter
+						accounts={accounts}
+						selectedAccountId={selectedAccountId}
+						currency={settings.currency}
+					/>
+				</div>
 				<div className="flex items-center gap-4 relative z-50">
 					<DateFilterToolbar />
 					<CreateAccountDialog />
@@ -61,16 +69,10 @@ export default async function AccountsPage({
 			</header>
 
 			<div className="flex flex-col gap-6">
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-75">
-					<BalanceLineChart data={dailyTransactions} />
-					<IncomeExpenseChart data={dailyTransactions} />
+				<div className="flex gap-6 h-75">
+					<BalanceLineChart data={dailyTransactions} className="flex-1" />
+					<IncomeExpenseChart data={dailyTransactions} className="flex-3" />
 				</div>
-
-				<AccountCardList
-					accounts={accounts}
-					currency={settings.currency}
-					selectedAccountId={selectedAccountId}
-				/>
 
 				<div className="bg-white p-4 rounded-2xl min-h-125">
 					<AnimatedTableWrapper>
@@ -117,7 +119,7 @@ export default async function AccountsPage({
 												<div className="flex flex-col items-center justify-center">
 													<div className="w-16 h-16 bg-grey-50 rounded-full flex items-center justify-center mb-4">
 														<span className="text-2xl">
-															📝
+																<IconGhostOff className="w-3.5 h-3.5" />
 														</span>
 													</div>
 													<p className="font-bold text-grey-900 mb-1 text-base">
