@@ -19,6 +19,7 @@
 
 | Area             | Detail                                                                 |
 |------------------|------------------------------------------------------------------------|
+| **Security**     | Arcjet Edge bot protection and API token-bucket rate limiting          |
 | **Auth**         | Session-based via Better Auth with Prisma adapter & Zod v4 validation  |
 | **Transactions** | Full CRUD, double-entry transfers, debounced search, 6-way sort, pagination |
 | **Accounts**     | Horizontal card list, sparkline trend chart, daily histogram, date filters |
@@ -43,16 +44,18 @@
 | Validation | Zod v4                                       |
 | Forms      | react-hook-form                              |
 | Charts     | Recharts 3 + custom SVG renderers            |
+| Security   | Arcjet                                       |
 | Runtime    | Bun                                          |
 
 ---
 
 ## 🔥 Features
 
-### 🔐 Authentication
+### 🔐 Authentication & Security
 - Better Auth with Prisma adapter for session-based auth
 - Zod v4 password policies (8+ chars, mixed case, digits, symbols)
 - Server-side session guard with redirect
+- **Arcjet Protection**: Edge-level bot shielding and token-bucket API rate limiting
 
 ### 💳 Transactions
 - Full CRUD via Server Actions
@@ -129,6 +132,7 @@
 - [x] Recurring Bills (auto-generation, summary, searchable bill list)
 - [x] Dashboard — At-a-glance financial summary with date-range filter
 - [x] Accounts — Sparkline charts, histogram, horizontal card list, date filtering
+- [x] Security — Arcjet bot protection and server action rate limiting
 
 ### 📌 Planned
 - [ ] Email Verification using Brevo
@@ -163,6 +167,7 @@ App available at `http://localhost:3000`.
 |----------------------|------------------------------|
 | `DATABASE_URL`       | PostgreSQL connection string |
 | `BETTER_AUTH_SECRET` | Secret for session signing   |
+| `ARCJET_KEY`         | API key for Arcjet security  |
 
 ---
 

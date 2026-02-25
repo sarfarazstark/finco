@@ -4,8 +4,13 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
+import { aj } from '@/lib/arcjet';
+import { request } from '@arcjet/next';
 
 export async function createCategory(data: { name: string; iconId: string }) {
+	const decision = await aj.protect(await request(), { requested: 1 });
+	if (decision.isDenied())
+		return { success: false, error: 'Rate limit exceeded' };
 	try {
 		const session = await auth.api.getSession({
 			headers: await headers(),

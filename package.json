@@ -16,6 +16,7 @@
 		"seed": "bunx --bun prisma/seed.ts"
 	},
 	"dependencies": {
+		"@arcjet/next": "^1.1.0",
 		"@better-fetch/fetch": "^1.1.21",
 		"@getbrevo/brevo": "^4.0.1",
 		"@hookform/resolvers": "^5.2.2",

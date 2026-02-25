@@ -4,8 +4,13 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
+import { aj } from '@/lib/arcjet';
+import { request } from '@arcjet/next';
 
 export async function createAccount(data: { name: string; image: string }) {
+	const decision = await aj.protect(await request(), { requested: 1 });
+	if (decision.isDenied())
+		return { success: false, error: 'Rate limit exceeded' };
 	try {
 		const session = await auth.api.getSession({
 			headers: await headers(),
@@ -37,6 +42,10 @@ export async function createAccount(data: { name: string; image: string }) {
 }
 
 export async function deleteAccount(id: string) {
+	const decision = await aj.protect(await request(), { requested: 1 });
+	if (decision.isDenied())
+		return { success: false, error: 'Rate limit exceeded' };
+
 	try {
 		const session = await auth.api.getSession({
 			headers: await headers(),

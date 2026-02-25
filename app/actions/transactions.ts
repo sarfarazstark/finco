@@ -9,12 +9,17 @@ import {
 	getSignedAmount,
 	handleError,
 } from '@/lib/action-utils';
+import { aj } from '@/lib/arcjet';
+import { request } from '@arcjet/next';
 
 export type TransactionPayload = z.infer<typeof transactionSchema>;
 
 export async function addTransaction(data: TransactionPayload) {
 	const user = await getServerUser();
 	if (!user) return { error: 'Unauthorized' };
+
+	const decision = await aj.protect(await request(), { requested: 1 });
+	if (decision.isDenied()) return { error: 'Rate limit exceeded' };
 
 	try {
 		const validatedFields = transactionSchema.safeParse(data);
@@ -83,6 +88,9 @@ export async function addTransaction(data: TransactionPayload) {
 export async function updateTransaction(id: string, data: TransactionPayload) {
 	const user = await getServerUser();
 	if (!user) return { error: 'Unauthorized' };
+
+	const decision = await aj.protect(await request(), { requested: 1 });
+	if (decision.isDenied()) return { error: 'Rate limit exceeded' };
 
 	try {
 		const existingTx = await prisma.transaction.findUnique({
@@ -159,6 +167,9 @@ export async function updateTransaction(id: string, data: TransactionPayload) {
 export async function deleteTransaction(id: string) {
 	const user = await getServerUser();
 	if (!user) return { error: 'Unauthorized' };
+
+	const decision = await aj.protect(await request(), { requested: 1 });
+	if (decision.isDenied()) return { error: 'Rate limit exceeded' };
 
 	try {
 		const tx = await prisma.transaction.findUnique({ where: { id } });
