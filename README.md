@@ -21,6 +21,7 @@
 |------------------|------------------------------------------------------------------------|
 | **Auth**         | Session-based via Better Auth with Prisma adapter & Zod v4 validation  |
 | **Transactions** | Full CRUD, double-entry transfers, debounced search, 6-way sort, pagination |
+| **Accounts**     | Horizontal card list, sparkline trend chart, daily histogram, date filters |
 | **Budget**       | Custom SVG donut chart, period-aware tracking (W/M/Q/Y), overspent detection |
 | **Pots**         | Savings goals with progress tracking, add/withdraw money, target caps  |
 | **Recurring**    | Auto-generated transactions on login, paid/upcoming/due-soon tracking  |
@@ -66,6 +67,13 @@
 - **Overspent Detection** — Split-sector pie chart + split progress bars using 130° red dashed SVG patterns
 - **Budget CRUD** — Create/Edit with React Hook Form, zod validation, theme & period selectors
 - Per-category spend aggregation and deep links to filtered transactions
+
+### 🏦 Accounts
+- **Horizontal Card List** — Scrollable account cards with selection highlighting
+- **Sparkline Chart** — Recharts AreaChart showing daily income/expense trends with gradient fill
+- **Histogram** — CSS-based daily bar chart with income/expense toggle and hover tooltips
+- **Date Filtering** — Floating toolbar with daily, monthly, and custom range filters
+- **Transaction Table** — Paginated list scoped to selected account and date range
 
 ### 🏦 Pots (Savings Goals)
 - **Virtual Sub-Account** — Each pot tracks a `total` saved amount toward a `target`
@@ -120,10 +128,10 @@
 - [x] Empty States (Transactions, Budget, Pots)
 - [x] Recurring Bills (auto-generation, summary, searchable bill list)
 - [x] Dashboard — At-a-glance financial summary with date-range filter
+- [x] Accounts — Sparkline charts, histogram, horizontal card list, date filtering
 
 ### 📌 Planned
-- [ ] Settings — Currency & theme preferences
-- [ ] Email Verification using Resend
+- [ ] Email Verification using Brevo
 - [ ] Password Reset feature
 - [ ] Mobile Responsive
 

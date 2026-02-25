@@ -72,7 +72,7 @@ export default async function AccountsPage({
 					selectedAccountId={selectedAccountId}
 				/>
 
-				<div className="bg-white p-6 md:p-8 rounded-2xl min-h-125">
+				<div className="bg-white p-4 rounded-2xl min-h-125">
 					<AnimatedTableWrapper>
 						<div className="w-full overflow-x-auto">
 							<table className="table-auto w-full text-sm">
