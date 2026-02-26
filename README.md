@@ -23,7 +23,7 @@
 | **Auth**         | Session-based via Better Auth with OTP checks & Magic Link Resets      |
 | **Transactions** | Full CRUD, double-entry transfers, debounced search, 6-way sort, pagination |
 | **Accounts**     | Horizontal card list, sparkline trend chart, daily histogram, date filters |
-| **Budget**       | Custom SVG donut chart, period-aware tracking (W/M/Q/Y), overspent detection |
+| **Budget**       | Custom Recharts donut chart, period-aware tracking (W/M/Q/Y), overspent detection |
 | **Pots**         | Savings goals with progress tracking, add/withdraw money, target caps  |
 | **Recurring**    | Auto-generated transactions on login, paid/upcoming/due-soon tracking  |
 | **Dashboard**    | At-a-glance financial summary, date-range filtering, and smart widgets |
@@ -43,7 +43,7 @@
 | Animations | Framer Motion                                |
 | Validation | Zod v4                                       |
 | Forms      | react-hook-form                              |
-| Charts     | Recharts 3 + custom SVG renderers            |
+| Charts     | Recharts 3                                   |
 | Security   | Arcjet                                       |
 | Runtime    | Bun                                          |
 
@@ -67,9 +67,9 @@
 - Separate Income/Expense/Transfer dialogs with code splitting
 
 ### 📊 Budget
-- **Custom Donut Chart** — Dual-ring SVG with hover expansion and glow effects
+- **Custom Donut Chart** — Dual-ring Recharts donut chart with hover expansion and glow effects
 - **Period-Aware Tracking** — Weekly, Monthly, Quarterly, Yearly date boundaries with contextual labels
-- **Overspent Detection** — Split-sector pie chart + split progress bars using 130° red dashed SVG patterns
+- **Overspent Detection** — Split-sector Recharts donut chart + split progress bars using 130° red dashed Recharts patterns
 - **Budget CRUD** — Create/Edit with React Hook Form, zod validation, theme & period selectors
 - Per-category spend aggregation and deep links to filtered transactions
 
@@ -126,7 +126,7 @@
 - [x] Budget Periods (Weekly, Monthly, Quarterly, Yearly)
 - [x] Overspent Visuals (pie chart + progress bars)
 - [x] Custom UI Components (9 primitives)
-- [x] Animated Sidebar & Global FAB
+- [x] Animated Sidebar & Global **FAB**
 - [x] Database Seeding (200+ demo records)
 - [x] Currency Formatting (`Intl.NumberFormat`)
 - [x] Pots (savings goals, add/withdraw, progress tracking)
